@@ -18,6 +18,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
+//Landing Page
+Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos'); //guarda los datos del formulario de la landing page en la DDBB
+
 //Panel de Usuarios
 Route::get('/users/{username}', 'UserPanelController@index')
     ->name('user_panel_index');
@@ -32,7 +35,20 @@ Route::get('/home', 'HomeController@index')
 
 
 
-Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos'); //guarda los datos del formulario de la landing page en la DDBB
+
+
+
+
+
+
+
+
+
+
+//PARA HACER FILTRO
+
+
+
 
 Route::post('/admin/editarUsuario', 'UserController@editarUsuario');	//modifica los datos de un usuario en la DDBB
 Route::post('/admin/borrarUsuario', 'UserController@borrarUsuario');	//borra un usuario de la DDBB
