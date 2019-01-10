@@ -38,7 +38,7 @@ $fa-font-path: '../webfonts';
 
 // Css plano a importar [/resources/css]
 //  >> estilos previos de la plantilla Agency (agency.css)
-////@import '../css/agency';
+@import '../css/receta';
 //      =>> Pasados los estilos necesarios a este archivo, ya no hace falta este IMPORT
 
 
@@ -670,6 +670,12 @@ ul.social-buttons li a:active, ul.social-buttons li a:focus, ul.social-buttons l
     .u-flowText { font-size: 1.5rem; }
 }
 
+/* ********** PARTE RECETA ********** */
+
+
+
+
+
 /* ********** Media Queries Large ********** */
 @media (min-width: 992px) {
     #mainNav {
@@ -712,3 +718,7 @@ ul.social-buttons li a:active, ul.social-buttons li a:focus, ul.social-buttons l
 @media (min-width: 1200px) {
 
 }
+
+
+
+

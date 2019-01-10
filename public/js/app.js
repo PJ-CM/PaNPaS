@@ -48303,9 +48303,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\inetpubapache-www\__laravel-homestead-proyectos\panpas-restructurado\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! D:\inetpubapache-www\__laravel-homestead-proyectos\panpas-restructurado\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\inetpubapache-www\__laravel-homestead-proyectos\panpas-restructurado\resources\sass\app_admin.scss */"./resources/sass/app_admin.scss");
+__webpack_require__(/*! /home/eneko/LARAVEL/PaNPaS/resources/js/app.js */"./resources/js/app.js");
+__webpack_require__(/*! /home/eneko/LARAVEL/PaNPaS/resources/sass/app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! /home/eneko/LARAVEL/PaNPaS/resources/sass/app_admin.scss */"./resources/sass/app_admin.scss");
 
 
 /***/ })
