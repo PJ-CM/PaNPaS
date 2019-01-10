@@ -25,6 +25,9 @@ Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos'); //guarda
 Route::get('/users/{username}', 'UserPanelController@index')
     ->name('user_panel_index');
 
+Route::get('/logout', 'UserPanelController@logout')
+    ->name('user_panel_logout');
+
 //Panel Admin
 Route::get('/admin/dashboard', 'AdminPanelController@index')
 ->name('admin_panel_index');

@@ -26,7 +26,8 @@
                                     </div>
                                 @endif
 
-                                Bienvenido a tu escritorio
+                                Bienvenido a tu escritorio 
+                                {{ Auth::user() }}
                             </div>
                         </div>
                     </div>

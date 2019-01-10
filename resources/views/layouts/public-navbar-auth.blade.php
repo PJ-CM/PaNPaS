@@ -31,8 +31,12 @@
                                 >> ¿alguna más?
                         --}}
                         <li class="nav-item p-3">
-                            <a class="btn btn-primary text-uppercase js-scroll-trigger" href="#" data-target="#registerModal" data-toggle="modal" title="Crear cuenta de usuario"><i class="fa fa-user"></i> Mi cuenta</a>
+                            <a class="btn btn-primary text-uppercase js-scroll-trigger" href="" data-target="#registerModal" data-toggle="modal" title="Crear cuenta de usuario"><img src="{{Auth::user()->avatar}}" class="fa fa-user" style="width: 23px; height: 23px; margin-right: 10px;"> {{Auth::user()->username}}</a>
                         </li>
+                         <li class="nav-item p-3">
+                            <a class="btn btn-primary text-uppercase js-scroll-trigger" href="{{route('user_panel_logout')}}"title="Cerrar Sesión"><i class="fa fa-sign-out" style="font-size:36px"></i> Logout</a>
+                        </li>
+                        <a href="{{route('user_panel_logout')}}">logout</a>
                     </ul>
                 </div>
             </div>

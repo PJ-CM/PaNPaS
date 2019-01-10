@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Auth;
 class UserPanelController extends Controller
 {
     /**
@@ -18,8 +18,11 @@ class UserPanelController extends Controller
 
     public function index($username)
     {
-
-        return $username;
         return view('users.dashboard');
+    }
+
+    public function logout(){
+        Auth::logout();
+        return redirect("/");
     }
 }
