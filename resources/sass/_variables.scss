@@ -1,0 +1,66 @@
+
+// Body
+$body-bg: #f8fafc;
+
+/*
+¡¡ATENCIÓN!!
+Las unidades de px y rem son incompatibles; ya no es posible emplear
+valores con unidad PX en Bootstrap 4.
+*/
+
+// Typography
+/*$font-family-sans-serif: "Nunito", sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;*/
+
+// Typography :: Proyecto
+$font-family-prim: 'Lato';
+$font-family-sec: sans-serif;
+$font-family-ter: 'Montserrat';
+$font-family-h: 'Kaushan Script';
+$font-size-base: 1rem;
+$line-height-base: 1.6;
+
+// Colors
+$blue: #3490dc;
+$indigo: #6574cd;
+$purple: #9561e2;
+$pink: #f66D9b;
+$red: #e3342f;
+$orange: #f6993f;
+$yellow: #ffed4a;
+$green: #38c172;
+$teal: #4dc0b5;
+$cyan: #6cb2eb;
+
+// ***************************************************
+
+/*
+//NOTA EXTRA:
+//El definir todas estas variables con intención de usarlas
+//dentro de [app.scss] no funciona. En vez de reflejarse el valor
+//de la variable llamada, se refleja su nombre de variable.
+//Por ello, directamente, se han pasado los valores definidos
+//dentro de [app.scss] como "Custom properties"
+
+// Colores :: Proyecto
+$color-prim: #fed136;
+$color-sec: #143235;
+$color-ter: #364a4c;
+
+$color-prim-modal: rgba(254, 211, 54, .75);
+$color-sec-modal: rgb(20, 50, 53, .75);
+
+$bg-color-prim: #fff;
+$bg-color-sec: #f4f4f4;
+$bg-color-ter: #fed;
+////$bg-color-modal: rgba(0, 0, 0, .5); //NEGRO con opacidad al 50%
+$bg-color-modal: rgb(20, 50, 53, .5);
+
+$text-color-prim: #333;
+$text-color-sec: $bg-color-prim;
+
+$link-color: $color-prim;
+$link-hover-color: $color-sec;
+
+*/

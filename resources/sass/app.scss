@@ -1,0 +1,714 @@
+
+/* :: PARTE PÚBLICA :: */
+
+//IMPORTs NECESARIOS
+//*********************************************************
+
+// Fonts
+//  >> Fuente inicial importada por Laravel :: posible ELIMINAR si no se usa
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+//  >> Otras de las de por defecto
+//      => demandadas por plantilla parte Pública
+////@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
+////@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');
+////@import url('https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic');
+////@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700');
+//          ** Todo en UNO **
+//@import url('https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic|Kaushan+Script|Montserrat:400,700|Roboto+Slab:100,300,400,700');
+//          con Lato incluido
+@import url('https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic|Kaushan+Script|Lato|Montserrat:400,700|Roboto+Slab:100,300,400,700');
+
+// Variables
+@import 'variables';
+//Carga de archivos de fuentes de Font Awesome desde la dependencia instalada
+$fa-font-path: '../webfonts';
+
+//El símbolo ~ hace referencia a la carpeta node_modules
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// Font Awesome :: Importadas
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+@import '~@fortawesome/fontawesome-free/scss/brands.scss';
+
+// Social Buttons for Bootstrap
+@import 'bootstrap_social';
+
+// Css plano a importar [/resources/css]
+//  >> estilos previos de la plantilla Agency (agency.css)
+////@import '../css/agency';
+//      =>> Pasados los estilos necesarios a este archivo, ya no hace falta este IMPORT
+
+
+//ESTILOS
+//*********************************************************
+
+//Propio de Laravel :: posible ELIMINAR si no se usa
+.navbar-laravel {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+//Propio(s) del proyecto :: parte pública
+//==================================================
+
+/* ********** Custom Properties ********** */
+
+:root {
+    --font-family-prim: 'Montserrat';
+    --font-family-sec: sans-serif;
+    --font-family-h: 'Kaushan Script';
+    --font-family-hsub: 'Droid Serif';
+    --font-family-txt: 'Lato';
+    --font-size-base: .95rem;
+    --line-height-base: 1.6;
+
+    --color-prim: #fed136;
+    --color-sec: #143235;
+    --color-ter: #364a4c;
+    --color-prim-modal: rgba(254, 211, 54, .75);
+    --color-prim-modal-50: rgba(254, 211, 54, .5);
+    --color-prim-modal-90-caption: rgba(253, 206, 52, .9);
+    --color-sec-modal: rgb(20, 50, 53, .75);
+    --color-light: #fff;
+    --color-dark: #212529;
+    --color-medium: #ced4da;
+    --color-medium-dark: #777;
+    --color-star-gold: var(--color-prim);
+    --color-star-silver: #c0c0c0;
+    --color-star-bronze: #7e3d2b;
+
+    --bg-color-prim: var(--color-light);
+    --bg-color-sec: #f4f4f4;
+    --bg-color-ter: #fed;
+    //--bg-color-modal: rgba(0, 0, 0, .5); //NEGRO con opacidad al 50%
+    --bg-color-modal: rgb(20, 50, 53, .5);
+
+    --text-color-prim: var(--color-medium-dark);
+    --text-color-sec: var(--color-light);
+
+    --link-color: var(--color-prim);
+    --link-hover-color: #fec503;
+    --link-marco: #608184;/**/
+}
+
+
+/* ********** Reset Styles ********** */
+
+html {
+    font-family: var(--font-family-prim), var(--font-family-sec);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--text-color-prim);
+    background-color: var(--bg-color-prim);
+}
+
+body {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background-color: inherit;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+a {
+    text-decoration: none;
+    color: var(--link-color);
+    transition: all .3s ease-out;
+}
+
+a:hover { color: var(--link-hover-color); }/**/
+
+/*p {
+    line-height: var(--line-height-base);//o hacer un line-height-p o line-height-txt para párrafos o textos
+    line-height: 1.75;
+}*/
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-h);
+    font-weight: 700;
+}
+
+/*estilo aplicado al seleccionar texto*/
+::selection {
+    background-color: var(--color-prim);
+    text-shadow: none;
+    color: var(--text-color-sec);
+}
+
+img::selection, img::-moz-selection {
+    background-color: transparent;
+}
+
+
+/* ********** Bootstrap Styles ********** */
+
+.bg-dark {
+    background-color: var(--color-sec) !important;
+}
+.bg-light {
+    background-color: var(--bg-color-sec) !important;
+}
+
+#loginModal .modal-dialog, #registerModal .modal-dialog {
+    border: solid 0.0625rem var(--bg-color-prim);
+    border-radius: .35rem;
+}
+#loginModal .modal-content, #registerModal .modal-content {
+    background-color: var(--color-ter);
+}
+#loginModal .modal-header, #registerModal .modal-header {
+    background-color: var(--color-sec);
+    color: var(--color-light);
+}
+#loginModal .modal-header span, #registerModal .modal-header span {
+    color: var(--color-light);
+}
+#loginModal .modal-body, #registerModal .modal-body {
+    background-color: #a7a7a7;
+    padding-top: 1.75rem;
+}
+
+/*
+.nav-item:hover {
+    background-color: var(--color-prim-modal);
+    transition: all .3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--color-prim);
+    font-size: 1.15rem;
+    font-weight: bold;
+    transition: all .3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover { color: var(--bg-color-prim); }
+*/
+#mainNav {
+    background-color: var(--color-sec);
+}
+
+#mainNav .navbar-toggler {
+    font-size: .75rem;
+    right: 0;
+    padding: .8rem;
+    text-transform: uppercase;
+    color: var(--text-color-sec);
+    border: 0;
+    background-color: var(--color-prim);
+}
+
+#mainNav .navbar-brand {
+    font-family: var(--font-family-h);
+    color: var(--color-prim);
+
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+//Estados del botón de marca/logo
+#mainNav .navbar-brand.active, #mainNav .navbar-brand:active, #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
+    color: var(--link-hover-color);
+}
+
+#mainNav .navbar-nav .nav-item .nav-link, #mainNav .navbar-nav .nav-item-login-registro .nav-link {
+    font-size: .9rem;
+    font-weight: 600;
+    padding: 0.75em 0;
+    letter-spacing: 0.0625rem;
+    color: var(--text-color-sec);
+    text-decoration: none;
+}
+
+//Si los enlaces de Login/Registro son tienen formato botón
+#mainNav .navbar-nav .nav-item-login-registro .nav-link {
+    font-size: 1.25rem;
+}
+
+#mainNav .navbar-nav .nav-item .nav-link.active, #mainNav .navbar-nav .nav-item .nav-link:hover, #mainNav .navbar-nav .nav-item-login-registro .nav-link:hover {
+    color: var(--text-color-sec);
+}
+.nav-item:hover, .nav-item-login-registro:hover {
+    background-color: var(--color-prim-modal);
+    transition: all .3s ease;
+}
+
+.text-primary {
+    color: var(--color-prim) !important;
+}
+
+.btn {
+    font-weight: 700;
+}
+
+.btn-xl {
+    font-size: 1.125rem;
+    padding: 1.25rem 2.45rem;
+}
+
+.btn-primary {
+    background-color: var(--color-prim);
+    border-color: var(--color-prim);
+}
+
+.btn-primary:active, .btn-primary:focus, .btn-primary:hover {
+    background-color: var(--link-hover-color) !important;
+    border-color: var(--link-hover-color) !important;
+    color: var(--color-light);
+}
+
+.btn-primary:active, .btn-primary:focus {
+    -webkit-box-shadow: 0 0 0 0.2rem var(--color-prim-modal-50) !important;
+    box-shadow: 0 0 0 0.2rem var(--color-prim-modal-50) !important;
+}
+
+.btn-primary:active, .btn-primary:hover {
+    text-shadow: 0 0 .125rem var(--color-dark);
+}
+
+.form-control {
+    border-color: var(--color-sec);
+}
+/*cuando un elemento del FORM tenga el foco, se aplicará este color de borde
+y una sombra*/
+.form-control:focus {
+    border-color: var(--color-prim);
+    box-shadow: 0 0 0 .2rem var(--color-prim-modal);
+}
+.form-group label {
+    color: var(--color-prim);
+}
+.form-group.btn {
+    font-weight: bold;
+}
+
+
+/* ********** Estilos Propios ********** */
+
+.link-marco {
+    font-weight: bold;
+    background-color: var(--link-marco);
+    padding: 0 .35rem;
+}
+
+header.masthead {
+    width: 100%;
+    min-height: 100vh;  /*altura mínima del viewport para que el elemento ocupe esa altura*/
+                        /*según la altura del dispositivo empleado*/
+    color: var(--color-light);
+    background-image: var(--bg-url);
+    background-attachment: var(--bg-attach);
+    background-size: var(--bg-size);
+    background-position-x: var(--bg-x);
+    background-position-y: var(--bg-y);
+}
+header.masthead > div {
+    min-height: inherit; /*se hereda la altura mínima del elemento padre*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color-modal);
+}
+header.masthead h2 {
+    padding: 0 1rem;
+    text-align: center;
+    font-weight: bold;
+    font-size: 8vw; /*estableciendo un tamaño de fuente con respecto a la anchura del viewport */
+                    /*vw >> viewport width*/
+}
+header.masthead span {
+    font-family: var(--font-family-h);
+    display: block;
+    font-size: 3vw;
+}
+header.masthead h2, header.masthead span { text-shadow: .3125rem .4rem 0 black; }
+
+section {
+    padding: 6.25rem 0;
+}
+
+section h2.section-heading {
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: .95rem;
+}
+
+section h3.section-subheading {
+    font-size: 1.1rem;
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 4.75rem;
+    text-transform: none;
+    font-family: var(--font-family-hsub);
+}
+
+.service-heading {
+    margin: .95rem 0;
+    text-transform: none;
+}
+
+#ranking .ranking-item {
+    right: 0;
+    margin: 0 0 .95rem;
+}
+
+#ranking .ranking-item .ranking-link {
+    position: relative;
+    display: block;
+    max-width: 24.5rem;
+    margin: 0 auto;
+    cursor: pointer;
+    border-radius: .3125em .3125em 0 0;
+    border: .3125em solid var(--color-prim);
+    border-bottom: 0;
+}
+
+#ranking .ranking-item .ranking-link .ranking-hover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-transition: all ease 0.5s;
+    transition: all ease 0.5s;
+    opacity: 0;
+    background-color: var(--color-prim-modal-90-caption);
+}
+
+#ranking .ranking-item .ranking-link .ranking-hover:hover {
+    opacity: 1;
+}
+
+#ranking .ranking-item .ranking-link .ranking-hover .ranking-hover-content {
+    font-size: 1.25rem;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    height: 1.25rem;
+    margin-top: -0.75rem;
+    text-align: center;
+    color: var(--text-color-sec);
+}
+
+#ranking .ranking-item .ranking-link .ranking-hover .ranking-hover-content i {
+    margin-top: -0.75rem;
+}
+
+#ranking .ranking-item .ranking-link .ranking-hover .ranking-hover-content h3,
+#ranking .ranking-item .ranking-link .ranking-hover .ranking-hover-content h4 {
+    margin: 0;
+}
+
+#ranking .ranking-item .ranking-caption {
+    max-width: 24.5rem;
+    margin: 0 auto;
+    padding: 1.5625rem;
+    text-align: center;
+    background-color: var(--bg-color-ter);
+    border-radius: 0 0 .3125em .3125em;
+    border: .3125em solid var(--color-prim);
+    border-top: 0;
+}
+
+#ranking .ranking-item .ranking-caption h4 {
+    margin: 0;
+    text-transform: none;
+}
+
+#ranking .ranking-item .ranking-caption p {
+    font-family: var(--font-family-hsub);
+    font-size: 1rem;
+    font-style: italic;
+    margin: 0;
+}
+
+#ranking * {
+    z-index: 2;
+}
+
+.stars-votos {
+    font-family: var(--font-family-h);
+    margin-top: .45rem;
+}
+.star-gold { color: var(--color-star-gold); }
+.star-silver { color: var(--color-star-silver); }
+.star-bronze { color: var(--color-star-bronze); }
+
+//Sería mejor tratar de que los archivos de imágenes tuvieran medidas superiores
+.ranking-item img {
+    width: 400px;
+    height: 300px;
+}
+
+.ranking-modal {
+    padding-right: 0 !important;
+}
+
+.ranking-modal .modal-dialog {
+    margin: 1rem;
+    max-width: 100vw;
+}
+
+.ranking-modal .modal-content {
+    padding: 6.25rem 0;
+    text-align: center;
+}
+
+.ranking-modal .modal-content h2 {
+    font-size: 3rem;
+    margin-bottom: .95rem;
+}
+
+.ranking-modal .modal-content p {
+    margin-bottom: 1.90rem;
+}
+
+.ranking-modal .modal-content p.item-intro {
+    font-family: var(--font-family-hsub);
+    font-size: 1rem;
+    font-style: italic;
+    margin: 1.25rem 0 1.90rem;
+}
+
+.ranking-modal .modal-content ul.list-inline {
+    margin-top: 0;
+    margin-bottom: 1.90rem;
+}
+
+.ranking-modal .modal-content img {
+    margin-bottom: 1.90rem;
+    border-radius: .3125em;
+    border: .3125em solid var(--color-prim);
+}
+
+.ranking-modal .modal-content button {
+    cursor: pointer;
+}
+
+.ranking-modal .close-modal {
+    position: absolute;
+    top: 1.5625rem;
+    right: 1.5625rem;
+    width: 4.75rem;
+    height: 4.75rem;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.ranking-modal .close-modal:hover {
+    opacity: 0.3;
+}
+
+.ranking-modal .close-modal .lr, .ranking-modal .close-modal .lr .rl {
+    /* Safari and Chrome */
+    width: 0.0625rem;
+    height: 4.75rem;
+    /* IE 9 */
+    background-color: var(--color-sec);
+}
+
+.ranking-modal .close-modal .lr {
+    /* Safari and Chrome */
+    z-index: 1051;
+    margin-left: 2.2rem;
+    /* IE 9 */
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.ranking-modal .close-modal .lr .rl {
+    /* Safari and Chrome */
+    z-index: 1052;
+    /* IE 9 */
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.client {
+    margin-bottom: 3.125rem;
+    text-align: center;
+}
+
+.client img {
+    width: 14.0625rem;
+    height: 14.0625rem;
+    border: 0.3125em solid var(--color-prim);
+}
+
+.client h4 {
+    margin-top: 1.5625rem;
+    margin-bottom: 0;
+    text-transform: none;
+}
+
+.client p {
+    margin-top: 0;
+}
+
+section#contact {
+    background-color: var(--color-dark);
+    background-image: url('../images/map-image.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+section#contact .section-heading {
+    color: var(--color-light);
+}
+
+section#contact .form-group {
+    margin-bottom: 1.5625rem;//25px
+}
+
+section#contact .form-group input,
+section#contact .form-group textarea {
+    padding: 1.25rem;//20px
+}
+
+section#contact .form-group input.form-control {
+    height: auto;
+}
+
+section#contact .form-group textarea.form-control {
+    height: 10rem;
+}
+
+section#contact .form-control:focus {
+    border-color: var(--color-prim);
+    //Permitiendo sombra al coger el foco
+    /*-webkit-box-shadow: none;
+    box-shadow: none;*/
+}
+
+section#contact ::-webkit-input-placeholder, section#contact :-moz-placeholder,
+section#contact ::-moz-placeholder, section#contact :-ms-input-placeholder {
+    font-weight: 700;
+    color: var(--color-medium);
+}
+
+footer {
+    background-color: var(--color-ter);
+    padding: 1.5625rem 0;
+    text-align: center;
+}
+
+footer span.copyright, footer ul.quicklinks {
+    font-size: .9rem;
+    line-height: 2.45rem;
+    text-transform: none;
+}
+
+footer ul.quicklinks, ul.social-buttons {
+    margin-bottom: 0;
+}
+
+ul.social-buttons li a {
+    font-size: 1.25rem;
+    line-height: 3.125rem;
+    display: block;
+    width: 3.125rem;
+    height: 3.125rem;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    color: var(--color-light);
+    border-radius: 100%;
+    outline: none;
+    background-color: var(--color-sec);
+}
+
+ul.social-buttons li a:active, ul.social-buttons li a:focus, ul.social-buttons li a:hover {
+    background-color: var(--color-prim);
+}
+
+.u-flowText { font-size: 1.25rem; }
+
+.social-auth-links, .social-auth-links a {
+    text-align: center;
+}
+.social-auth-links .btn-social {
+    color: white !important;
+}
+.social-auth-links .btn-social > :first-child {
+    width: 2.45rem;
+    line-height: 2.25rem;
+}
+.social-auth-links .btn-twitter { background-color: #55acee; }
+.social-auth-links .btn-twitter:focus, .social-auth-links .btn-twitter.focus, .social-auth-links .btn-twitter:hover { background-color: #2795e9; }
+.social-auth-links .btn-twitter:active, .social-auth-links .btn-twitter.active, .social-auth-links .btn-twitter:active.focus, .social-auth-links .btn-twitter.active.focus { background-color: #1583d7; }
+.social-auth-links .btn-facebook { background-color: #3b5998; }
+.social-auth-links .btn-facebook:focus, .social-auth-links .btn-facebook.focus, .social-auth-links .btn-facebook:hover { background-color: #2d4373; }
+.social-auth-links .btn-facebook:active, .social-auth-links .btn-facebook.active, .social-auth-links .btn-facebook:active.focus, .social-auth-links .btn-facebook.active.focus { background-color: #23345a; }
+.social-auth-links .btn-google{ background-color: #dd4b39; }
+.social-auth-links .btn-google:focus, .social-auth-links .btn-google.focus, .social-auth-links .btn-google:hover { background-color: #c23321; }
+.social-auth-links .btn-google:active, .social-auth-links .btn-google.active, .social-auth-links .btn-google:active.focus, .social-auth-links .btn-google.active.focus { background-color: #a32b1c; }
+
+
+/* ********** Media Queries Small ********** */
+@media (max-width: 575px) {
+}
+@media (min-width: 576px) {
+
+}
+
+/* ********** Media Queries Medium ********** */
+@media (max-width: 767px) {
+    header.masthead h2 {
+        font-size: 10vw; /*estableciendo un tamaño de fuente con respecto a la anchura del viewport */
+                        /*vw >> viewport width*/
+    }
+    header.masthead span {
+        font-size: 5vw;
+        line-height: 2;
+    }
+}
+@media (min-width: 768px) {
+    section {
+        padding: 9.5rem 0;
+    }
+
+    .u-flowText { font-size: 1.5rem; }
+}
+
+/* ********** Media Queries Large ********** */
+@media (min-width: 992px) {
+    #mainNav {
+        padding-top: 1.5625rem;
+        padding-bottom: 1.5625rem;
+        -webkit-transition: padding-top 0.3s, padding-bottom 0.3s;
+        transition: padding-top 0.3s, padding-bottom 0.3s;
+        border: none;
+        background-color: transparent;
+    }
+    #mainNav .navbar-brand {
+        font-size: 3rem;
+        font-weight: bold;
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+    #mainNav .navbar-nav .nav-item .nav-link, #mainNav .navbar-nav .nav-item-login-registro .nav-link {
+        padding: 1.1em 1em !important;
+    }
+    #mainNav.navbar-shrink {
+        padding-top: 0;
+        padding-bottom: 0;
+        background-color: var(--color-sec);
+    }
+    #mainNav.navbar-shrink .navbar-brand {
+        font-size: 2.5rem;
+        padding: .75rem 0;
+    }
+    #mainNav .navbar-nav .nav-item .nav-link.active, #mainNav .navbar-nav .nav-item .nav-link:hover, #mainNav .navbar-nav .nav-item-login-registro .nav-link:hover {
+        color: var(--color-prim);
+    }
+    .nav-item:hover, .nav-item-login-registro:hover {
+        background-color: transparent;
+    }/**/
+
+    .u-flowText { font-size: 1.75rem; }
+}/* @media (min-width: 992px) { */
+
+/* ********** Media Queries ExtraLarge ********** */
+@media (min-width: 1200px) {
+
+}

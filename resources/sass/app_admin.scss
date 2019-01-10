@@ -1,0 +1,39 @@
+
+/* :: PARTE PRIVADA :: */
+
+//IMPORTs NECESARIOS
+//*********************************************************
+
+// Fonts
+//  >> Otras de las de por defecto
+//      => demandadas por plantilla parte Privada
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700');
+
+// Variables
+@import 'variables';
+//Carga de archivos de fuentes de Font Awesome desde la dependencia instalada
+$fa-font-path: '../webfonts';
+
+//El símbolo ~ hace referencia a la carpeta node_modules
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+// AdminLTE :: Importado
+@import '~admin-lte/dist/css/adminlte.css';
+
+// Font Awesome :: Importadas
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+@import '~@fortawesome/fontawesome-free/scss/brands.scss';
+
+// Css plano a importar [/resources/css]
+//  >> estilos previos de la plantilla Agency (agency.css)
+////@import '../css/agency';
+//      =>> Pasados los estilos necesarios a este archivo, ya no hace falta este IMPORT
+
+
+//ESTILOS
+//*********************************************************
+
+//Propio(s) del proyecto :: parte privada
+//==================================================
