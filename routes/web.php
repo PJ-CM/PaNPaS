@@ -22,7 +22,7 @@ Auth::routes();
 Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos'); //guarda los datos del formulario de la landing page en la DDBB
 
 //Panel de Usuarios
-Route::get('/users/{username}', 'UserPanelController@index')
+Route::get('/users/{username?}', 'UserPanelController@index')
     ->name('user_panel_index');
 
 Route::get('/logout', 'UserPanelController@logout')

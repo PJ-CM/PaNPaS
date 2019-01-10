@@ -36,7 +36,6 @@
                          <li class="nav-item p-3">
                             <a class="btn btn-primary text-uppercase js-scroll-trigger" href="{{route('user_panel_logout')}}"title="Cerrar Sesión"><i class="fa fa-sign-out" style="font-size:36px"></i> Logout</a>
                         </li>
-                        <a href="{{route('user_panel_logout')}}">logout</a>
                     </ul>
                 </div>
             </div>

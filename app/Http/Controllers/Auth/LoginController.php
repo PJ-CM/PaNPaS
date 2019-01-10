@@ -28,20 +28,20 @@ class LoginController extends Controller
    public function redirectTo(){
     // User role   
     
-    // Check user role
-    switch (Auth::user()->perfil_id) {
-        case 1:
-                return '/admin/dashboard';
-            break;
-        case 2:
-                $url = "/users/".Auth::user()->username;
-                return $url;
-            break; 
-        default:
-                return '/'; 
-            break;
+        // Check user role
+        switch (Auth::user()->perfil_id) {
+            case 1:
+                    return '/admin/dashboard';
+                break;
+            case 2:
+                    $url = "/users/".Auth::user()->username;
+                    return $url;
+                break; 
+            default:
+                    return '/'; 
+                break;
+        }
     }
-}
 
 
 
