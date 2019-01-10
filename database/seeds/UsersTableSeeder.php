@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use Faker\Factory;
 class UsersTableSeeder extends Seeder
 {
     /**
@@ -11,6 +11,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Factory::create();
         for ($i = 0; $i < 10; $i++){
 
             if ($i == 0){
@@ -20,15 +21,17 @@ class UsersTableSeeder extends Seeder
                     'lastname' => 'Admin',
                     'email' => 'admin@gmail.com',
                     'password' => Hash::make('admin'),
-                    'perfil_id' => 1
+                    'perfil_id' => 1,
+                    'avatar' => $faker->imageUrl($width = 640, $height = 480)
                 ]);
             }else {
                 DB::table('users')->insert([
-                    'username' => 'nick'.$i,
-                    'name' => 'nombre'.$i,
-                    'lastname' => 'apellido'.$i,
-                    'email' => 'correo'.$i,
-                    'password' => Hash::make(str_random(10))
+                    'username' => $faker->username(),
+                    'name' => $faker->name(),
+                    'lastname' => $faker->lastname(),
+                    'email' => $faker->email(),
+                    'password' => Hash::make(str_random(10)),
+                    'avatar' => $faker->imageUrl($width = 640, $height = 480)
                 ]);
             }
         }

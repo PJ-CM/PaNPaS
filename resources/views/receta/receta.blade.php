@@ -95,7 +95,7 @@
 <div class="container receta"> 
   <div class="row row-receta">
     <h1 id="titulo" class="titulo frijole"> {{$receta->titulo}}  </h1> 
-    <a href="/user/perfil/{{$receta->user->id}}">{{$receta->user->nick}}</a>
+    <a href="/user/perfil/{{$receta->user->id}}">{{$receta->user->username}}</a>
   </div>
 
   <div class="row row-receta">
@@ -152,7 +152,7 @@
 						<!-- Contenedor del Comentario -->
 						<div class="comment-box">
 							<div class="comment-head">
-								<h6 class="comment-name @if ($comentario->user_id == $receta->user_id) by-author @endif"><a href="http://creaticode.com/blog">{{$comentario->user->nick}}</a></h6>
+								<h6 class="comment-name @if ($comentario->user_id == $receta->user_id) by-author @endif"><a href="http://creaticode.com/blog">{{$comentario->user->username}}</a></h6>
 								<span> hace {{ intval(($time - $comentario->time) / 60) }} minutos</span>
 								<i class="fa fa-reply"></i>
 								<i class="fa fa-heart"></i>

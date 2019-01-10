@@ -18,6 +18,8 @@ class UserPanelController extends Controller
 
     public function index($username)
     {
+
+        return $username;
         return view('users.dashboard');
     }
 }

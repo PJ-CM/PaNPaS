@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call(contactos_seeder::class);
 
         $this->call(perfiles_seeder::class);
-        $this->call(users_seeder::class);
+        $this->call(UsersTableSeeder::class);
 
         
         $this->call(ingredientes_seeder::class);
