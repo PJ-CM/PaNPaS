@@ -17,7 +17,15 @@ try {
     //vale pasar windows.jQuery tanto así
     //como sin windows. lo mismo para $
     ////require('jquery.easing')(window.jQuery);
-    require('jquery.easing')($);
+    /*
+        ¡¡ATENCIÓN!!
+        Para el funcionamiento de animación que ya trae adminLTE,
+        es incompatible requerir 'jquery.easing' antes de requerir
+        la propia plantilla.
+        Si 'jquery.easing' fuera necesario, al menos, requerirlo tras el REQUIRE de 'admin-lte'.
+        Por ahora, como no es necesario, se deja comentado.
+    */
+    ////require('jquery.easing')($);
     /*Añadido(s) para ADMIN*/
     require('admin-lte');
 } catch (e) {}

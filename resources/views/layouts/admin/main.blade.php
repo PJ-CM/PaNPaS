@@ -14,19 +14,51 @@
         <div class="wrapper">
 
             <!-- Navbar -->
-            @include('layouts.admin.main-navbar')
+            @include('layouts.admin.main-navbar-top')
             <!-- /.navbar -->
 
             <!-- Main Sidebar Container -->
-            @include('layouts.admin.main-sidebar')
-            <!-- /.main-sidebar -->
+            <aside class="main-sidebar sidebar-dark-primary elevation-4">
+                <!-- Brand Logo -->
+                <a href="{{ route('index') }}" class="brand-link" title="Ir a la página de inicio">
+                    <img src="images/logo-admin-blanco.png" alt="PaNPaS Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">{{ config('app.name', 'PaNPaS') }}</span>
+                </a>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Sidebar user panel (optional) -->
+                    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                        <div class="image">
+                            <img src="images/admin-icon.png" class="img-circle elevation-2" alt="Imagen de usuario">
+                        </div>
+                        <div class="info">
+                            <a href="#" class="d-block">Administrador</a>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Menu -->
+                    @include('layouts.admin.main-navbar-left')
+                    <!-- /.sidebar-menu -->
+                </div>
+                <!-- /.sidebar -->
+            </aside>
 
             <!-- Content Wrapper. Contains page content -->
-            @yield('content')
+            <div class="content-wrapper">
+                @yield('content')
+            </div>
             <!-- /.content-wrapper -->
 
-            <footer class="main-footer">
+            <!-- Control Sidebar -->
+            <aside class="control-sidebar control-sidebar-dark">
+                <!-- Control sidebar content goes here -->
+                @include('layouts.admin.main-right-sidebar')
+            </aside>
+            <!-- /.control-sidebar -->
 
+            <!-- Main Footer -->
+            <footer class="main-footer">
                 @php
                     $anio_ini = 2018;
                     $anio_actual = date('Y');
@@ -45,12 +77,6 @@
                     <b>Versión</b> 1.0
                 </div>
             </footer>
-
-            <!-- Control Sidebar -->
-            <aside class="control-sidebar control-sidebar-dark">
-                <!-- Control sidebar content goes here -->
-            </aside>
-            <!-- /.control-sidebar -->
 
         </div>
         <!-- ./wrapper -->

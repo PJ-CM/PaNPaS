@@ -48181,12 +48181,12 @@ try {
   //como sin windows. lo mismo para $
   ////require('jquery.easing')(window.jQuery);
 
-
-  __webpack_require__(/*! jquery.easing */ "./node_modules/jquery.easing/jquery.easing.js")($);
   /*Añadido(s) para ADMIN*/
 
 
   __webpack_require__(/*! admin-lte */ "./node_modules/admin-lte/dist/js/adminlte.min.js");
+
+  __webpack_require__(/*! jquery.easing */ "./node_modules/jquery.easing/jquery.easing.js")($);
 } catch (e) {}
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -48302,7 +48302,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/eneko/LARAVEL/PaNPaS/resources/js/app_admin.js */"./resources/js/app_admin.js");
+module.exports = __webpack_require__(/*! D:\inetpubapache-www\__laravel-homestead-proyectos\panpas-restructurado-git\resources\js\app_admin.js */"./resources/js/app_admin.js");
 
 
 /***/ })

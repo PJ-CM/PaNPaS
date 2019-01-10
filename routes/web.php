@@ -30,7 +30,11 @@ Route::get('/logout', 'UserPanelController@logout')
 
 //Panel Admin
 Route::get('/admin/dashboard', 'AdminPanelController@index')
-->name('admin_panel_index');
+    ->name('admin_panel_index');
+Route::get('/admin/profile', 'AdminPanelController@profile')
+    ->name('admin_panel_profile');
+//Route::get('/admin/users', 'AdminPanelController@index')
+//    ->name('admin_panel_index');
 
 //==================================================
 Route::get('/home', 'HomeController@index')
@@ -78,7 +82,7 @@ Route::get('/prueba', 'UserPerfilController@prueba');
 
 
 
-// [API]recoger datos 
+// [API]recoger datos
 
 Route::get ('/api/usuarios', 'ApiController@getUsuarios'); 	//json de todos los usuarios registrados
 Route::get ('/api/perfiles', 'ApiController@getPerfiles');	//json de todos los perfiles disponibles
