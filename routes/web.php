@@ -36,6 +36,12 @@ Route::get('/admin/profile', 'AdminPanelController@profile')
 //Route::get('/admin/users', 'AdminPanelController@index')
 //    ->name('admin_panel_index');
 
+//Para aceptar URLs de todo tipo dentro de  este controlador
+//  >> establecido para aceptar peticiones GET a las rutas
+//  relacionadas con los componentes a cargar en él
+Route::get('/admin/{path}', 'AdminPanelController@index')
+    ->where( 'path', '([A-z\d-\/_.]+)?' );
+
 //==================================================
 Route::get('/home', 'HomeController@index')
     ->name('home');

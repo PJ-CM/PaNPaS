@@ -45,7 +45,10 @@
             </aside>
 
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
+            {{--
+                id="app", para indicar a VueJS dónde se cargará su parte
+            --}}
+            <div class="content-wrapper" id="app">
                 @yield('content')
             </div>
             <!-- /.content-wrapper -->

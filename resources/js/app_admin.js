@@ -8,6 +8,40 @@
 require('./bootstrap_admin');
 
 window.Vue = require('vue');
+//Tratamiento de rutas en VueJS a través de VueRouter
+//  >> Importando Vue Router
+import VueRouter from 'vue-router';
+//  >> Indicando a Vue que utilice VueRouter
+Vue.use(VueRouter);
+
+//Registro de RUTAS
+// ----------------------------------------------------
+let patron = '/admin';
+//Forma 1d2 :. en dos pasos
+//////Definición de componentes
+////const Dashboard = require('./components/Dashboard.vue');
+////const Profile = require('./components/Profile.vue');
+////let routes = [
+////    { path: '/dashboard', component: Dashboard },
+////    { path: '/profile', component: Profile },
+////]
+// ----------------------------------------------------
+//Forma 2d2 :. en un solo paso
+let routes = [
+    { path: patron + '/dashboard', component: require('./components/Dashboard.vue').default },
+    //{ path: patron + '/profile', component: require('./components/Profile.vue') },
+    { path: patron + '/users', component: require('./components/Users.vue') },
+]
+
+//Instancia de VueRouter y asignación de rutas
+const router = new VueRouter({
+    //para que las URL sean referidas al componente a cargar
+    //y no a la vista que lo contiene
+    mode: 'history',
+
+    routes // short for `routes: routes`
+})
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -29,5 +63,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    //pasando el " router " a la instancia de Vue
+    router
 });
