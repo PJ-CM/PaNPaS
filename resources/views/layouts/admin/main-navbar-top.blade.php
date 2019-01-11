@@ -1,4 +1,3 @@
-
             <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
                 <!-- Left navbar links -->
                 <ul class="navbar-nav">
@@ -34,8 +33,8 @@
                             <span class="badge badge-danger navbar-badge">3</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <!-- Message Start -->
                             <a href="#" class="dropdown-item">
-                                <!-- Message Start -->
                                 <div class="media">
                                     <img src="images/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                                     <div class="media-body">
@@ -47,11 +46,11 @@
                                         <p class="text-sm text-muted"><i class="fa fa-clock-o mr-1"></i> 4 Hours Ago</p>
                                     </div>
                                 </div>
-                                <!-- Message End -->
                             </a>
+                            <!-- Message End -->
                             <div class="dropdown-divider"></div>
+                            <!-- Message Start -->
                             <a href="#" class="dropdown-item">
-                                <!-- Message Start -->
                                 <div class="media">
                                     <img src="images/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                     <div class="media-body">
@@ -63,11 +62,11 @@
                                         <p class="text-sm text-muted"><i class="fa fa-clock-o mr-1"></i> 4 Hours Ago</p>
                                     </div>
                                 </div>
-                                <!-- Message End -->
                             </a>
+                            <!-- Message End -->
                             <div class="dropdown-divider"></div>
+                            <!-- Message Start -->
                             <a href="#" class="dropdown-item">
-                                <!-- Message Start -->
                                 <div class="media">
                                     <img src="images/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                     <div class="media-body">
@@ -79,8 +78,8 @@
                                         <p class="text-sm text-muted"><i class="fa fa-clock-o mr-1"></i> 4 Hours Ago</p>
                                     </div>
                                 </div>
-                                <!-- Message End -->
                             </a>
+                            <!-- Message End -->
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
                         </div>
@@ -92,10 +91,10 @@
                             <span class="badge badge-warning navbar-badge">15</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-item dropdown-header">15 Notifications</span>
+                            <span class="dropdown-header">15 Notifications</span>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item">
-                                <i class="fas fa-envelope mr-2"></i> 4 new messages
+                                <i class="fa fa-envelope mr-2"></i> 4 new messages
                                 <span class="float-right text-muted text-sm">3 mins</span>
                             </a>
                             <div class="dropdown-divider"></div>

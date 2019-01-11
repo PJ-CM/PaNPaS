@@ -1,4 +1,8 @@
+#Archivos varios de documentación
 /__docs
+#Archivos de prueba
+/resources/views/admin/*_00_*
+/resources/views/layouts/admin/*_00_*
 
 /node_modules
 /public/hot
