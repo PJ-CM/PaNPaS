@@ -11,6 +11,8 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $primarykey = "username";
+    protected $table = "users";
+
 
     /**
      * The attributes that are mass assignable.
@@ -29,4 +31,37 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function perfil(){
+        return $this->belongsTo('App\Perfil');
+    }
+
+    public function recetas(){
+        return $this->hasMany('App\Receta');
+    }
+
+    public function panaderias(){
+        return $this->hasMany('App\Panaderia');
+    }
+
+    public function comentarios(){
+        return $this->belongsToMany('App\Comentario');
+    }
+
+        public function comentario(){
+        return $this->hasOne('App\Comentario');
+    }
+
+    public function followers(){
+        return $this->belongsToMany('App\User', 'user_user', 'followed', 'follower');
+    }
+
+    public function follows(){
+        return $this->belongsToMany('App\User', 'user_user', 'follower', 'followed');
+    }
+
+
+
+
+
 }

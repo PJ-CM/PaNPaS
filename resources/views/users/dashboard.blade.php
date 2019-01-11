@@ -3,6 +3,7 @@
 @section('head_content')
         <meta name="description" content="Gestiona tus datos, tus recetas y otras opciones.">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/app.css') }}">
 
         <title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
 @endsection

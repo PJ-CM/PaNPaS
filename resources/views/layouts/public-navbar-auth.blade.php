@@ -10,19 +10,19 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav text-uppercase ml-auto">
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger" href="#services" title="Ir a la sección de Servicios">Servicios</a>
+                            <a class="nav-link js-scroll-trigger center" href="#services" title="Ir a la sección de Servicios">Seguidos<br>{{count(Auth::user()->follows)}}</a>
                         </li>
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger" href="#recetas" title="Ir a la sección de Recetas">Recetas</a>
+                            <a class="nav-link js-scroll-trigger center" href="#recetas" title="Ir a la sección de Recetas" ">Seguidores<br>0</a>
                         </li>
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger" href="#ranking" title="Ir a la sección de Ranking">Ranking</a>
+                            <a class="nav-link js-scroll-trigger center" href="#ranking" title="Ir a la sección de Ranking">Ranking</a>
                         </li>
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger" href="#clients" title="Ir a la sección de Clientes">Clientes</a>
+                            <a class="nav-link js-scroll-trigger center" href="#clients" title="Ir a la sección de Clientes">Recetas</a>
                         </li>
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger" href="#contact" title="Ir a la sección de Contacto">Contacto</a>
+                            <a class="nav-link js-scroll-trigger center" href="#contact" title="Ir a la sección de Contacto">Contacto</a>
                         </li>
                         {{--
                             Deberá ser un DropdownMenu con las opciones de:
@@ -35,6 +35,17 @@
                         </li>
                          <li class="nav-item p-3">
                             <a class="btn btn-primary text-uppercase js-scroll-trigger" href="{{route('user_panel_logout')}}"title="Cerrar Sesión"><i class="fa fa-sign-out" style="font-size:36px"></i> Logout</a>
+                        </li>
+                         <li class="nav-item p-3" style="background-color: red">
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                         </li>
                     </ul>
                 </div>
