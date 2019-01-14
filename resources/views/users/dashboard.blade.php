@@ -28,7 +28,7 @@
                                 @endif
 
                                 Bienvenido a tu escritorio 
-                                {{ Auth::user() }}
+                                <a href="/api/usuarios">Usuarios</a>
                             </div>
                         </div>
                     </div>

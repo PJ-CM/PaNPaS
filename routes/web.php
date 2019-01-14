@@ -28,6 +28,19 @@ Route::get('/users/{username?}', 'UserPanelController@index')
 Route::get('/logout', 'UserPanelController@logout')
     ->name('user_panel_logout');
 
+Route::get('/recetas', 'UserPanelController@listaRecetas')
+    ->name('user_recetas');
+
+Route::get('/seguidos', 'UserPanelController@seguidos')
+    ->name('user_seguidos');
+
+Route::get('/seguidores', 'UserPanelController@seguidores')
+    ->name('user_seguidores');
+
+//Panel Público de Usuario
+Route::get('/{username}', 'UserPanelController@perfilPublico')
+    ->name('user_perfilPublico');
+
 //Panel Admin
 Route::get('/admin/dashboard', 'AdminPanelController@index')
     ->name('admin_panel_index');
@@ -46,8 +59,20 @@ Route::get('/admin/{path}', 'AdminPanelController@index')
 Route::get('/home', 'HomeController@index')
     ->name('home');
 
+//Panel donde se muestra la Receta
+Route::get ('/receta', 'RecetaController@mostrar');
 
 
+
+
+
+// [API]recoger datos
+
+Route::get ('/api/usuarios', 'ApiController@getUsuarios'); 	//json de todos los usuarios registrados
+Route::get ('/api/perfiles', 'ApiController@getPerfiles');	//json de todos los perfiles disponibles
+Route::get ('/api/recetas', 'ApiController@getRecetas');	//json de todas las recetas disponibles
+Route::get ('/api/ingredientes', 'ApiController@getIngredientes');	//json de todos los ingredinetes disponibles
+Route::get ('/api/panaderias', 'ApiController@getPanaderias');	//json de todas las panaderias disponibles
 
 
 
@@ -66,7 +91,7 @@ Route::get('/home', 'HomeController@index')
 Route::post('/admin/editarUsuario', 'UserController@editarUsuario');	//modifica los datos de un usuario en la DDBB
 Route::post('/admin/borrarUsuario', 'UserController@borrarUsuario');	//borra un usuario de la DDBB
 
-Route::get ('/receta', 'RecetaController@mostrar');
+
 
 
 
@@ -88,7 +113,4 @@ Route::get('/prueba', 'UserPerfilController@prueba');
 
 
 
-// [API]recoger datos
 
-Route::get ('/api/usuarios', 'ApiController@getUsuarios'); 	//json de todos los usuarios registrados
-Route::get ('/api/perfiles', 'ApiController@getPerfiles');	//json de todos los perfiles disponibles
