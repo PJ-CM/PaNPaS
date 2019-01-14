@@ -19,6 +19,7 @@ class CreateRecetasTable extends Migration
             $table->string('descripcion');
             $table->string('imagen');
             $table->text('elaboracion');
+            $table->integer('votos');
             $table->integer('user_id')->unsigned();
             $table->timestamps();
         });

@@ -20,7 +20,7 @@
                 <div class="row">
                 	@foreach($user->followers as $usuario)
                     	<div class="col-md-4 col-sm-6 ranking-item">
-	                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
+	                        <a class="ranking-link" data-toggle="modal" href="/seguir/{{$usuario->username}}">
 	                            <div class="ranking-hover">
 	                                <div class="ranking-hover-content">
 	                                    <i class="fas fa-plus fa-3x"></i>
@@ -30,6 +30,7 @@
 	                        </a>
 	                        <div class="ranking-caption">
 	                            <h4><a href="/{{$usuario->username}}">{{$usuario->username}}</a></h4>
+
 	                        </div>
                     	</div>
    

@@ -11,7 +11,7 @@ class ingredientesRecetas_seeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < 10; $i++){
+        for ($i = 0; $i < 50; $i++){
 	         DB::table('ingrediente_receta')->insert([
 		            'ingrediente_id' => random_int(1, 9),
 		            'receta_id' => random_int(1, 9)

@@ -12,7 +12,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $faker = Factory::create();
-        for ($i = 0; $i < 10; $i++){
+        for ($i = 0; $i < 11; $i++){
 
             if ($i == 0){
                 DB::table('users')->insert([
@@ -24,7 +24,7 @@ class UsersTableSeeder extends Seeder
                     'perfil_id' => 1,
                     'avatar' => $faker->imageUrl($width = 640, $height = 480)
                 ]);
-            }else {
+            }else if ($i < 10) {
                 DB::table('users')->insert([
                     'username' => $faker->username(),
                     'name' => $faker->name(),
@@ -33,6 +33,15 @@ class UsersTableSeeder extends Seeder
                     'password' => Hash::make(str_random(10)),
                     'avatar' => $faker->imageUrl($width = 640, $height = 480)
                 ]);
+            } else {
+               DB::table('users')->insert([
+                        'username' => 'Eneko',
+                        'name' => 'Eneko',
+                        'lastname' => 'Apellido',
+                        'email' => 'Eneko@gmail.com',
+                        'password' => Hash::make('usuario'),
+                        'avatar' => $faker->imageUrl($width = 640, $height = 480)
+                    ]);                
             }
         }
     }

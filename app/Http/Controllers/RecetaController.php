@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Receta;
 use App\Comentario;
+
 class RecetaController extends Controller
 {
     
@@ -21,6 +22,14 @@ class RecetaController extends Controller
 		$comentarios = $comentarios->get()->where('receta_id', $id);
 
 		return view ('receta/receta', ['receta'=>$receta, 'comentarios' => $comentarios, 'time'=>time()]);
+	}
+
+	public function getRecetasRanking() {
+
+		$recetas = new Receta;
+		$recetas = Receta::orderBy('votos', 'DESC')->take(6)->get();
+
+		return view('index', ['recetas'=>$recetas]);
 	}
 
 }

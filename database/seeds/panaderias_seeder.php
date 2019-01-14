@@ -11,7 +11,7 @@ class panaderias_seeder extends Seeder
      */
     public function run()
     {
-       	for ($i = 0; $i < 10; $i++){
+       	for ($i = 0; $i < 20; $i++){
 	         DB::table('panaderias')->insert([
 		            'nombre' => 'nombrePanaderia'.$i,
 		            'descripcion' => 'descripcionPanaderia'.$i,

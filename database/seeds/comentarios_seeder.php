@@ -12,7 +12,7 @@ class comentarios_seeder extends Seeder
     public function run()
     {
         $faker = Factory::create();
-        for ($i = 0; $i < 10; $i++){
+        for ($i = 0; $i < 30; $i++){
 	         DB::table('comentarios')->insert([
 		            'padre' => null,
 		            'mensaje' => $faker->realText($faker->numberBetween(10,50)),

@@ -11,10 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-})
-    ->name('index');
+Route::get('/', 'RecetaController@getRecetasRanking')->name('index');
 
 Auth::routes();
 
