@@ -5,7 +5,7 @@
                         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
                     </li>
                     <li class="nav-item d-none d-sm-inline-block">
-                        <a href="{{ url('admin/dashboard') }}" class="nav-link">Dashboard</a>
+                        <router-link to="/admin/dashboard" class="nav-link" title="Ir al Dashboard">Dashboard</router-link>
                     </li>
                     <li class="nav-item d-none d-sm-inline-block">
                         <a href="#" class="nav-link">Contact</a>

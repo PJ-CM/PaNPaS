@@ -12,7 +12,7 @@
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><router-link to="/admin/dashboard" title="Ir al Dashboard">Dashboard</router-link></li>
                                     <li class="breadcrumb-item active">Usuarios</li>
                                 </ol>
                             </div><!-- /.col -->
@@ -36,9 +36,11 @@
                                             //>> CON Paginación
                                             Usuarios [<strong>{{ $valores->total() }}</strong> disponible(s)]-->
                                         </h3>
-                                        <ul class="nav nav-pills ml-auto p-2">
+                                        <!--De este UL, se ha eliminado el CLASS de nav-pills para que el color
+                                        del texto del botón salga en blanco por defecto-->
+                                        <ul class="nav ml-auto p-2">
                                             <li class="nav-item">
-                                                <button class="nav-link btn btn-primary" type="button" title="Insertar registro" data-toggle="modal" data-target="#regInsModal">Nuevo</button>
+                                                <button class="nav-link btn btn-primary txt_blanco" type="button" title="Insertar registro" data-toggle="modal" data-target="#regInsModal">Nuevo</button>
                                             </li>
                                         </ul>
                                     </div><!-- /.card-header -->

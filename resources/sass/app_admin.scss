@@ -38,6 +38,12 @@ $fa-font-path: '../webfonts';
 //Propio(s) del proyecto :: parte privada
 //==================================================
 
+hr { width: 100%; height: 1px; background-color: #4f5962; }
+
+.txt_blanco {
+    color: white;
+}
+
 //Para que quede resaltado, en el menú izquierdo, el elemento activo relacionado con la ruta accedida
 .sidebar-dark-primary .nav-treeview > .nav-item > .router-link-active,
 .sidebar-dark-primary .nav-treeview > .nav-item > .router-link-active:hover

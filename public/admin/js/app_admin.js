@@ -2086,6 +2086,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
@@ -37139,162 +37141,175 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _c("div", { staticClass: "content-header" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c("div", { staticClass: "row mb-2" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-6" }, [
+            _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
+              _c(
+                "li",
+                { staticClass: "breadcrumb-item" },
+                [
+                  _c(
+                    "router-link",
+                    {
+                      attrs: {
+                        to: "/admin/dashboard",
+                        title: "Ir al Dashboard"
+                      }
+                    },
+                    [_vm._v("Dashboard")]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Usuarios")
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _vm._m(1)
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "content-header" }, [
-        _c("div", { staticClass: "container-fluid" }, [
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-sm-6" }, [
-              _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Usuarios")])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-sm-6" }, [
-              _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
-                _c("li", { staticClass: "breadcrumb-item" }, [
-                  _c("a", { attrs: { href: "/admin/dashboard" } }, [
-                    _vm._v("Dashboard")
-                  ])
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Usuarios")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "content" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c("div", { staticClass: "row" }, [
+          _c("section", { staticClass: "col-lg-12" }, [
+            _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-header d-flex p-0" }, [
+                _c("h3", { staticClass: "card-title p-3" }, [
+                  _c("i", { staticClass: "fas fa-users mr-1" })
                 ]),
                 _vm._v(" "),
-                _c("li", { staticClass: "breadcrumb-item active" }, [
-                  _vm._v("Usuarios")
+                _c("ul", { staticClass: "nav ml-auto p-2" }, [
+                  _c("li", { staticClass: "nav-item" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "nav-link btn btn-primary txt_blanco",
+                        attrs: {
+                          type: "button",
+                          title: "Insertar registro",
+                          "data-toggle": "modal",
+                          "data-target": "#regInsModal"
+                        }
+                      },
+                      [_vm._v("Nuevo")]
+                    )
+                  ])
                 ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "content" }, [
-        _c("div", { staticClass: "container-fluid" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("section", { staticClass: "col-lg-12" }, [
-              _c("div", { staticClass: "card" }, [
-                _c("div", { staticClass: "card-header d-flex p-0" }, [
-                  _c("h3", { staticClass: "card-title p-3" }, [
-                    _c("i", { staticClass: "fas fa-users mr-1" })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-body table-responsive p-0" }, [
+                _c("table", { staticClass: "table table-hover" }, [
+                  _c("thead", [
+                    _c("tr", [
+                      _c("th", [_vm._v("#")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Nombre")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("NICK")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Email")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Fecha Registro")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Activo")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Modificar")])
+                    ])
                   ]),
                   _vm._v(" "),
-                  _c("ul", { staticClass: "nav nav-pills ml-auto p-2" }, [
-                    _c("li", { staticClass: "nav-item" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "nav-link btn btn-primary",
-                          attrs: {
-                            type: "button",
-                            title: "Insertar registro",
-                            "data-toggle": "modal",
-                            "data-target": "#regInsModal"
-                          }
-                        },
-                        [_vm._v("Nuevo")]
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-body table-responsive p-0" }, [
-                  _c("table", { staticClass: "table table-hover" }, [
-                    _c("thead", [
-                      _c("tr", [
-                        _c("th", [_vm._v("#")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Nombre")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("NICK")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Email")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Fecha Registro")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Activo")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Modificar")])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", { staticClass: "lista_indice" }, [
-                          _vm._v("01")
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "negrita",
+                  _c("tbody", [
+                    _c("tr", [
+                      _c("td", { staticClass: "lista_indice" }, [_vm._v("01")]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "negrita",
+                            attrs: {
+                              href: "admin/users/detalle/1",
+                              title: "Ir al detalle"
+                            }
+                          },
+                          [_vm._v("Pepito Pérez")]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v("elPep")]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v("elpep@per.es")]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v("2018/01/25 00:12:59")]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "form",
+                          {
+                            attrs: { action: "activar_registro", method: "get" }
+                          },
+                          [
+                            _c("input", {
                               attrs: {
-                                href: "admin/users/detalle/1",
-                                title: "Ir al detalle"
+                                type: "checkbox",
+                                checked: "",
+                                onchange: "this.form.submit();",
+                                title: "Clic para desactivar"
                               }
-                            },
-                            [_vm._v("Pepito Pérez")]
-                          )
-                        ]),
+                            })
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "text-primary",
+                            attrs: {
+                              href: "#editar_registro",
+                              title: "Editar este registro"
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-pencil-alt" })]
+                        ),
                         _vm._v(" "),
-                        _c("td", [_vm._v("elPep")]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("elpep@per.es")]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("2018/01/25 00:12:59")]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c(
-                            "form",
-                            {
-                              attrs: {
-                                action: "activar_registro",
-                                method: "get"
-                              }
-                            },
-                            [
-                              _c("input", {
-                                attrs: {
-                                  type: "checkbox",
-                                  checked: "",
-                                  onchange: "this.form.submit();",
-                                  title: "Clic para desactivar"
-                                }
-                              })
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "text-primary",
-                              attrs: {
-                                href: "#editar_registro",
-                                title: "Editar este registro"
-                              }
-                            },
-                            [_c("i", { staticClass: "fas fa-pencil-alt" })]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "a",
-                            {
-                              staticClass: "text-danger",
-                              attrs: {
-                                href: "javascript: void(0);",
-                                title: "Borrar este registro",
-                                "data-toggle": "modal",
-                                "data-target": "#confirmModal_1"
-                              }
-                            },
-                            [_c("i", { staticClass: "fas fa-trash-alt" })]
-                          )
-                        ])
+                        _c(
+                          "a",
+                          {
+                            staticClass: "text-danger",
+                            attrs: {
+                              href: "javascript: void(0);",
+                              title: "Borrar este registro",
+                              "data-toggle": "modal",
+                              "data-target": "#confirmModal_1"
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-trash-alt" })]
+                        )
                       ])
                     ])
                   ])
