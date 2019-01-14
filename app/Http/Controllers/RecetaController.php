@@ -17,6 +17,7 @@ class RecetaController extends Controller
 		$comentarios = new Comentario();
 
 		$receta = $receta->find($id);
+
 		$comentarios = $comentarios->get()->where('receta_id', $id);
 
 		return view ('receta/receta', ['receta'=>$receta, 'comentarios' => $comentarios, 'time'=>time()]);
