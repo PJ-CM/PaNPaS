@@ -30,7 +30,7 @@ let patron = '/admin';
 let routes = [
     { path: patron + '/dashboard', component: require('./components/Dashboard.vue').default },
     //{ path: patron + '/profile', component: require('./components/Profile.vue') },
-    { path: patron + '/users', component: require('./components/Users.vue') },
+    { path: patron + '/users', component: require('./components/Users.vue').default },
 ]
 
 //Instancia de VueRouter y asignación de rutas
@@ -39,7 +39,7 @@ const router = new VueRouter({
     //y no a la vista que lo contiene
     mode: 'history',
 
-    routes // short for `routes: routes`
+    routes // forma corta cuando coinciden tanto el nombre del par de variables,  " routes: routes "
 })
 
 

@@ -29272,3 +29272,10 @@ readers do not read off random characters that represent icons */
   font-family: "Font Awesome 5 Brands";
 }
 
+.sidebar-dark-primary .nav-treeview > .nav-item > .router-link-active,
+.sidebar-dark-primary .nav-treeview > .nav-item > .router-link-active:hover .sidebar-dark-primary .nav-treeview > .nav-item > .router-link-exact-active,
+.sidebar-dark-primary .nav-treeview > .nav-item > .router-link-exact-active:hover {
+  color: #343a40;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+

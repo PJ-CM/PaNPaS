@@ -11,7 +11,18 @@
         <link href="{{ asset('admin/css/app_admin.css') }}" rel="stylesheet">
     </head>
     <body class="hold-transition sidebar-mini">
-        <div class="wrapper">
+        {{--
+            id="app", para indicar a VueJS dentro de qué elemento
+            se cargará su parte o los componentes relacionados
+
+            >> Es mejor a este nivel que en la propia etiqueta que
+            carga el contenido central para que, así, se tengan en
+            cuenta los enlaces a las rutas activas por Vue Router
+            y, así, automáticamente, se activen dichos enlaces al pulsarlos
+            al insertar los CLASS "router-link-exact-active" y "router-link-active"
+.
+        --}}
+        <div id="app" class="wrapper">
 
             <!-- Navbar -->
             @include('layouts.admin.main-navbar-top')
@@ -45,10 +56,7 @@
             </aside>
 
             <!-- Content Wrapper. Contains page content -->
-            {{--
-                id="app", para indicar a VueJS dónde se cargará su parte
-            --}}
-            <div class="content-wrapper" id="app">
+            <div class="content-wrapper">
                 @yield('content')
             </div>
             <!-- /.content-wrapper -->

@@ -37,3 +37,12 @@ $fa-font-path: '../webfonts';
 
 //Propio(s) del proyecto :: parte privada
 //==================================================
+
+//Para que quede resaltado, en el menú izquierdo, el elemento activo relacionado con la ruta accedida
+.sidebar-dark-primary .nav-treeview > .nav-item > .router-link-active,
+.sidebar-dark-primary .nav-treeview > .nav-item > .router-link-active:hover
+.sidebar-dark-primary .nav-treeview > .nav-item > .router-link-exact-active,
+.sidebar-dark-primary .nav-treeview > .nav-item > .router-link-exact-active:hover {
+    color: #343a40;
+    background-color: rgba(255, 255, 255, 0.9);
+}

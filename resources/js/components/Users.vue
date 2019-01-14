@@ -12,7 +12,7 @@
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
                                     <li class="breadcrumb-item active">Usuarios</li>
                                 </ol>
                             </div><!-- /.col -->
@@ -25,59 +25,134 @@
                 <div class="content">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-lg-6">
+                            <section class="col-lg-12">
                                 <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card title</h5>
+                                    <div class="card-header d-flex p-0">
+                                        <h3 class="card-title p-3">
+                                            <i class="fas fa-users mr-1"></i>
+                                            <!--
+                                            //>> SIN Paginación
+                                            Usuarios [<strong>{{ $valoresTOT }}</strong> disponible(s)]
+                                            //>> CON Paginación
+                                            Usuarios [<strong>{{ $valores->total() }}</strong> disponible(s)]-->
+                                        </h3>
+                                        <ul class="nav nav-pills ml-auto p-2">
+                                            <li class="nav-item">
+                                                <button class="nav-link btn btn-primary" type="button" title="Insertar registro" data-toggle="modal" data-target="#regInsModal">Nuevo</button>
+                                            </li>
+                                        </ul>
+                                    </div><!-- /.card-header -->
+                                    <div class="card-body table-responsive p-0">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Nombre</th>
+                                                    <th>NICK</th>
+                                                    <th>Email</th>
+                                                    <th>Fecha Registro</th>
+                                                    <th>Activo</th>
+                                                    <th>Modificar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
 
-                                        <p class="card-text">
-                                            Some quick example text to build on the card title and make up the bulk of the card's content.
-                                        </p>
+                                                <!--
+                                                <?php //var_dump($valores);
+                                                //>> SIN Paginación
+                                                ////$contador = 0;
+                                                //>> CON Paginación
+                                                //      => Orden ASC
+                                                ////$contador = ($valores->perPage() * ($valores->currentPage() - 1));
+                                                //      => Orden DESC
+                                                $contador = ($valores->total() - ($valores->perPage() * ($valores->currentPage() - 1))); ?>
+                                                @forelse ($valores as $valor)
+                                                    {{-- SIN o CON Paginación [ASC] --}}
+                                                    {{--@php
+                                                        $contador++;
+                                                    @endphp--}}
 
-                                        <a href="#" class="card-link">Card link</a>
-                                        <a href="#" class="card-link">Another link</a>
-                                    </div>
+                                                @include('inc.modal_confirm_del', [
+                                                    'modal_id' => 'confirmModal_' . $valor->id,
+                                                    'ruta_nom' => 'users_borrar',
+                                                ])
+                                                -->
+
+                                                <!--
+                                                <tr>
+                                                    <td class="lista_indice">{{ $contador < 10 ? '0'.$contador : $contador }}</td>
+                                                    <td><a href="{{ url('/'.$valores_tipo.'s/detalle/'.$valor->id) }}" title="Ir al detalle" class="negrita{{ $valor->activo == 0 ? ' registro_activo_no' : ' registro_activo_si' }}">{{ $valor->name }}</a></td>
+                                                    <td>{{ $valor->username }}</td>
+                                                    <td>{{ $valor->email }}</td>
+                                                    <td>{{ $valor->created_at }}</td>
+
+                                                    @php
+                                                        $valor_activo_tit = '';
+                                                        $valor_activo_nuevo = '';
+                                                        if($valor->activo == 0) {
+                                                            $valor_activo_tit = 'Clic para activar';
+                                                            $valor_activo_nuevo = 1;
+                                                        } else {
+                                                            $valor_activo_tit = 'Clic para desactivar';
+                                                            $valor_activo_nuevo = 0;
+                                                        }
+                                                    @endphp
+
+                                                    <td><form action="{{ route('users_editar_campo', ['id' => $valor->id, 'campo' => 'activo', 'valor' => $valor_activo_nuevo]) }}" method="get"><input type="checkbox"{{ $valor->activo == 1 ? ' checked' : '' }} onchange="this.form.submit();" title="{{ $valor_activo_tit }}"></form></td>
+                                                    <td><a href="{{ route('users_detalle', ['id' => $valor->id]) }}" class="text-primary" title="Editar este registro"><i class="fas fa-pencil-alt"></i></a> <a href="javascript: void(0);" class="text-danger" title="Borrar este registro" data-toggle="modal" data-target="#confirmModal_{{ $valor->id }}"><i class="fas fa-trash-alt"></i></a></td>
+                                                </tr>
+                                                -->
+
+                                                <tr>
+                                                    <td class="lista_indice">01</td>
+                                                    <td><a href="admin/users/detalle/1" title="Ir al detalle" class="negrita">Pepito Pérez</a></td>
+                                                    <td>elPep</td>
+                                                    <td>elpep@per.es</td>
+                                                    <td>2018/01/25 00:12:59</td>
+                                                    <!--
+                                                    @php
+                                                        $valor_activo_tit = '';
+                                                        $valor_activo_nuevo = '';
+                                                        if($valor->activo == 0) {
+                                                            $valor_activo_tit = 'Clic para activar';
+                                                            $valor_activo_nuevo = 1;
+                                                        } else {
+                                                            $valor_activo_tit = 'Clic para desactivar';
+                                                            $valor_activo_nuevo = 0;
+                                                        }
+                                                    @endphp
+                                                    -->
+                                                    <td><form action="activar_registro" method="get"><input type="checkbox" checked onchange="this.form.submit();" title="Clic para desactivar"></form></td>
+                                                    <td><a href="#editar_registro" class="text-primary" title="Editar este registro"><i class="fas fa-pencil-alt"></i></a> <a href="javascript: void(0);" class="text-danger" title="Borrar este registro" data-toggle="modal" data-target="#confirmModal_1"><i class="fas fa-trash-alt"></i></a></td>
+                                                </tr>
+
+                                                    <!--
+                                                    {{-- CON Paginación [DESC] --}}
+                                                    @php
+                                                        $contador--;
+                                                    @endphp
+                                                    -->
+
+                                                <!--
+                                                @empty
+
+                                                <tr>
+                                                    <td colspan="7">:: No existen registros en este momento ::<td>
+                                                </tr>
+
+                                                @endforelse
+                                                -->
+                                            </tbody>
+                                        </table>
+
+                                        <!--
+                                        {{--PAGINACIÓN::Enlaces--}}
+                                        {{ $valores->links() }}
+                                        -->
+                                    </div><!-- /.card-body -->
                                 </div>
-
-                                <div class="card card-primary card-outline">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card title</h5>
-
-                                        <p class="card-text">
-                                            Some quick example text to build on the card title and make up the bulk of the card's content.
-                                        </p>
-                                        <a href="#" class="card-link">Card link</a>
-                                        <a href="#" class="card-link">Another link</a>
-                                    </div>
-                                </div><!-- /.card -->
-                            </div>
-                            <!-- /.col-md-6 -->
-                            <div class="col-lg-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="m-0">Featured</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <h6 class="card-title">Special title treatment</h6>
-
-                                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                                    </div>
-                                </div>
-
-                                <div class="card card-primary card-outline">
-                                    <div class="card-header">
-                                        <h5 class="m-0">Featured</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <h6 class="card-title">Special title treatment</h6>
-
-                                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.col-md-6 -->
+                                <!-- /.card -->
+                            </section>
                         </div>
                         <!-- /.row -->
                     </div><!-- /.container-fluid -->

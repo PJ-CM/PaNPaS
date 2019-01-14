@@ -1870,7 +1870,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
@@ -1921,6 +1920,85 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -36875,17 +36953,11 @@ var staticRenderFns = [
         _c("div", { staticClass: "container-fluid" }, [
           _c("div", { staticClass: "row mb-2" }, [
             _c("div", { staticClass: "col-sm-6" }, [
-              _c("h1", { staticClass: "m-0 text-dark" }, [
-                _vm._v("Dashboard desde Vue - Vue Router")
-              ])
+              _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Dashboard")])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-sm-6" }, [
               _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
-                _c("li", { staticClass: "breadcrumb-item" }, [
-                  _c("a", { attrs: { href: "#" } }, [_vm._v("Home")])
-                ]),
-                _vm._v(" "),
                 _c("li", { staticClass: "breadcrumb-item active" }, [
                   _vm._v("Dashboard")
                 ])
@@ -37074,22 +37146,24 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
+    return _c("div", [
       _c("div", { staticClass: "content-header" }, [
         _c("div", { staticClass: "container-fluid" }, [
           _c("div", { staticClass: "row mb-2" }, [
             _c("div", { staticClass: "col-sm-6" }, [
-              _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Dashboard")])
+              _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Usuarios")])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-sm-6" }, [
               _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
                 _c("li", { staticClass: "breadcrumb-item" }, [
-                  _c("a", { attrs: { href: "#" } }, [_vm._v("Home")])
+                  _c("a", { attrs: { href: "/admin/dashboard" } }, [
+                    _vm._v("Dashboard")
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("li", { staticClass: "breadcrumb-item active" }, [
-                  _vm._v("Dashboard")
+                  _vm._v("Usuarios")
                 ])
               ])
             ])
@@ -37100,98 +37174,130 @@ var staticRenderFns = [
       _c("div", { staticClass: "content" }, [
         _c("div", { staticClass: "container-fluid" }, [
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-lg-6" }, [
+            _c("section", { staticClass: "col-lg-12" }, [
               _c("div", { staticClass: "card" }, [
-                _c("div", { staticClass: "card-body" }, [
-                  _c("h5", { staticClass: "card-title" }, [
-                    _vm._v("Card title")
+                _c("div", { staticClass: "card-header d-flex p-0" }, [
+                  _c("h3", { staticClass: "card-title p-3" }, [
+                    _c("i", { staticClass: "fas fa-users mr-1" })
                   ]),
                   _vm._v(" "),
-                  _c("p", { staticClass: "card-text" }, [
-                    _vm._v(
-                      "\n                                        Some quick example text to build on the card title and make up the bulk of the card's content.\n                                    "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-                    _vm._v("Card link")
-                  ]),
-                  _vm._v(" "),
-                  _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-                    _vm._v("Another link")
+                  _c("ul", { staticClass: "nav nav-pills ml-auto p-2" }, [
+                    _c("li", { staticClass: "nav-item" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "nav-link btn btn-primary",
+                          attrs: {
+                            type: "button",
+                            title: "Insertar registro",
+                            "data-toggle": "modal",
+                            "data-target": "#regInsModal"
+                          }
+                        },
+                        [_vm._v("Nuevo")]
+                      )
+                    ])
                   ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card card-primary card-outline" }, [
-                _c("div", { staticClass: "card-body" }, [
-                  _c("h5", { staticClass: "card-title" }, [
-                    _vm._v("Card title")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "card-text" }, [
-                    _vm._v(
-                      "\n                                        Some quick example text to build on the card title and make up the bulk of the card's content.\n                                    "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-                    _vm._v("Card link")
-                  ]),
-                  _vm._v(" "),
-                  _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-                    _vm._v("Another link")
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-lg-6" }, [
-              _c("div", { staticClass: "card" }, [
-                _c("div", { staticClass: "card-header" }, [
-                  _c("h5", { staticClass: "m-0" }, [_vm._v("Featured")])
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "card-body" }, [
-                  _c("h6", { staticClass: "card-title" }, [
-                    _vm._v("Special title treatment")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "card-text" }, [
-                    _vm._v(
-                      "With supporting text below as a natural lead-in to additional content."
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "a",
-                    { staticClass: "btn btn-primary", attrs: { href: "#" } },
-                    [_vm._v("Go somewhere")]
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card card-primary card-outline" }, [
-                _c("div", { staticClass: "card-header" }, [
-                  _c("h5", { staticClass: "m-0" }, [_vm._v("Featured")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-body" }, [
-                  _c("h6", { staticClass: "card-title" }, [
-                    _vm._v("Special title treatment")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "card-text" }, [
-                    _vm._v(
-                      "With supporting text below as a natural lead-in to additional content."
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "a",
-                    { staticClass: "btn btn-primary", attrs: { href: "#" } },
-                    [_vm._v("Go somewhere")]
-                  )
+                _c("div", { staticClass: "card-body table-responsive p-0" }, [
+                  _c("table", { staticClass: "table table-hover" }, [
+                    _c("thead", [
+                      _c("tr", [
+                        _c("th", [_vm._v("#")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Nombre")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("NICK")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Email")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Fecha Registro")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Activo")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Modificar")])
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("tbody", [
+                      _c("tr", [
+                        _c("td", { staticClass: "lista_indice" }, [
+                          _vm._v("01")
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "negrita",
+                              attrs: {
+                                href: "admin/users/detalle/1",
+                                title: "Ir al detalle"
+                              }
+                            },
+                            [_vm._v("Pepito Pérez")]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v("elPep")]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v("elpep@per.es")]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v("2018/01/25 00:12:59")]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "form",
+                            {
+                              attrs: {
+                                action: "activar_registro",
+                                method: "get"
+                              }
+                            },
+                            [
+                              _c("input", {
+                                attrs: {
+                                  type: "checkbox",
+                                  checked: "",
+                                  onchange: "this.form.submit();",
+                                  title: "Clic para desactivar"
+                                }
+                              })
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "text-primary",
+                              attrs: {
+                                href: "#editar_registro",
+                                title: "Editar este registro"
+                              }
+                            },
+                            [_c("i", { staticClass: "fas fa-pencil-alt" })]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "text-danger",
+                              attrs: {
+                                href: "javascript: void(0);",
+                                title: "Borrar este registro",
+                                "data-toggle": "modal",
+                                "data-target": "#confirmModal_1"
+                              }
+                            },
+                            [_c("i", { staticClass: "fas fa-trash-alt" })]
+                          )
+                        ])
+                      ])
+                    ])
+                  ])
                 ])
               ])
             ])
@@ -51142,14 +51248,14 @@ var routes = [{
 }, //{ path: patron + '/profile', component: require('./components/Profile.vue') },
 {
   path: patron + '/users',
-  component: __webpack_require__(/*! ./components/Users.vue */ "./resources/js/components/Users.vue")
+  component: __webpack_require__(/*! ./components/Users.vue */ "./resources/js/components/Users.vue").default
 }]; //Instancia de VueRouter y asignación de rutas
 
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   //para que las URL sean referidas al componente a cargar
   //y no a la vista que lo contiene
   mode: 'history',
-  routes: routes // short for `routes: routes`
+  routes: routes // forma corta cuando coinciden tanto el nombre del par de variables,  " routes: routes "
 
 });
 /**
