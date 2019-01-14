@@ -27,12 +27,21 @@
                         <li class="nav-item-login-registro p-2">
                             <a class="nav-link js-scroll-trigger" href="#about" title="Crear cuenta de usuario">Registro</a>
                         </li>--}}
+                        @if (Auth::user() == null)
                         <li class="nav-item p-3">
                             <a class="btn btn-primary text-uppercase js-scroll-trigger" href="#" data-target="#loginModal" data-toggle="modal" title="Iniciar sesión"><i class="fas fa-sign-in-alt"></i> Login</a>
                         </li>
                         <li class="nav-item p-3">
                             <a class="btn btn-primary text-uppercase js-scroll-trigger" href="#" data-target="#registerModal" data-toggle="modal" title="Crear cuenta de usuario"><i class="fa fa-user-plus"></i> Registro</a>
                         </li>
+
+                        @else 
+
+                         <li class="nav-item p-3">
+                            <a class="btn btn-primary text-uppercase js-scroll-trigger" href="/users" title="Inicio"><i class="fas fa-sign-in-alt"></i> {{Auth::user()->username}}</a>
+                        </li>
+
+                        @endif
                     </ul>
                 </div>
             </div>

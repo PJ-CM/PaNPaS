@@ -19,7 +19,7 @@
             <div class="container">
                 <div class="row">
                 	@foreach($recetas as $receta)
-                    	<div class="col-md-3 col-sm-6 ranking-item">
+                    	<div class="col-md-4 col-sm-6 ranking-item">
 	                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
 	                            <div class="ranking-hover">
 	                                <div class="ranking-hover-content">
@@ -32,7 +32,7 @@
 	                            <h4>{{$receta->titulo}}</h4>
 	                            <p class="text-muted">por <a href="/{{$receta->user->username}}" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
 	                            <h5 class="stars-votos">
-	                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> 5
+	                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> {{$receta->votos}}
 	                            </h5>
 	                        </div>
                     	</div>

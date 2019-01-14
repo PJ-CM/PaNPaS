@@ -73,8 +73,93 @@
                 </div>
             </div>
         </section>
+ {{-- Ranking Grid --}}
+        <section class="bg-light" id="ranking">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h2 class="section-heading text-uppercase">Ranking</h2>
+                        <h3 class="section-subheading text-muted">Visualiza las recetas más destacadas</h3>
+                    </div>
+                </div>
+                <div class="row">
 
-        {{-- Ranking Grid --}}
+                    @foreach($recetas as $receta)
+
+                    {{-- Modal X --}}
+                            <div class="ranking-modal modal fade" id="rankingModal1" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="close-modal" data-dismiss="modal">
+                                            <div class="lr">
+                                                <div class="rl"></div>
+                                            </div>
+                                        </div>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-lg-8 mx-auto">
+                                                    <div class="modal-body">
+                                                        <!-- Project Details Go Here -->
+                                                        <h2 class="text-uppercase">Bollos Suizos</h2>
+                                                        <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario3</a></p>
+                                                        <img class="img-fluid d-block mx-auto" src="images/recetas/bollos-suizos.jpg" alt="Bollos Suizos">
+                                                        <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+
+                                                        <table class="mx-auto mb-5">
+                                                            <tr>
+                                                                <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
+                                                                <td style="width: 50%;" class="text-left px-2">Enero 2017</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-right px-2">Categoría:</td>
+                                                                <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Pastelería</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-right px-2">Votos:</td>
+                                                                <td class="text-left px-2">5</td>
+                                                            </tr>
+                                                        </table>
+
+                                                        <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
+                                                            <i class="fas fa-times" title="Icono de Cerrar"></i>
+                                                            Cerrar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                    {{-- Parte del Ranking --}}
+                    <div class="col-md-4 col-sm-6 ranking-item">
+                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
+                            <div class="ranking-hover">
+                                <div class="ranking-hover-content">
+                                    <i class="fas fa-plus fa-3x"></i>
+                                </div>
+                            </div>
+                            <img class="img-fluid" src="{{$receta->imagen}}" alt="Bollos Suizos">
+                        </a>
+                        <div class="ranking-caption">
+                            <h4>{{$receta->titulo}}</h4>
+                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
+                            <h5 class="stars-votos">
+                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> {{$receta->votos}}
+                            </h5>
+                        </div>
+                    </div>
+
+                    @endforeach
+
+                </div>
+            </div>
+        </section>
+
+@php /*
+
+        {{-- Ranking Grid --}} <!-- RANKING ORIGINAL -->
         <section class="bg-light" id="ranking">
             <div class="container">
                 <div class="row">
@@ -189,6 +274,9 @@
                 </div>
             </div>
         </section>
+        */
+    @endphp
+
 
         {{-- Clientes --}}
         <section id="clients">

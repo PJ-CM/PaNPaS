@@ -10,16 +10,16 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav text-uppercase ml-auto">
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center" href="/users/dashboard" title="Ir a la sección de Recetas" ">Inicio</a>
+                            <a class="nav-link js-scroll-trigger center" href="/users/dashboard" title="Ir a tu página principal" ">Inicio</a>
                         </li>
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center" href="/seguidos" title="Ir a la sección de Servicios">Seguidos<br>{{count(Auth::user()->follows)}}</a>
+                            <a class="nav-link js-scroll-trigger center" href="/seguidos" title="Ir a la sección de Seguidos">Seguidos<br>{{count(Auth::user()->follows)}}</a>
                         </li>
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center" href="/seguidores" title="Ir a la sección de Recetas" ">Seguidores<br>{{count(Auth::user()->followers)}}</a>
+                            <a class="nav-link js-scroll-trigger center" href="/seguidores" title="Ir a la sección de Seguidores" ">Seguidores<br>{{count(Auth::user()->followers)}}</a>
                         </li>
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center" href="#ranking" title="Ir a la sección de Ranking">Ranking</a>
+                            <a class="nav-link js-scroll-trigger center" href="/usuarios" title="Ir a la sección de Usuarios">Usuarios</a>
                         </li>
                         <li class="nav-item p-2">
                             <a class="nav-link js-scroll-trigger center" href="/recetas" title="Ir a la sección de Recetas">Recetas</a>
