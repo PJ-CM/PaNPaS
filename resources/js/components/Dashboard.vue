@@ -30,9 +30,7 @@
                                         <h5 class="card-title">Card title</h5>
 
                                         <p class="card-text">
-                                            RUTA definida en ROUTES:
-                                            <br>
-                                            (ver ruta en la barra lateral)
+                                            Kesi KEsi Kesito
                                         </p>
 
                                         <a href="#" class="card-link">Card link</a>
@@ -93,7 +91,7 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
-        }
+            console.log('Component mounted.');
+        },
     }
 </script>

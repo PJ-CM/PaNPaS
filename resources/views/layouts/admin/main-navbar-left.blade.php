@@ -4,11 +4,16 @@
                             with font-awesome or any other icon font library -->
                             {{--
                                 menu-open
+                                ***************************************************
                             --}}
+                            {{--
                             @php
                                 echo 'Estoy en: [' . $_SERVER['REQUEST_URI'] . ']';
+                                $pag_actual = $_SERVER['REQUEST_URI'];
+                                $class_menu_open = '';
+                                if($pag_actual == '/admin/users') { $class_menu_open = ' menu-open'; }
                             @endphp
-                            <br>@{{ $route.path }}<br>
+                            <br>@{{ $route.path }}<br>--}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link active">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>

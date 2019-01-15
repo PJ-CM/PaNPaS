@@ -29311,3 +29311,11 @@ hr {
   font-size: 58%;
 }
 
+.elem_mostrar {
+  display: block;
+}
+
+.elem_ocultar {
+  display: none;
+}
+
