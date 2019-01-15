@@ -2089,8 +2089,46 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
+  created: function created() {
+    //console.log('Component mounted.')
+    //para cargar el listado de usuarios
+    this.getUsers();
+  },
+  //datos devueltos por el componente:
+  data: function data() {
+    return {
+      //Puede ser también     >>      users: [],
+      users: {} //variable contenedora de los registros a mostrar
+
+    };
+  },
+  methods: {
+    getUsers: function getUsers() {
+      var _this = this;
+
+      //Obteniendo registros de usuarios
+      //URL hacia la ruta del listado de registros
+      //  >> SIN paginación
+      var urlUsers = '/api/users'; //Se emplea el método GET de Axios, el cliente AJAX
+      //pues es el método referido a la ruta a la que se
+      //llama.
+      //  -> Si es correcto, se recogen los datos
+      //  dentro del contenedor definido
+      //axios.get(urlUsers).then( ({ data }) => (
+
+      axios.get(urlUsers).then(function (data) {
+        return _this.users = data.data;
+      });
+    },
+    getUsersOK: function getUsersOK() {
+      var _this2 = this;
+
+      var urlUsers = '/api/users';
+      axios.get(urlUsers).then(function (response) {
+        ////console.log(response.data)
+        _this2.users = response.data;
+      });
+    }
   }
 });
 
@@ -37294,9 +37332,9 @@ var staticRenderFns = [
                               title: "Editar este registro"
                             }
                           },
-                          [_c("i", { staticClass: "fas fa-pencil-alt" })]
+                          [_c("i", { staticClass: "fas fa-edit" })]
                         ),
-                        _vm._v(" "),
+                        _vm._v(" / "),
                         _c(
                           "a",
                           {
@@ -51589,7 +51627,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /var/www/html/panpas-restructurado/resources/js/app_admin.js */"./resources/js/app_admin.js");
+module.exports = __webpack_require__(/*! D:\inetpubapache-www\__laravel-homestead-proyectos\panpas-restructurado-git\resources\js\app_admin.js */"./resources/js/app_admin.js");
 
 
 /***/ })

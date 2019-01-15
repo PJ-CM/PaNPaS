@@ -125,7 +125,7 @@
                                                     @endphp
                                                     -->
                                                     <td><form action="activar_registro" method="get"><input type="checkbox" checked onchange="this.form.submit();" title="Clic para desactivar"></form></td>
-                                                    <td><a href="#editar_registro" class="text-primary" title="Editar este registro"><i class="fas fa-pencil-alt"></i></a> <a href="javascript: void(0);" class="text-danger" title="Borrar este registro" data-toggle="modal" data-target="#confirmModal_1"><i class="fas fa-trash-alt"></i></a></td>
+                                                    <td><a href="#editar_registro" class="text-primary" title="Editar este registro"><i class="fas fa-edit"></i></a> / <a href="javascript: void(0);" class="text-danger" title="Borrar este registro" data-toggle="modal" data-target="#confirmModal_1"><i class="fas fa-trash-alt"></i></a></td>
                                                 </tr>
 
                                                     <!--
@@ -168,8 +168,45 @@
 
 <script>
     export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+        created() {
+            //console.log('Component mounted.')
+
+            //para cargar el listado de usuarios
+            this.getUsers();
+        },
+
+        //datos devueltos por el componente:
+        data() {
+            return {
+                //Puede ser también     >>      users: [],
+                users: {},  //variable contenedora de los registros a mostrar
+            }
+        },
+
+        methods: {
+            getUsers() {
+                //Obteniendo registros de usuarios
+                //URL hacia la ruta del listado de registros
+                //  >> SIN paginación
+                let urlUsers = '/api/users';
+                //Se emplea el método GET de Axios, el cliente AJAX
+                //pues es el método referido a la ruta a la que se
+                //llama.
+                //  -> Si es correcto, se recogen los datos
+                //  dentro del contenedor definido
+                //axios.get(urlUsers).then( ({ data }) => (
+                axios.get(urlUsers).then(  data  => (
+                    this.users = data.data
+                ));
+            },
+
+            getUsersOK() {
+                let urlUsers = '/api/users';
+                axios.get(urlUsers).then(response => {
+                    ////console.log(response.data)
+                    this.users = response.data;
+                });
+            }
+        },
     }
 </script>

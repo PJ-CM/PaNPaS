@@ -4,8 +4,8 @@
         {{--<meta name="description" content="Parte ADMIN.">--}}
         {{--
             :: CSRF Token ::
-            Descomentar la siguiente línea, solamente, si hiciera falta
-        <meta name="csrf-token" content="{{ csrf_token() }}">--}}
+            Descomentar la siguiente línea, solamente, si hiciera falta--}}
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'PaNPaS') }} :: ADMIN</title>
 

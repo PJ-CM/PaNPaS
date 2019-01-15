@@ -13,6 +13,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//RUTA PRESENTE en la creación del proyecto
+////Route::middleware('auth:api')->get('/user', function (Request $request) {
+////    return $request->user();
+////});
+
+
+//Ruta(s) registrada(s) para API(s)
+Route::apiResources([
+    'users' => 'API\UserController',
+]);

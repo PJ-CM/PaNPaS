@@ -91,12 +91,12 @@ Route::get ('/api/panaderias', 'ApiController@getPanaderias');	//json de todas l
 //PARA HACER FILTRO
 
 
-
+/*
 
 Route::post('/admin/editarUsuario', 'UserController@editarUsuario');	//modifica los datos de un usuario en la DDBB
 Route::post('/admin/borrarUsuario', 'UserController@borrarUsuario');	//borra un usuario de la DDBB
 
-
+*/
 
 
 
