@@ -34,7 +34,7 @@ class UserPanelController extends Controller
 
     public function listaRecetas(){
         $recetas = new Receta;
-        $recetas = $recetas->all();
+        $recetas = $recetas->orderBy('votos', 'asc')->get();
 
         return view('/users/recetas', ['recetas'=>$recetas]);
     }
@@ -51,9 +51,8 @@ class UserPanelController extends Controller
     public function seguidos(){
         $user = new User();
         $user = $user->find(Auth::user()->id);
-     
-
-        return view('users/seguidos', ['user'=>$user]);
+        $follows = $user->follows;
+        return view('users/seguidos', ['follows'=>$follows]);
     }
 
     public function seguidores(){
@@ -64,13 +63,12 @@ class UserPanelController extends Controller
         return view('users/seguidores', ['user'=>$user]);
     }
 
-        public function usuarios(){
+        public function usuarios($columna = 'username', $orden = 'asc'){
             $users = new User();
-            $users = $users->all();
+            $users = $users->orderBy($columna, $orden)->get();
      
 
-        return view('users/usuarios', ['users'=>$users]);
+        return view('users/usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
     }
-
 
 }

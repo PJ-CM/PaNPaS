@@ -16,7 +16,7 @@
         <section id="user_panel">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">{{$user->username}}</div>
 
@@ -37,7 +37,7 @@
 								            <div class="container">
 								                <div class="row">
 								                	@foreach($user->recetas as $receta)
-								                    	<div class="col-md-6 col-sm-6 ranking-item">
+								                    	<div class="col-md-4 col-sm-6 ranking-item">
 									                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
 									                            <div class="ranking-hover">
 									                                <div class="ranking-hover-content">
@@ -50,7 +50,7 @@
 									                            <h4>{{$receta->titulo}}</h4>
 									                            
 									                            <h5 class="stars-votos">
-									                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> 5
+									                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> {{$receta->votos}}
 									                            </h5>
 									                        </div>
 								                    	</div>

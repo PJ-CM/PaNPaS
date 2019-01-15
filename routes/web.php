@@ -18,6 +18,9 @@ Auth::routes();
 //Landing Page
 Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos'); //guarda los datos del formulario de la landing page en la DDBB
 
+//Panel donde se muestra la Receta
+Route::get ('/receta/{id}', 'RecetaController@mostrar');
+
 //Panel de Usuarios
 Route::get('/users/{username?}', 'UserPanelController@index')
     ->name('user_panel_index');
@@ -28,13 +31,13 @@ Route::get('/logout', 'UserPanelController@logout')
 Route::get('/recetas', 'UserPanelController@listaRecetas')
     ->name('user_recetas');
 
-Route::get('/seguidos', 'UserPanelController@seguidos')
+Route::get('/seguidos/{columna?}/{orden?}', 'UserPanelController@seguidos')
     ->name('user_seguidos');
 
 Route::get('/seguidores', 'UserPanelController@seguidores')
     ->name('user_seguidores');
 
-Route::get('/usuarios', 'UserPanelController@usuarios')
+Route::get('/usuarios/{columna?}/{orden?}', 'UserPanelController@usuarios')
     ->name('user_usuarios');
 
 //Panel Público de Usuario
@@ -62,8 +65,7 @@ Route::get('/admin/{path}', 'AdminPanelController@index')
 Route::get('/home', 'HomeController@index')
     ->name('home');
 
-//Panel donde se muestra la Receta
-Route::get ('/receta', 'RecetaController@mostrar');
+
 
 
 

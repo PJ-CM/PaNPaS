@@ -12,31 +12,48 @@
 
 		@include('layouts.public-navbar-auth')
 
-		{{-- Panel-de-Usuario --}}
-
-		{{-- Ranking Grid --}}
-        <section class="bg-light" id="ranking">
+		{{-- Panel --}}
+        <section id="user_panel">
             <div class="container">
-                <div class="row">
-                	@foreach($user->follows as $usuario)
-                    	<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">
-	                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
-	                            <div class="ranking-hover">
-	                                <div class="ranking-hover-content">
-	                                    <i class="fas fa-minus fa-3x"></i>
-	                                </div>
-	                            </div>
-	                            <img class="img-fluid" src="{{$usuario->avatar}}" alt="Bollos Suizos">
-	                        </a>
-	                        <div class="ranking-caption">
-	                            <h4><a href="/{{$usuario->username}}">{{$usuario->username}}</a></h4>
-	                        </div>
-                    	</div>
-   
-                    @endforeach
+                <div class="row justify-content-center">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                            	Siguiendo
+                        	</div>
+
+                            <div class="card-body">
+                               {{-- Seguidos Grid --}}
+							        <section class="bg-light" id="ranking">
+							            <div class="container">
+							                <div class="row">
+							                	@foreach($follows as $usuario)
+							                    	<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">
+								                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
+								                            <div class="ranking-hover">
+								                                <div class="ranking-hover-content">
+								                                    <i class="fas fa-minus fa-3x"></i>
+								                                </div>
+								                            </div>
+								                            <img class="img-fluid" src="{{$usuario->avatar}}" alt="Bollos Suizos">
+								                        </a>
+								                        <div class="ranking-caption">
+								                            <h4><a href="/{{$usuario->username}}">{{$usuario->username}}</a></h4>
+								                        </div>
+							                    	</div>
+							   
+							                    @endforeach
+							                </div>
+							            </div>
+							        </section>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
+
+		
 
 @endsection
 

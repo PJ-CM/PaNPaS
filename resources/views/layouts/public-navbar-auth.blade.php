@@ -33,12 +33,13 @@
                                 >> cerrar sesión
                                 >> ¿alguna más?
                         --}}
-                        <li class="nav-item p-3 dropdown">
+                        <li class="nav-item p-3 dropdown" style="float: right;">
                             <a class="btn btn-primary text-uppercase dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Tu Cuenta"><img src="{{Auth::user()->avatar}}" class="fa fa-user" style="width: 40px; height: 40px;"> {{Auth::user()->username}}</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="#">Perfil</a>
                                 <a class="dropdown-item" href="{{route('user_panel_logout')}}" title="Cerrar Sesión">   Logout</a>
                             </div>
+                            
                         </li>
 
                          

@@ -10,24 +10,20 @@ use App\Comentario;
 class RecetaController extends Controller
 {
     
-	public function mostrar() {
-
-		$id = 2;
+	public function mostrar($titulo) {
 
 		$receta = new Receta();
-		$comentarios = new Comentario();
 
-		$receta = $receta->find($id);
+		$receta = $receta->where('titulo', $titulo)->get();
+		$receta = $receta[0];
 
-		$comentarios = $comentarios->get()->where('receta_id', $id);
-
-		return view ('receta/receta', ['receta'=>$receta, 'comentarios' => $comentarios, 'time'=>time()]);
+		return view ('receta/receta', ['receta'=>$receta, 'time'=>time()]);
 	}
 
 	public function getRecetasRanking() {
 
 		$recetas = new Receta;
-		$recetas = Receta::orderBy('votos', 'DESC')->take(6)->get();
+		$recetas = Receta::orderBy('votos', 'DESC')->take(3)->get();
 
 		return view('index', ['recetas'=>$recetas]);
 	}

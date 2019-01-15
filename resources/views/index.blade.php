@@ -73,6 +73,8 @@
                 </div>
             </div>
         </section>
+
+
  {{-- Ranking Grid --}}
         <section class="bg-light" id="ranking">
             <div class="container">
@@ -86,70 +88,24 @@
 
                     @foreach($recetas as $receta)
 
-                    {{-- Modal X --}}
-                            <div class="ranking-modal modal fade" id="rankingModal1" tabindex="-1" role="dialog" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="close-modal" data-dismiss="modal">
-                                            <div class="lr">
-                                                <div class="rl"></div>
-                                            </div>
-                                        </div>
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-lg-8 mx-auto">
-                                                    <div class="modal-body">
-                                                        <!-- Project Details Go Here -->
-                                                        <h2 class="text-uppercase">Bollos Suizos</h2>
-                                                        <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario3</a></p>
-                                                        <img class="img-fluid d-block mx-auto" src="images/recetas/bollos-suizos.jpg" alt="Bollos Suizos">
-                                                        <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
-
-                                                        <table class="mx-auto mb-5">
-                                                            <tr>
-                                                                <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                                                <td style="width: 50%;" class="text-left px-2">Enero 2017</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-right px-2">Categoría:</td>
-                                                                <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Pastelería</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-right px-2">Votos:</td>
-                                                                <td class="text-left px-2">5</td>
-                                                            </tr>
-                                                        </table>
-
-                                                        <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
-                                                            <i class="fas fa-times" title="Icono de Cerrar"></i>
-                                                            Cerrar</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                        {{-- Parte del Ranking --}}
+                        <div class="col-md-4 col-sm-6 ranking-item">
+                            <a class="ranking-link" data-toggle="modal" href="#rankingModal{{$receta->titulo}}">
+                                <div class="ranking-hover">
+                                    <div class="ranking-hover-content">
+                                        <i class="fas fa-plus fa-3x"></i>
                                     </div>
                                 </div>
+                                <img class="img-fluid" src="{{$receta->imagen}}" alt="{{$receta}}">
+                            </a>
+                            <div class="ranking-caption">
+                                <h4>{{$receta->titulo}}</h4>
+                                <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
+                                <h5 class="stars-votos">
+                                    <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> {{$receta->votos}}
+                                </h5>
                             </div>
-
-
-                    {{-- Parte del Ranking --}}
-                    <div class="col-md-4 col-sm-6 ranking-item">
-                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
-                            <div class="ranking-hover">
-                                <div class="ranking-hover-content">
-                                    <i class="fas fa-plus fa-3x"></i>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="{{$receta->imagen}}" alt="Bollos Suizos">
-                        </a>
-                        <div class="ranking-caption">
-                            <h4>{{$receta->titulo}}</h4>
-                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
-                            <h5 class="stars-votos">
-                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> {{$receta->votos}}
-                            </h5>
                         </div>
-                    </div>
 
                     @endforeach
 
@@ -497,280 +453,72 @@
 @endsection
 
 {{-- ============================================================================ --}}
+
+
+
+
+@foreach ($recetas as $receta)
+     {{-- Modal X --}}
+                            <div class="ranking-modal modal fade" id="rankingModal{{$receta->titulo}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="close-modal" data-dismiss="modal">
+                                            <div class="lr">
+                                                <div class="rl"></div>
+                                            </div>
+                                        </div>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-lg-8 mx-auto">
+                                                    <div class="modal-body">
+                                                        <!-- Project Details Go Here -->
+                                                        <h2 class="text-uppercase">{{$receta->titulo}}</h2>
+                                                        <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
+                                                        <img class="img-fluid d-block mx-auto" src="{{$receta->imagen}}" alt="{{$receta->titulo}}">
+                                                        <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+
+                                                        <table class="mx-auto mb-5">
+                                                            <tr>
+                                                                <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
+                                                                <td style="width: 50%;" class="text-left px-2">Enero 2017</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-right px-2">Categoría:</td>
+                                                                <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Pastelería</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-right px-2">Votos:</td>
+                                                                <td class="text-left px-2">{{$receta->votos}}</td>
+                                                            </tr>
+                                                        </table>
+
+                                                        <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
+                                                            <i class="fas fa-times" title="Icono de Cerrar"></i>
+                                                            Cerrar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+@endforeach
+
+
+
+
+
+
+
+
+
+
+
+
 {{-- ============================================================================ --}}
 
 @section('footer_scripts_content')
         {{-- Ranking Modals --}}
-
-        {{-- Modal 1 --}}
-        <div class="ranking-modal modal fade" id="rankingModal1" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="close-modal" data-dismiss="modal">
-                        <div class="lr">
-                            <div class="rl"></div>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-8 mx-auto">
-                                <div class="modal-body">
-                                    <!-- Project Details Go Here -->
-                                    <h2 class="text-uppercase">Bollos Suizos</h2>
-                                    <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario3</a></p>
-                                    <img class="img-fluid d-block mx-auto" src="images/recetas/bollos-suizos.jpg" alt="Bollos Suizos">
-                                    <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
-
-                                    <table class="mx-auto mb-5">
-                                        <tr>
-                                            <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                            <td style="width: 50%;" class="text-left px-2">Enero 2017</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Categoría:</td>
-                                            <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Pastelería</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Votos:</td>
-                                            <td class="text-left px-2">5</td>
-                                        </tr>
-                                    </table>
-
-                                    <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
-                                        <i class="fas fa-times" title="Icono de Cerrar"></i>
-                                        Cerrar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Modal 2 --}}
-        <div class="ranking-modal modal fade" id="rankingModal2" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="close-modal" data-dismiss="modal">
-                        <div class="lr">
-                            <div class="rl"></div>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-8 mx-auto">
-                                <div class="modal-body">
-                                    <!-- Project Details Go Here -->
-                                    <h2 class="text-uppercase">Magdalenas</h2>
-                                    <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario1</a></p>
-                                    <img class="img-fluid d-block mx-auto" src="images/recetas/magdalenas.jpg" alt="Magdalenas">
-                                    <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
-
-                                    <table class="mx-auto mb-5">
-                                        <tr>
-                                            <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                            <td style="width: 50%;" class="text-left px-2">Febrero 2017</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Categoría:</td>
-                                            <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Pastelería</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Votos:</td>
-                                            <td class="text-left px-2">3</td>
-                                        </tr>
-                                    </table>
-
-                                    <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
-                                        <i class="fas fa-times" title="Icono de Cerrar"></i>
-                                        Cerrar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Modal 3 --}}
-        <div class="ranking-modal modal fade" id="rankingModal3" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="close-modal" data-dismiss="modal">
-                        <div class="lr">
-                            <div class="rl"></div>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-8 mx-auto">
-                                <div class="modal-body">
-                                    <!-- Project Details Go Here -->
-                                    <h2 class="text-uppercase">Pan</h2>
-                                    <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario3</a></p>
-                                    <img class="img-fluid d-block mx-auto" src="images/recetas/pan.jpg" alt="Pan">
-                                    <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
-
-                                    <table class="mx-auto mb-5">
-                                        <tr>
-                                            <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                            <td style="width: 50%;" class="text-left px-2">Marzo 2017</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Categoría:</td>
-                                            <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Panadería</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Votos:</td>
-                                            <td class="text-left px-2">3</td>
-                                        </tr>
-                                    </table>
-
-                                    <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
-                                        <i class="fas fa-times" title="Icono de Cerrar"></i>
-                                        Cerrar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Modal 4 --}}
-        <div class="ranking-modal modal fade" id="rankingModal4" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="close-modal" data-dismiss="modal">
-                        <div class="lr">
-                            <div class="rl"></div>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-8 mx-auto">
-                                <div class="modal-body">
-                                    <!-- Project Details Go Here -->
-                                    <h2 class="text-uppercase">Pan de semillas</h2>
-                                    <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario1</a></p>
-                                    <img class="img-fluid d-block mx-auto" src="images/recetas/pan-de-semillas.jpg" alt="Pan de semillas">
-                                    <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
-
-                                    <table class="mx-auto mb-5">
-                                        <tr>
-                                            <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                            <td style="width: 50%;" class="text-left px-2">Abril 2017</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Categoría:</td>
-                                            <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Panadería</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Votos:</td>
-                                            <td class="text-left px-2">1</td>
-                                        </tr>
-                                    </table>
-
-                                    <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
-                                        <i class="fas fa-times" title="Icono de Cerrar"></i>
-                                        Cerrar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Modal 5 --}}
-        <div class="ranking-modal modal fade" id="rankingModal5" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="close-modal" data-dismiss="modal">
-                        <div class="lr">
-                            <div class="rl"></div>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-8 mx-auto">
-                                <div class="modal-body">
-                                    <!-- Project Details Go Here -->
-                                    <h2 class="text-uppercase">Panecillos</h2>
-                                    <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario2</a></p>
-                                    <img class="img-fluid d-block mx-auto" src="images/recetas/panecillos.jpg" alt="Panecillos">
-                                    <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
-
-                                    <table class="mx-auto mb-5">
-                                        <tr>
-                                            <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                            <td style="width: 50%;" class="text-left px-2">Mayo 2017</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Categoría:</td>
-                                            <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Panadería</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Votos:</td>
-                                            <td class="text-left px-2">1</td>
-                                        </tr>
-                                    </table>
-
-                                    <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
-                                        <i class="fas fa-times" title="Icono de Cerrar"></i>
-                                        Cerrar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Modal 6 --}}
-        <div class="ranking-modal modal fade" id="rankingModal6" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="close-modal" data-dismiss="modal">
-                        <div class="lr">
-                            <div class="rl"></div>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-8 mx-auto">
-                                <div class="modal-body">
-                                    <!-- Project Details Go Here -->
-                                    <h2 class="text-uppercase">Pastas</h2>
-                                    <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario2</a></p>
-                                    <img class="img-fluid d-block mx-auto" src="images/recetas/pastas.jpg" alt="Pastas">
-                                    <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
-
-                                    <table class="mx-auto mb-5">
-                                        <tr>
-                                            <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                            <td style="width: 50%;" class="text-left px-2">Junio 2017</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Categoría:</td>
-                                            <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Pastelería</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right px-2">Votos:</td>
-                                            <td class="text-left px-2">1</td>
-                                        </tr>
-                                    </table>
-
-                                    <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
-                                        <i class="fas fa-times" title="Icono de Cerrar"></i>
-                                        Cerrar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         {{-- Login / Registro Modals --}}
         @include('auth.modals.login_modal')
