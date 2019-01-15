@@ -33,23 +33,15 @@
                                 >> cerrar sesión
                                 >> ¿alguna más?
                         --}}
-                        <li class="nav-item p-3">
-                            <a class="btn btn-primary text-uppercase js-scroll-trigger" href="" data-target="#registerModal" data-toggle="modal" title="Tu Cuenta"><img src="{{Auth::user()->avatar}}" class="fa fa-user" style="width: 23px; height: 23px; margin-right: 10px;"> {{Auth::user()->username}}</a>
+                        <li class="nav-item p-3 dropdown">
+                            <a class="btn btn-primary text-uppercase dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Tu Cuenta"><img src="{{Auth::user()->avatar}}" class="fa fa-user" style="width: 40px; height: 40px;"> {{Auth::user()->username}}</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Perfil</a>
+                                <a class="dropdown-item" href="{{route('user_panel_logout')}}" title="Cerrar Sesión">   Logout</a>
+                            </div>
                         </li>
-                         <li class="nav-item p-3">
-                            <a class="btn btn-primary text-uppercase js-scroll-trigger" href="{{route('user_panel_logout')}}"title="Cerrar Sesión"><i class="fa fa-sign-out" style="font-size:36px"></i> Logout</a>
-                        </li>
-                         <li class="nav-item p-3" style="background-color: red">
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </li>
+                         
                     </ul>
                 </div>
             </div>
