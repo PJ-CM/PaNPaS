@@ -14,8 +14,10 @@
 
 @section('content')
 
-                <!-- el componente coincidente con la ruta será renderizado aquí -->
-                <router-view></router-view>
+                <transition name="fade" mode="out-in">
+                    <!-- el componente coincidente con la ruta será renderizado aquí -->
+                    <router-view></router-view>
+                </transition>
 
 @endsection
 

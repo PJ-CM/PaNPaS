@@ -13,9 +13,9 @@ class AddAvatarToUsersTable extends Migration
      */
     public function up()
     {
-          Schema::table('users', function($table) {
-                $table->string('avatar')->default('https://image.freepik.com/free-icon/user-profile-icon_318-33925.jpg');
-            });
+        Schema::table('users', function($table) {
+            $table->string('avatar')->after('perfil_id')->default('https://image.freepik.com/free-icon/user-profile-icon_318-33925.jpg');
+        });
     }
 
     /**
@@ -26,7 +26,7 @@ class AddAvatarToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function($table) {
-                $table->dropColumn('avatar');
+            $table->dropColumn('avatar');
         });
     }
 }

@@ -8,6 +8,7 @@
                             @php
                                 echo 'Estoy en: [' . $_SERVER['REQUEST_URI'] . ']';
                             @endphp
+                            <br>@{{ $route.path }}<br>
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link active">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>

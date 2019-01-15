@@ -44,6 +44,14 @@ hr { width: 100%; height: 1px; background-color: #4f5962; }
     color: white;
 }
 
+//Efecto de transición entre vistas de componentes Vue
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
 //Para que quede resaltado, en el menú izquierdo, el elemento activo relacionado con la ruta accedida
 .sidebar-dark-primary .nav-treeview > .nav-item > .router-link-active,
 .sidebar-dark-primary .nav-treeview > .nav-item > .router-link-active:hover
@@ -52,3 +60,11 @@ hr { width: 100%; height: 1px; background-color: #4f5962; }
     color: #343a40;
     background-color: rgba(255, 255, 255, 0.9);
 }
+
+//iconos de alerta de la barra de navegación superior
+#icos-alerts #ico_msg { padding-right: 3px; }
+#icos-alerts #ico_notif { padding-right: 10px; }
+.badge {
+    font-size: 58%;
+}
+
