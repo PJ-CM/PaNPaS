@@ -19,11 +19,11 @@
             <div class="container">
                 <div class="row">
                 	@foreach($user->follows as $usuario)
-                    	<div class="col-md-4 col-sm-6 ranking-item">
+                    	<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">
 	                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
 	                            <div class="ranking-hover">
 	                                <div class="ranking-hover-content">
-	                                    <i class="fas fa-plus fa-3x"></i>
+	                                    <i class="fas fa-minus fa-3x"></i>
 	                                </div>
 	                            </div>
 	                            <img class="img-fluid" src="{{$usuario->avatar}}" alt="Bollos Suizos">

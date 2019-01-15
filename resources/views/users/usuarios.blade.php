@@ -18,25 +18,27 @@
         <section class="bg-light" id="ranking">
             <div class="container">
                 <div class="row">
-                	@foreach($user->followers as $usuario)
+                	@foreach($users as $user)
                     	<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">
-	                        <a class="ranking-link" data-toggle="modal" href="/seguir/{{$usuario->username}}">
-	                            <div class="ranking-hover">
+	                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
+	                            <div class="ranking-hover" title="Seguir a {{$user->username}}">
 	                                <div class="ranking-hover-content">
 	                                    <i class="fas fa-plus fa-3x"></i>
 	                                </div>
 	                            </div>
-	                            <img class="img-fluid" src="{{$usuario->avatar}}" alt="Bollos Suizos">
+	                            <img class="img-fluid" src="{{$user->avatar}}" alt="Bollos Suizos">
 	                        </a>
 	                        <div class="ranking-caption">
-	                            <h4><a href="/{{$usuario->username}}">{{$usuario->username}}</a></h4>
+	                            <h4 title="{{$user->username}}">{{$user->username}}</h4>
 
+	                            <h5 class="stars-votos" style="">
+	                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$user->username}} está siguiendo a  {{count ($user->follows)}} usuarios"></i > {{ count($user->follows) }}  
+	                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	                                <i class="fas fa-lg fas fa-sign-in-alt" title="{{$user->username}} tiene {{count($user->followers)}} seguidores"></i > {{ count($user->followers) }}
+	                            </h5>
 	                        </div>
                     	</div>
-   
                     @endforeach
-                </div>
-            </div>
         </section>
 
 @endsection

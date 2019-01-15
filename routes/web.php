@@ -34,9 +34,15 @@ Route::get('/seguidos', 'UserPanelController@seguidos')
 Route::get('/seguidores', 'UserPanelController@seguidores')
     ->name('user_seguidores');
 
+Route::get('/usuarios', 'UserPanelController@usuarios')
+    ->name('user_usuarios');
+
 //Panel Público de Usuario
 Route::get('/{username}', 'UserPanelController@perfilPublico')
     ->name('user_perfilPublico');
+
+
+
 
 //Panel Admin
 Route::get('/admin/dashboard', 'AdminPanelController@index')
