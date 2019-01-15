@@ -64,5 +64,13 @@ class UserPanelController extends Controller
         return view('users/seguidores', ['user'=>$user]);
     }
 
+        public function usuarios(){
+            $users = new User();
+            $users = $users->all();
+     
+
+        return view('users/usuarios', ['users'=>$users]);
+    }
+
 
 }

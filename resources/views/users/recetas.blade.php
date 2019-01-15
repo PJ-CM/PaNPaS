@@ -19,19 +19,19 @@
             <div class="container">
                 <div class="row">
                 	@foreach($recetas as $receta)
-                    	<div class="col-md-4 col-sm-6 ranking-item">
+                    	<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">
 	                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
-	                            <div class="ranking-hover">
+	                            <div class="ranking-hover" title="Preparar {{$receta->titulo}}">
 	                                <div class="ranking-hover-content">
 	                                    <i class="fas fa-plus fa-3x"></i>
 	                                </div>
 	                            </div>
-	                            <img class="img-fluid" src="{{$receta->imagen}}" alt="Bollos Suizos">
+	                            <img class="img-fluid" src="{{$receta->imagen}}" title="Bollos Suizos">
 	                        </a>
 	                        <div class="ranking-caption">
-	                            <h4>{{$receta->titulo}}</h4>
-	                            <p class="text-muted">por <a href="/{{$receta->user->username}}" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
-	                            <h5 class="stars-votos">
+	                            <h4 title="{{$receta->titulo}}">{{$receta->titulo}}</h4>
+	                            <p class="text-muted">por <a href="/{{$receta->user->username}}" title="Ver perfil de {{$receta->user->username}}" class="link-marco">{{$receta->user->username}}</a></p>
+	                            <h5 class="stars-votos" title="{{$receta->titulo}} tiene {{$receta->votos}} votos">
 	                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> {{$receta->votos}}
 	                            </h5>
 	                        </div>
