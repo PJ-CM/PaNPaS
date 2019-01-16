@@ -152,7 +152,7 @@
 
                                                 <tr v-for="user in users" :key="user.id">
                                                     <td class="lista_indice" v-text="user.id"></td>
-                                                    <td><a href="admin/users/detalle/{{ user.id }}" title="Ir al detalle" class="negrita"><i class="fas fa-user-astronaut" style="width: 40px;"></i></a></td>
+                                                    <td><a :href="'admin/users/detalle/' + user.id" title="Ir al detalle" class="negrita"><i class="fas fa-user-astronaut" style="width: 40px;"></i></a></td>
                                                     <td v-text="user.name"></td>
                                                     <td v-text="user.lastname"></td>
                                                     <td>{{ user.username }}</td>
