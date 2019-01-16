@@ -49,11 +49,13 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
+                                                    <th>Avatar</th>
                                                     <th>Nombre</th>
+                                                    <th>Apellido</th>
                                                     <th>NICK</th>
                                                     <th>Email</th>
-                                                    <th>Fecha Registro</th>
-                                                    <th>Activo</th>
+                                                    <th>Perfil</th>
+                                                    <th>Registro</th>
                                                     <th>Modificar</th>
                                                 </tr>
                                             </thead>
@@ -107,9 +109,12 @@
 
                                                 <tr>
                                                     <td class="lista_indice">01</td>
-                                                    <td><a href="admin/users/detalle/1" title="Ir al detalle" class="negrita">Pepito Pérez</a></td>
+                                                    <td><a href="admin/users/detalle/1" title="Ir al detalle" class="negrita"><i class="fas fa-user-astronaut" style="width: 40px;"></i></a><img src="" alt="Avatar del usuario"></td>
+                                                    <td>Pepito</td>
+                                                    <td>Pérez</td>
                                                     <td>elPep</td>
                                                     <td>elpep@per.es</td>
+                                                    <td>Usuario</td>
                                                     <td>2018/01/25 00:12:59</td>
                                                     <!--
                                                     @php
@@ -123,8 +128,8 @@
                                                             $valor_activo_nuevo = 0;
                                                         }
                                                     @endphp
-                                                    -->
-                                                    <td><form action="activar_registro" method="get"><input type="checkbox" checked onchange="this.form.submit();" title="Clic para desactivar"></form></td>
+
+                                                    <td><form action="activar_registro" method="get"><input type="checkbox" checked onchange="this.form.submit();" title="Clic para desactivar"></form></td>-->
                                                     <td><a href="#editar_registro" class="text-primary" title="Editar este registro"><i class="fas fa-edit"></i></a> / <a href="javascript: void(0);" class="text-danger" title="Borrar este registro" data-toggle="modal" data-target="#confirmModal_1"><i class="fas fa-trash-alt"></i></a></td>
                                                 </tr>
 
@@ -144,6 +149,41 @@
 
                                                 @endforelse
                                                 -->
+
+                                                <tr v-for="user in users" :key="user.id">
+                                                    <td class="lista_indice" v-text="user.id"></td>
+                                                    <td><a href="admin/users/detalle/{{ user.id }}" title="Ir al detalle" class="negrita"><i class="fas fa-user-astronaut" style="width: 40px;"></i></a></td>
+                                                    <td v-text="user.name"></td>
+                                                    <td v-text="user.lastname"></td>
+                                                    <td>{{ user.username }}</td>
+                                                    <td>{{ user.email }}</td>
+                                                    <td>{{ user.perfil_id }}</td>
+                                                    <td>{{ user.created_at }}</td>
+                                                    <!--
+                                                    @php
+                                                        $valor_activo_tit = '';
+                                                        $valor_activo_nuevo = '';
+                                                        if($valor->activo == 0) {
+                                                            $valor_activo_tit = 'Clic para activar';
+                                                            $valor_activo_nuevo = 1;
+                                                        } else {
+                                                            $valor_activo_tit = 'Clic para desactivar';
+                                                            $valor_activo_nuevo = 0;
+                                                        }
+                                                    @endphp
+
+                                                    <td><form action="activar_registro" method="get"><input type="checkbox" checked onchange="this.form.submit();" title="Clic para desactivar"></form></td>-->
+                                                    <td>
+                                                        <a href="javascript: void(0);" v-on:click.prevent="editUser(user)" class="text-primary" title="Editar registro">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                         /
+                                                        <!--<a href="javascript: void(0);" class="text-danger" title="Borrar este registro" data-toggle="modal" data-target="#confirmModal_1">-->
+                                                        <a href="javascript: void(0);" v-on:click.prevent="deleteUser(user)" class="text-danger" title="Borrar registro">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
 
@@ -184,8 +224,11 @@
         },
 
         methods: {
+
+            /**
+             * Obteniendo listado de registros
+            */
             getUsers() {
-                //Obteniendo registros de usuarios
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
                 let urlUsers = '/api/users';
@@ -194,19 +237,39 @@
                 //llama.
                 //  -> Si es correcto, se recogen los datos
                 //  dentro del contenedor definido
-                //axios.get(urlUsers).then( ({ data }) => (
-                axios.get(urlUsers).then(  data  => (
-                    this.users = data.data
-                ));
+                axios.get(urlUsers).then( response => {
+                    ////console.log(response.data)
+                    this.users = response.data
+                });
             },
 
-            getUsersOK() {
-                let urlUsers = '/api/users';
-                axios.get(urlUsers).then(response => {
-                    ////console.log(response.data)
-                    this.users = response.data;
-                });
-            }
+            /**
+             * Creando nuevo registro
+            */
+            createUser() {
+                //
+            },
+
+            /**
+             * Editando registro
+            */
+            editUser(user) {
+                //
+            },
+
+            /**
+             * Actualizando registro
+            */
+            updateUser(id) {
+                //
+            },
+
+            /**
+             * Actualizando registro
+            */
+            deleteUser(user) {
+                //
+            },
         },
     }
 </script>

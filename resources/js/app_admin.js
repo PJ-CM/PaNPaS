@@ -28,9 +28,9 @@ let patron = '/admin';
 // ----------------------------------------------------
 //Forma 2d2 :. en un solo paso
 let routes = [
-    { path: patron + '/dashboard', component: require('./components/Dashboard.vue').default },
+    { path: patron + '/dashboard', component: require('./components/DashboardAdmin.vue').default },
     //{ path: patron + '/profile', component: require('./components/Profile.vue') },
-    { path: patron + '/users', component: require('./components/Users.vue').default },
+    { path: patron + '/users', component: require('./components/UsersAdmin.vue').default },
 ]
 
 //Instancia de VueRouter y asignación de rutas
