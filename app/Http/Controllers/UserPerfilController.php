@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Auth;
+use URL;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -20,19 +22,28 @@ class UserPerfilController extends Controller
     }
 
     public function mostrarPerfilPrivado () {
-    	return view ('layouts/user/perfilprivado');
+    	return view ('layouts/user/perfilPrivado');
     }
 
     public function guardarFotoPerfil(Request $request)
   {
    
-      $image = $request->file('file');
-      $input['imagename'] = $image->getClientOriginalname();
+      $image = $request->file('newAvatar');
 
-      $request->file('file')->storeAs('public/avatar', $input['imagename']);
+      $image->storeAs('public/avatar', Auth::user()->username);
+
+      $user = Auth::user();
+
+      $url = URL::asset("storage/avatar/".Auth::user()->username);
+
+      $user->avatar = $url;
+
+      $user->save();
+      Auth::login($user);
 
 
-		return $this->prueba($image);
+
+		return redirect(route('user_perfil', Auth::user()->username));
       //return view('layouts/user/perfilprivado');
 
   }

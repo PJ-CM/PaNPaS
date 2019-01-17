@@ -15,7 +15,7 @@ class FkIngredientesRecetas extends Migration
     {
         Schema::table('ingrediente_receta', function (Blueprint $table) {
             $table->foreign('ingrediente_id')->references('id')->on('ingredientes');
-            $table->foreign('receta_id')->references('id')->on('recetas');
+            $table->foreign('receta_id')->references('id')->on('recetas')->onDelete('cascade');
         });
     }
 

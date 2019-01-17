@@ -39,13 +39,16 @@ class UserPanelController extends Controller
         return view('/users/recetas', ['recetas'=>$recetas]);
     }
 
-    public function perfilPublico($username){
+    public function perfil($username){
         $user = new User();
         $var = $user->where('username', $username)->get();
         $user = $var[0];
-     
 
-        return view('users/perfilPublico', ['user'=>$user]);
+        if ($user->id == Auth::user()->id){
+            return view('users/perfilPrivado', ['user'=>$user]);
+        } else 
+            return view('users/perfilPublico', ['user'=>$user]);
+     
     }
 
     public function seguidos(){
@@ -68,7 +71,7 @@ class UserPanelController extends Controller
             $users = $users->orderBy($columna, $orden)->get();
      
 
-        return view('users/usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
+        return view('users/usuarios2', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
     }
 
 }

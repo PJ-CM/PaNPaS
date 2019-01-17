@@ -473,7 +473,12 @@
                                                     <div class="modal-body">
                                                         <!-- Project Details Go Here -->
                                                         <h2 class="text-uppercase">{{$receta->titulo}}</h2>
-                                                        <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
+                                                        <p class="item-intro text-muted">por 
+                                                            @if (Auth::user()!= null)
+                                                                <a href="/{{$receta->user->username}}" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a>
+                                                                @else
+                                                                    <span>{{$receta->user->username}}</span>
+                                                            @endif</p>
                                                         <img class="img-fluid d-block mx-auto" src="{{$receta->imagen}}" alt="{{$receta->titulo}}">
                                                         <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
 

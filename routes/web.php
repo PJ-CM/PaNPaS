@@ -41,9 +41,12 @@ Route::get('/usuarios/{columna?}/{orden?}', 'UserPanelController@usuarios')
     ->name('user_usuarios');
 
 //Panel Público de Usuario
-Route::get('/{username}', 'UserPanelController@perfilPublico')
-    ->name('user_perfilPublico');
+Route::get('/{username}', 'UserPanelController@perfil')
+    ->name('user_perfil');
 
+//rutas de usuario PRIVADAS
+//Route::get('/perfilPrivado', 'UserPerfilController@mostrarPerfilPrivado');
+Route::post('/user/guardarFotoPerfil', 'UserPerfilController@guardarFotoPerfil');
 
 
 
@@ -68,7 +71,8 @@ Route::get('/home', 'HomeController@index')
 
 
 
-
+//AJAX
+Route::post ('/ajax/usuarios', 'AjaxController@updateUsers');
 
 
 // [API]recoger datos
@@ -108,9 +112,7 @@ Route::get ('/user/perfilPublico/{id}', 'UserPerfilController@mostrarPerfilPubli
 Route::get ('/user/index', 'UserPerfilController@index'); //mostrar perfil del usuario con información pública
 
 
-//rutas de usuario PRIVADAS
-Route::get('/user/perfilprivado', 'UserPerfilController@mostrarPerfilPrivado');
-Route::post('/user/guardarFotoPerfil', 'UserPerfilController@guardarFotoPerfil');
+
 
 //prueba carga de foto de perfil (Borrar al terminar)
 //se carga desde la modificación del perfil privado

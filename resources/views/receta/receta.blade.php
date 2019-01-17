@@ -1,50 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Receta</title>
+@extends('layouts.public')
 
-	<link rel="stylesheet" type="text/css" href="{{ URL::asset('css/app.css') }}">
+@section('head_content')
+        <meta name="description" content="Gestiona tus datos, tus recetas y otras opciones.">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/app.css') }}">
 
-
-<style type="text/css">
-	#myCarousel{
-		width: 100%;
-		height: auto;
-		margin: auto;
-		margin-bottom: 100px;
-
-	}
-	.carousel-inner{
-		width: 100%;
-		height: 100%;
-	}
-	#myCarousel > button {
-		margin: 50px;
-	}
-	.icono{
-		color: white;
-		font-size: 5em;
-	}
-
-
-
-</style>
-
-</head>
-<body>
-<!-- navbar -->
-
-	
-<!-- /navbar -->
-<!-- RECETA -->
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-
-<link href="https://fonts.googleapis.com/css?family=Frijole" rel="stylesheet">
-
-<!-- Latest compiled and minified CSS -->
+        <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 <!-- jQuery library -->
@@ -53,10 +14,73 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-@include('layouts.public-navbar-auth')
+        <title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
 
 
- {{-- Panel-de-Usuario --}}
+		<style type="text/css">
+			#myCarousel{
+				width: 100%;
+				height: auto;
+				margin: auto;
+				margin-bottom: 100px;
+
+			}
+			.carousel-inner{
+				width: 100%;
+				height: 100%;
+			}
+			#myCarousel > button {
+				margin: 50px;
+			}
+			.icono{
+				color: white;
+				font-size: 5em;
+			}
+
+
+
+		</style>
+
+@endsection
+
+@section('content')
+
+        @include('layouts.public-navbar-auth')
+
+
+        <div id="myCarousel" class="carousel slide" data-ride="carousel"> <!-- INICIO CARROUSEL -->
+			  <!-- Indicators -->
+			  <ol class="carousel-indicators">
+			    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			    <li data-target="#myCarousel" data-slide-to="1" class=""></li>
+			  </ol>
+
+
+			  <!-- Wrapper for slides -->
+			  	<div class="carousel-inner">
+				    <div class="item active">
+				      <img src="http://www.viajejet.com/wp-content/viajes/Quesadillas.jpg" alt="Los Angeles">
+				    </div>
+				    <div class="item">
+				      <img src="http://www.viajejet.com/wp-content/viajes/Quesadillas.jpg" alt="Los Angeles">
+				    </div>
+
+
+			  </div>
+
+			  <!-- Left and right controls -->
+			  <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+			    <span class="glyphicon glyphicon-chevron-left"></span>
+			    <span class="sr-only">Previous</span>
+			  </a>
+			  <a class="right carousel-control" href="#myCarousel" data-slide="next">
+			    <span class="glyphicon glyphicon-chevron-right"></span>
+			    <span class="sr-only">Next</span>
+			  </a>
+
+		</div> <!-- FIN CARROUSEL -->
+
+        {{-- Panel-de-Usuario --}}
         <section id="user_panel">
             <div class="container">
                 <div class="row justify-content-center">
@@ -65,41 +89,12 @@
                             <div class="card-header"><h1 class="frijole">{{$receta->titulo}}</h1><a href="/{{$receta->user->username}}">{{$receta->user->username}}</a></div>
 
                             <div class="card-body">
-                                
-                            			<div id="myCarousel" class="carousel slide" data-ride="carousel"> <!-- INICIO CARROUSEL -->
-		  <!-- Indicators -->
-		  <ol class="carousel-indicators">
-		    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-		  </ol>
-
-
-		  <!-- Wrapper for slides -->
-		  <div class="carousel-inner">
-		    <div class="item active">
-		      <img src="http://www.viajejet.com/wp-content/viajes/Quesadillas.jpg" alt="Los Angeles">
-		    </div>
-
-		  </div>
-
-		  <!-- Left and right controls -->
-		  <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-		    <span class="glyphicon glyphicon-chevron-left"></span>
-		    <span class="sr-only">Previous</span>
-		  </a>
-		  <a class="right carousel-control" href="#myCarousel" data-slide="next">
-		    <span class="glyphicon glyphicon-chevron-right"></span>
-		    <span class="sr-only">Next</span>
-		  </a>
-
-		</div> <!-- FIN CARROUSEL -->
-	
-
 
 <div class="col-md-12" style="margin-top: 0px;">
 <div class="container"> 
 
   <div class="row row-receta">
-    <div class="col-md-4" style="background-color: lightblue; padding: 30px;>
+    <div class="col-md-5" style="background-color: lightblue; padding: 30px;>
       <h2 class="frijole"> Ingredientes: </h2>
       <ul>
 	      @foreach ($receta->ingredientes as $ingrediente)
@@ -205,144 +200,15 @@
                 </div>
             </div>
         </section>
+@endsection
 
+{{-- ============================================================================ --}}
+{{-- ============================================================================ --}}
 
+@section('footer_scripts_content')
+        {{-- jQuery, Bootstrap, jQuery Easing --}}
+        <script src="{{ asset('js/app.js') }}"></script>
 
-
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@php /*
-
-	<!-- COMENTARIOS -->
-		<!-- Contenedor Principal -->
-	<div class="comments-container">
-		<h1 class="frijole">Comentarios</h1>
-
-		<ul id="comments-list" class="comments-list">
-			<li>
-				<div class="comment-main-level">
-					<!-- Avatar -->
-					<div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
-					<!-- Contenedor del Comentario -->
-					<div class="comment-box">
-						<div class="comment-head">
-							<h6 class="comment-name by-author"><a href="http://creaticode.com/blog">Eneko Vázquez</a></h6>
-							<span>hace 20 minutos</span>
-							<i class="fa fa-reply"></i>
-							<i class="fa fa-heart"></i>
-						</div>
-						<div class="comment-content">
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
-						</div>
-						<div class="right"><i class="far fa-star"></i></div>
-					</div>
-				</div>
-				<!-- Respuestas de los comentarios -->
-				<ul class="comments-list reply-list">
-					<li>
-						<!-- Avatar -->
-						<div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg" alt=""></div>
-						<!-- Contenedor del Comentario -->
-						<div class="comment-box">
-							<div class="comment-head">
-								<h6 class="comment-name"><a href="http://creaticode.com/blog">Pedro José</a></h6>
-								<span>hace 10 minutos</span>
-								<i class="fa fa-reply"></i>
-								<i class="fa fa-heart"></i>
-							</div>
-							<div class="comment-content">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
-							</div>
-							<div class="right"><i class="far fa-star"></i></div>
-						</div>
-					</li>
-
-					<li>
-						<!-- Avatar -->
-						<div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
-						<!-- Contenedor del Comentario -->
-						<div class="comment-box">
-							<div class="comment-head">
-								<h6 class="comment-name by-author"><a href="http://creaticode.com/blog">Eneko Vázquez</a></h6>
-								<span>hace 10 minutos</span>
-								<i class="fa fa-reply"></i>
-								<i class="fa fa-heart"></i>
-							</div>
-							<div class="comment-content">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
-							</div>
-							<div class="right"><i class="far fa-star"></i></div>
-						</div>
-					</li>
-
-
-
-
-				</ul>
-			</li>
-
-			<li>
-				<div class="comment-main-level">
-					<!-- Avatar -->
-					<div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg" alt=""></div>
-					<!-- Contenedor del Comentario -->
-					<div class="comment-box">
-						<div class="comment-head">
-							<h6 class="comment-name"><a href="http://creaticode.com/blog">Pedro José</a></h6>
-							<span>hace 10 minutos</span>
-							<i class="fa fa-reply"></i>
-							<i class="fa fa-heart"></i>
-						</div>
-						<div class="comment-content">
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
-						</div>
-					</div>
-				</div>
-			</li>
-		</ul>
-	</div>
-<!-- FIN COMENTARIOS -->
-
-@endphp
+        {{-- Otros --}}
+        <script src="js/agency.js"></script>
+@endsection

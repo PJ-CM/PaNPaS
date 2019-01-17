@@ -7,6 +7,7 @@
 
         @yield('head_content')
 
+
         {{-- CSS compilado en /public --}}
         {{--
             ==> Forma normal de llamar al archivo compilado

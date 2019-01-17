@@ -10,6 +10,26 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
 
+	
+
+
+	function getUsuarios(){ //NO SE LLAMA ÁÚN
+		$.ajax({
+			headers: {
+		    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		  },
+		  method: 'post', // Type of response and matches what we said in the route
+		    url: '/ajax/usuarios', // This is the url we gave in the route
+
+		  	success: function(data){ // What to do if we succeed
+		        alert("{{$users[0]}}"); 
+		    },
+		    complete: function (data) {
+                    // Schedule the next
+                    setTimeout(getUsuarios, 1000);
+            }
+		});
+	}	
 </script>
 
 @section('content')

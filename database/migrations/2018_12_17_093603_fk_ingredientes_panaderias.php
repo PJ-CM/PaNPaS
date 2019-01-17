@@ -14,7 +14,7 @@ class FkIngredientesPanaderias extends Migration
     public function up()
     {
         Schema::table('ingrediente_panaderia', function (Blueprint $table) {
-            $table->foreign('panaderia_id')->references('id')->on('panaderias');
+            $table->foreign('panaderia_id')->references('id')->on('panaderias')->onDelete('cascade');
             $table->foreign('ingrediente_id')->references('id')->on('ingredientes');
         });
     }
