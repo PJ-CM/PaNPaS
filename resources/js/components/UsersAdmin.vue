@@ -29,11 +29,10 @@
                                 <div class="card">
                                     <div class="card-header d-flex p-0">
                                         <h3 class="card-title p-3">
-                                            <i class="fas fa-users mr-1"></i>
-                                            <!--
-                                            //>> SIN Paginación
-                                            Usuarios [<strong>{{ $valoresTOT }}</strong> disponible(s)]
-                                            //>> CON Paginación
+                                            <i class="fas fa-users mr-1" title="Icono de usuarios"></i>
+                                            <!-- >> SIN Paginación-->
+                                            [<strong>{{ users.length }}</strong> disponible(s)]
+                                            <!-- >> CON Paginación
                                             Usuarios [<strong>{{ $valores->total() }}</strong> disponible(s)]-->
                                         </h3>
                                         <!--De este UL, se ha eliminado el CLASS de nav-pills para que el color
@@ -48,149 +47,38 @@
                                         <table class="table table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>Avatar</th>
+                                                    <th class="text-center">#</th>
+                                                    <th class="text-center">Avatar</th>
                                                     <th>Nombre</th>
                                                     <th>Apellido</th>
                                                     <th>NICK</th>
                                                     <th>Email</th>
                                                     <th>Perfil</th>
                                                     <th>Registro</th>
-                                                    <th>Modificar</th>
+                                                    <th class="text-center">Modificar</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-
-                                                <!--
-                                                <?php //var_dump($valores);
-                                                //>> SIN Paginación
-                                                ////$contador = 0;
-                                                //>> CON Paginación
-                                                //      => Orden ASC
-                                                ////$contador = ($valores->perPage() * ($valores->currentPage() - 1));
-                                                //      => Orden DESC
-                                                $contador = ($valores->total() - ($valores->perPage() * ($valores->currentPage() - 1))); ?>
-                                                @forelse ($valores as $valor)
-                                                    {{-- SIN o CON Paginación [ASC] --}}
-                                                    {{--@php
-                                                        $contador++;
-                                                    @endphp--}}
-
-                                                @include('inc.modal_confirm_del', [
-                                                    'modal_id' => 'confirmModal_' . $valor->id,
-                                                    'ruta_nom' => 'users_borrar',
-                                                ])
-                                                -->
-
-                                                <!--
-                                                <tr>
-                                                    <td class="lista_indice">{{ $contador < 10 ? '0'.$contador : $contador }}</td>
-                                                    <td><a href="{{ url('/'.$valores_tipo.'s/detalle/'.$valor->id) }}" title="Ir al detalle" class="negrita{{ $valor->activo == 0 ? ' registro_activo_no' : ' registro_activo_si' }}">{{ $valor->name }}</a></td>
-                                                    <td>{{ $valor->username }}</td>
-                                                    <td>{{ $valor->email }}</td>
-                                                    <td>{{ $valor->created_at }}</td>
-
-                                                    @php
-                                                        $valor_activo_tit = '';
-                                                        $valor_activo_nuevo = '';
-                                                        if($valor->activo == 0) {
-                                                            $valor_activo_tit = 'Clic para activar';
-                                                            $valor_activo_nuevo = 1;
-                                                        } else {
-                                                            $valor_activo_tit = 'Clic para desactivar';
-                                                            $valor_activo_nuevo = 0;
-                                                        }
-                                                    @endphp
-
-                                                    <td><form action="{{ route('users_editar_campo', ['id' => $valor->id, 'campo' => 'activo', 'valor' => $valor_activo_nuevo]) }}" method="get"><input type="checkbox"{{ $valor->activo == 1 ? ' checked' : '' }} onchange="this.form.submit();" title="{{ $valor_activo_tit }}"></form></td>
-                                                    <td><a href="{{ route('users_detalle', ['id' => $valor->id]) }}" class="text-primary" title="Editar este registro"><i class="fas fa-pencil-alt"></i></a> <a href="javascript: void(0);" class="text-danger" title="Borrar este registro" data-toggle="modal" data-target="#confirmModal_{{ $valor->id }}"><i class="fas fa-trash-alt"></i></a></td>
-                                                </tr>
-                                                -->
-
-                                                <tr>
-                                                    <td class="lista_indice">01</td>
-                                                    <td><a href="admin/users/detalle/1" title="Ir al detalle" class="negrita"><i class="fas fa-user-astronaut" style="width: 40px;"></i></a><img src="" alt="Avatar del usuario"></td>
-                                                    <td>Pepito</td>
-                                                    <td>Pérez</td>
-                                                    <td>elPep</td>
-                                                    <td>elpep@per.es</td>
-                                                    <td>Usuario</td>
-                                                    <td>2018/01/25 00:12:59</td>
-                                                    <!--
-                                                    @php
-                                                        $valor_activo_tit = '';
-                                                        $valor_activo_nuevo = '';
-                                                        if($valor->activo == 0) {
-                                                            $valor_activo_tit = 'Clic para activar';
-                                                            $valor_activo_nuevo = 1;
-                                                        } else {
-                                                            $valor_activo_tit = 'Clic para desactivar';
-                                                            $valor_activo_nuevo = 0;
-                                                        }
-                                                    @endphp
-
-                                                    <td><form action="activar_registro" method="get"><input type="checkbox" checked onchange="this.form.submit();" title="Clic para desactivar"></form></td>-->
-                                                    <td><a href="#editar_registro" class="text-primary" title="Editar este registro"><i class="fas fa-edit"></i></a> / <a href="javascript: void(0);" class="text-danger" title="Borrar este registro" data-toggle="modal" data-target="#confirmModal_1"><i class="fas fa-trash-alt"></i></a></td>
-                                                </tr>
-
-                                                    <!--
-                                                    {{-- CON Paginación [DESC] --}}
-                                                    @php
-                                                        $contador--;
-                                                    @endphp
-                                                    -->
-
-                                                <!--
-                                                @empty
-
-                                                <tr>
-                                                    <td colspan="7">:: No existen registros en este momento ::<td>
-                                                </tr>
-
-                                                @endforelse
-                                                -->
-
-                                                <tr v-for="user in users" :key="user.id">
-                                                    <td class="lista_indice" v-text="user.id"></td>
-                                                    <td><a :href="'admin/users/detalle/' + user.id" title="Ir al detalle" class="negrita"><i class="fas fa-user-astronaut" style="width: 40px;"></i></a></td>
+                                                <tr class="lista-usuarios" v-for="(user, index) in users" :key="user.id">
+                                                    <td class="lista_indice text-center" v-if="(index + 1) < 10">{{ '0' + (index + 1) }}</td>
+                                                    <td class="lista_indice text-center" v-else v-text="index + 1"></td>
+                                                    <td class="text-center"><a :href="'admin/users/detalle/' + user.id" title="Ir al detalle" class="negrita"><img class="avatar" :src="user.avatar" alt="Avatar del usuario"></a></td>
                                                     <td v-text="user.name"></td>
                                                     <td v-text="user.lastname"></td>
                                                     <td>{{ user.username }}</td>
                                                     <td>{{ user.email }}</td>
-                                                    <td>{{ user.perfil_id }}</td>
+                                                    <td>{{ user.perfil.nombre }}</td>
                                                     <td>{{ user.created_at }}</td>
-                                                    <!--
-                                                    @php
-                                                        $valor_activo_tit = '';
-                                                        $valor_activo_nuevo = '';
-                                                        if($valor->activo == 0) {
-                                                            $valor_activo_tit = 'Clic para activar';
-                                                            $valor_activo_nuevo = 1;
-                                                        } else {
-                                                            $valor_activo_tit = 'Clic para desactivar';
-                                                            $valor_activo_nuevo = 0;
-                                                        }
-                                                    @endphp
-
-                                                    <td><form action="activar_registro" method="get"><input type="checkbox" checked onchange="this.form.submit();" title="Clic para desactivar"></form></td>-->
-                                                    <td>
+                                                    <td class="text-center">
                                                         <a href="javascript: void(0);" v-on:click.prevent="editUser(user)" class="text-primary" title="Editar registro">
                                                             <i class="fas fa-edit"></i>
-                                                        </a>
-                                                         /
-                                                        <!--<a href="javascript: void(0);" class="text-danger" title="Borrar este registro" data-toggle="modal" data-target="#confirmModal_1">-->
-                                                        <a href="javascript: void(0);" v-on:click.prevent="deleteUser(user)" class="text-danger" title="Borrar registro">
+                                                        </a> / <a href="javascript: void(0);" v-on:click.prevent="deleteUser(user)" class="text-danger" title="Borrar registro">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
-
-                                        <!--
-                                        {{--PAGINACIÓN::Enlaces--}}
-                                        {{ $valores->links() }}
-                                        -->
                                     </div><!-- /.card-body -->
                                 </div>
                                 <!-- /.card -->
@@ -200,6 +88,155 @@
                     </div><!-- /.container-fluid -->
                 </div>
                 <!-- /.content -->
+
+                <!-- MODALES :: ini -->
+
+                <!-- Modal-inserto :: ini -->
+                <div class="modal fade" id="regInsModal" tabindex="-1" role="dialog" aria-labelledby="regInsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                            <form @submit.prevent="createUser" class="needs-validation" novalidate>
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="regInsModalLabel">Insertar registro</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="name-id">Nombre</label>
+                                        <input v-model="newUser.name" type="text" class="form-control" name="name" id="name-id" placeholder="Nombre">
+                                        <div class="valid-feedback">
+                                            ¡OK!
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Por favor, teclea un NOMBRE.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="lastname-id">Apellido</label>
+                                        <input v-model="newUser.lastname" type="text" class="form-control" name="lastname" id="lastname-id" placeholder="Apellido">
+                                        <div class="valid-feedback">
+                                            ¡OK!
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Por favor, teclea un APELLIDO.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email-id">Email</label>
+                                        <input v-model="newUser.email" type="text" class="form-control" name="email" id="email-id" placeholder="Email" required>
+                                        <div class="valid-feedback">
+                                            ¡OK!
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Por favor, teclea un EMAIL.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="username-id">Nick</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupUserN">@</span>
+                                            </div>
+                                            <input v-model="newUser.username" type="text" class="form-control" name="username" id="username-id" placeholder="Nick" aria-describedby="inputGroupUserN" required>
+                                            <div class="valid-feedback">
+                                                ¡OK!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Por favor, teclea un NICK.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="pass_id">Contraseña</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPass">&bull;</span>
+                                            </div>
+                                            <input v-model="newUser.password" type="password" class="form-control" name="password" id="pass_id" placeholder="Contraseña" aria-describedby="inputGroupPass" required>
+                                            <div class="valid-feedback">
+                                                ¡OK!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Por favor, teclea una CONTRASEÑA.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="pass_confirm_id">Confirmar contraseña</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPassConf">&bull;</span>
+                                            </div>
+                                            <input v-model="newUser.password_confirmation" type="password" class="form-control" name="password_confirmation" id="pass_confirm_id" placeholder="Confirmar contraseña" aria-describedby="inputGroupPassConf" required>
+                                            <div class="valid-feedback">
+                                                ¡OK!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Por favor, confirma la CONTRASEÑA.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="perfil-id">Perfil</label>
+                                        <select v-model="newUser.perfil_id" name="perfil_id" id="perfil-id" class="custom-select">
+                                            <option value="">Seleccionar un perfil</option>
+                                            <option value="1">Administrador</option>
+                                            <option value="2">Usuario</option>
+                                        </select>
+                                        <div class="valid-feedback">¡OK!</div>
+                                        <div class="invalid-feedback">Elegir una de las opciones</div>
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <label for="avatar-id">Avatar</label>
+                                        <input type="file" class="form-control" name="avatar" id="avatar-id" placeholder="Avatar">
+                                        <div class="valid-feedback">
+                                            ¡OK!
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Por favor, escoge un AVATAR.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--<div class="col-xs|sm|md|lg|xl-1-12">
+                                    @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    @endif
+                                </div>-->
+                            </div>
+
+                            <div class="modal-footer">
+                                <input type="hidden" name="modalIns" value="regInsModal">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button class="btn btn-primary" type="submit" title="Insertar registro">Insertar</button>
+                            </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal-inserto :: fin -->
+
+                <!-- MODALES :: fin -->
 
         <!-- CONTENIDO a Mostrar :: fin -->
 
@@ -219,8 +256,30 @@
         data() {
             return {
                 //Puede ser también     >>      users: [],
-                users: {},  //variable contenedora de los registros a mostrar
+                users: {},  //variable contenedora de los registros a listar
+                //variable para almacenar los datos del registro a almacenar
+                newUser: {
+                    'name': '',
+                    'lastname': '',
+                    'username': '',
+                    'email': '',
+                    'password': '',
+                    'password_confirmation': '',
+                    'perfil_id': '',
+                    'avatar': '',
+                },
             }
+        },
+
+        //propiedades computadas
+        /**
+         * Servirán para establecer el estilo adecuado:
+         *    => cuando se esté o no en la página actual.
+         *    => a las diferentes opciones de paginado:
+         *      >> números, siguiente, anterior, ...
+        */
+        computed: {
+            //
         },
 
         methods: {
@@ -247,7 +306,7 @@
              * Creando nuevo registro
             */
             createUser() {
-                //
+                console.log('Registrando nuevo registro...');
             },
 
             /**
