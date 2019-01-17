@@ -49,7 +49,9 @@ Route::get('/{username}', 'UserPanelController@perfil')
 Route::post('/user/guardarFotoPerfil', 'UserPerfilController@guardarFotoPerfil');
 Route::post('/user/actualizarDatos', 'UserPerfilController@actualizarDatos');
 
-
+//FOLLOW SYSTEM routes
+Route::get('/unfollow/{id}', 'FollowController@unfollow')
+    ->name('follow_unfollow');
 
 
 

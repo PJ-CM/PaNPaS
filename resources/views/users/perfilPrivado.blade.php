@@ -4,6 +4,9 @@
         <meta name="description" content="Gestiona tus datos, tus recetas y otras opciones.">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/app.css') }}">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+
 
         <title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
 
@@ -15,6 +18,12 @@
                 height: auto;
                 max-height: 600px;
             }
+            .centrado {
+                text-align: center;
+            }
+
+
+        
         </style>
 
 
@@ -35,28 +44,30 @@
 
                             <div class="card-body">
                                 <h1>Modificar Avatar:</h1>
-                                <form action="/user/guardarFotoPerfil" method="post" enctype="multipart/form-data">
+                                <form action="/user/guardarFotoPerfil" method="post" enctype="multipart/form-data" class="centrado">
                                 	<img src="{{$user->avatar}}" class="avatar">
-                                	<input type="file" name="newAvatar" ><input type="submit" name="sub_avatar">
+                                	<input type="file" name="newAvatar" class="btn btn-secondary"><input type="submit" name="sub_avatar" value="Cambiar" class="btn btn-primary">
                                 </form>
 
                                 <h1>Modificar Datos:</h1>
                                 <form action="/user/actualizarDatos" method="post" enctype="multipart/form-data">
-                                    <p>
-                                        <label>Nombre de usuario:</label>   <input type="text" name="username" value="{{$user->username}}">
+                                    <p class="col-lg-5 col-md-9">
+                                        <label>Nombre de usuario:</label>   <input type="text" name="username" value="{{$user->username}}" class="w3-input">
                                     </p>
-                                    <p>
-                                        <label>Nombre:</label>              <input type="text" name="name" value="{{$user->name}}">
+                                    <p class="col-lg-5 col-md-9">
+                                        <label>Nombre:</label>              <input type="text" name="name" value="{{$user->name}}" class="w3-input">
                                     </p>
-                                    <p>
-                                     <label>Apellido:</label>               <input type="text" name="lastname" value="{{$user->lastname}}">
+                                    <p class="col-lg-5 col-md-9">
+                                     <label>Apellido:</label>               <input type="text" name="lastname" value="{{$user->lastname}}" class="w3-input">
                                     </p>
-                                    <p>
-                                        <label>Correo:</label>              <input type="text" name="email" value="{{$user->email}}">
+                                    <p class="col-lg-5 col-md-9">
+                                        <label>Correo:</label>              <input type="text" name="email" value="{{$user->email}}" class="w3-input">
                                     </p>
-                                    <input type="submit" name="sub_avatar">
+                                    <input type="submit" name="sub_avatar", value="Actualizar" class="btn btn-primary right">
                                 </form>
-
+                                <form>
+                                   <div class="row">
+                                </form>
                             </div>
                         </div>
                     </div>

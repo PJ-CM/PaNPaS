@@ -24,9 +24,6 @@
                         <li class="nav-item p-2">
                             <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/recetas') active @endif" href="/recetas" title="Ir a la sección de Recetas">Recetas</a>
                         </li>
-                        <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/contacto') active @endif" href="#contacto" title="Ir a la sección de Contacto">Contacto</a>
-                        </li>
                         {{--
                             Deberá ser un DropdownMenu con las opciones de:
                                 >> ir al escritorio/dashboard del usuario
