@@ -182,8 +182,9 @@
 										
 										<!-- Formulario para insertar comentario en la receta -->
 										<div class="insertar-comentario-container">
-											<form>
-												<textarea>hola</textarea><input type="submit" name="enviarComentario">
+											<form action="/insertarComentario" method="post">
+												<input type="hidden" name="id" value="{{$receta->id}}">
+												<textarea name="mensaje"></textarea><input type="submit" name="enviarComentario">
 											</form>
 											
 										</div>

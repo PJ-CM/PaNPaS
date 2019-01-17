@@ -48,6 +48,26 @@ class UserPerfilController extends Controller
 
   }
 
+  public function actualizarDatos(Request $request)
+  {
+   
+      $input = $request->all();
+
+      $user = Auth::user();
+
+      $user->username = $input['username'];
+      $user->name = $input['name'];
+      $user->lastname = $input['lastname'];
+      $user->email = $input['email'];
+
+      $user->save();
+
+      Auth::login($user);
+
+    return redirect(route('user_perfil', Auth::user()->username));
+
+  }
+
       public function prueba ($image)
   {
 

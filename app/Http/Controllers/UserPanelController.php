@@ -71,7 +71,7 @@ class UserPanelController extends Controller
             $users = $users->orderBy($columna, $orden)->get();
      
 
-        return view('users/usuarios2', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
+        return view('users/usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
     }
 
 }

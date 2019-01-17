@@ -53,7 +53,7 @@
 										                            <img class="img-fluid" src="{{$user->avatar}}" alt="Bollos Suizos">
 										                        </a>
 										                        <div class="ranking-caption">
-										                            <h4 title="{{$user->username}}">{{$user->username}}</h4>
+										                            <h4 title="{{$user->username}}"><a href="/{{$user->username}}">{{$user->username}}</a></h4>
 
 										                            <h5 class="stars-votos" style="">
 										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$user->username}} está siguiendo a  {{count ($user->follows)}} usuarios"></i > {{ count($user->follows) }}  

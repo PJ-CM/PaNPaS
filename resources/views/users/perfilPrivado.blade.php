@@ -10,8 +10,10 @@
 
         <style type="text/css">
             .avatar {
+                max-width: 600px;
                 width: 100%;
                 height: auto;
+                max-height: 600px;
             }
         </style>
 
@@ -32,11 +34,29 @@
                             <div class="card-header">Perfil Privado</div>
 
                             <div class="card-body">
+                                <h1>Modificar Avatar:</h1>
                                 <form action="/user/guardarFotoPerfil" method="post" enctype="multipart/form-data">
-                                	<h1>Modificar Avatar:</h1>
                                 	<img src="{{$user->avatar}}" class="avatar">
                                 	<input type="file" name="newAvatar" ><input type="submit" name="sub_avatar">
                                 </form>
+
+                                <h1>Modificar Datos:</h1>
+                                <form action="/user/actualizarDatos" method="post" enctype="multipart/form-data">
+                                    <p>
+                                        <label>Nombre de usuario:</label>   <input type="text" name="username" value="{{$user->username}}">
+                                    </p>
+                                    <p>
+                                        <label>Nombre:</label>              <input type="text" name="name" value="{{$user->name}}">
+                                    </p>
+                                    <p>
+                                     <label>Apellido:</label>               <input type="text" name="lastname" value="{{$user->lastname}}">
+                                    </p>
+                                    <p>
+                                        <label>Correo:</label>              <input type="text" name="email" value="{{$user->email}}">
+                                    </p>
+                                    <input type="submit" name="sub_avatar">
+                                </form>
+
                             </div>
                         </div>
                     </div>
