@@ -25,9 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-   public function redirectTo(){
-    // User role   
-    
+    public function redirectTo() {
         // Check user role
         switch (Auth::user()->perfil_id) {
             case 1:
@@ -36,9 +34,9 @@ class LoginController extends Controller
             case 2:
                     $url = "/users/".Auth::user()->username;
                     return $url;
-                break; 
+                break;
             default:
-                    return '/'; 
+                    return '/';
                 break;
         }
     }

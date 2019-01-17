@@ -8,6 +8,21 @@
 require('./bootstrap_admin');
 
 window.Vue = require('vue');
+
+//Importando Sistema de alertas
+import Swal from 'sweetalert2'
+//y pasando variable a global para que sea accesible en toda la aplicación
+window.Swal = Swal;
+//  >> Registrando modo de alerta simple
+const toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+//y pasando variable a global
+window.toast = toast;
+
 //Tratamiento de rutas en VueJS a través de VueRouter
 //  >> Importando Vue Router
 import VueRouter from 'vue-router';
@@ -28,9 +43,9 @@ let patron = '/admin';
 // ----------------------------------------------------
 //Forma 2d2 :. en un solo paso
 let routes = [
-    { path: patron + '/dashboard', component: require('./components/DashboardAdmin.vue').default },
-    //{ path: patron + '/profile', component: require('./components/Profile.vue') },
-    { path: patron + '/users', component: require('./components/UsersAdmin.vue').default },
+    { path: patron + '/dashboard', component: require('./components' + patron + '/DashboardComponent.vue').default },
+    //{ path: patron + '/profile', component: require('./components' + patron + '/ProfileComponent.vue') },
+    { path: patron + '/users', component: require('./components' + patron + '/UsersComponent.vue').default },
 ]
 
 //Instancia de VueRouter y asignación de rutas
@@ -55,6 +70,7 @@ const router = new VueRouter({
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('user-create-component', require('./components' + patron + '/UserCreateComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
