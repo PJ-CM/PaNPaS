@@ -58,7 +58,7 @@ class UsersTableSeeder extends Seeder
             } else {
                 DB::table('users')->insert([
                     'username' => $faker->username(),
-                    'name' => $faker->name(),
+                    'name' => $faker->firstname(),
                     'lastname' => $faker->lastname(),
                     'email' => $faker->email(),
                     'password' => Hash::make(str_random(10)),

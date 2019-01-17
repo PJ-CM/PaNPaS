@@ -15,7 +15,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        ////return User::all();
+        //Para obtener datos de perfil a través de la relación perfil() del modelo
+        //  >> recogiendo, solamente, lsa columnas de ID y el NOMBRE de "perfiles"
+        return User::with('perfil:id,nombre')->get();
     }
 
     /**
