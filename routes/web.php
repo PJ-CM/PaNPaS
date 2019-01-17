@@ -41,6 +41,12 @@ Route::get('/seguidores', 'UserPanelController@seguidores')
 Route::get('/usuarios/{columna?}/{orden?}', 'UserPanelController@usuarios')
     ->name('user_usuarios');
 
+Route::post('/insertarReceta', 'RecetaController@insertarReceta')
+    ->name('insertar_receta');
+
+
+
+
 //Panel Público de Usuario
 Route::get('/{username}', 'UserPanelController@perfil')
     ->name('user_perfil');

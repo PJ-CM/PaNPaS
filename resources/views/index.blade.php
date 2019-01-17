@@ -81,7 +81,7 @@
                 <div class="row">
                     <div class="col-lg-12 text-center">
                         <h2 class="section-heading text-uppercase">Ranking</h2>
-                        <h3 class="section-subheading text-muted">Visualiza las recetas más destacadas</h3>
+                        <h3 class="section-subheading text-muted">Visualiza las 3 recetas más destacadas entre {{$totalRecetas}}</h3>
                     </div>
                 </div>
                 <div class="row">
@@ -485,7 +485,7 @@
                                                         <table class="mx-auto mb-5">
                                                             <tr>
                                                                 <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                                                <td style="width: 50%;" class="text-left px-2">Enero 2017</td>
+                                                                <td style="width: 50%;" class="text-left px-2">{{$receta->created_at}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-right px-2">Categoría:</td>

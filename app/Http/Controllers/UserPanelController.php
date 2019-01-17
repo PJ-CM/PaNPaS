@@ -34,7 +34,7 @@ class UserPanelController extends Controller
 
     public function listaRecetas(){
         $recetas = new Receta;
-        $recetas = $recetas->orderBy('votos', 'asc')->get();
+        $recetas = $recetas->orderBy('created_at', 'desc')->get();
 
         return view('/users/recetas', ['recetas'=>$recetas]);
     }

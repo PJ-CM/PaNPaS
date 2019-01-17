@@ -65,9 +65,7 @@
                                     </p>
                                     <input type="submit" name="sub_avatar", value="Actualizar" class="btn btn-primary right">
                                 </form>
-                                <form>
-                                   <div class="row">
-                                </form>
+
                             </div>
                         </div>
                     </div>

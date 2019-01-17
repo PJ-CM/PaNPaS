@@ -26,7 +26,8 @@ class RecetaController extends Controller
 		$recetas = new Receta;
 		$recetas = Receta::orderBy('votos', 'DESC')->take(3)->get();
 
-		return view('index', ['recetas'=>$recetas]);
+
+		return view('index', ['recetas'=>$recetas, 'totalRecetas'=>count(Receta::get())]);
 	}
 
 	public function insertarComentario(Request $request) {
@@ -44,7 +45,22 @@ class RecetaController extends Controller
 		$com->save();
 
 		return redirect('receta/'.$receta->titulo);
+	}
+
+	public function insertarReceta(Request $request) {
+
+		$data = $request->all();
+
+		$receta = new Receta();
+		$receta->titulo = $data['titulo'];
+		$receta->descripcion = $data['descripcion'];
+		$receta->elaboracion = $data['elaboracion'];
+		$receta->imagen = $data['imagen'];
+		$receta->user_id = Auth::user()->id;
 		
+		$receta->save();
+
+		return redirect('recetas');
 	}
 
 }
