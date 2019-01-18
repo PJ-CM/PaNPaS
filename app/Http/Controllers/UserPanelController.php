@@ -22,21 +22,21 @@ class UserPanelController extends Controller
     {
         if (Auth::user()->perfil_id != 1){
             return view('users.dashboard');
-        } else 
-            return redirect('admin/dashboard');          
-        
+        } else
+            return redirect('admin.dashboard');
+
     }
 
     public function logout(){
         Auth::logout();
-        return redirect("/");
+        return redirect('/');
     }
 
     public function listaRecetas(){
         $recetas = new Receta;
         $recetas = $recetas->orderBy('created_at', 'desc')->get();
 
-        return view('/users/recetas', ['recetas'=>$recetas]);
+        return view('users.recetas', ['recetas'=>$recetas]);
     }
 
     public function perfil($username){
@@ -45,33 +45,36 @@ class UserPanelController extends Controller
         $user = $var[0];
 
         if ($user->id == Auth::user()->id){
-            return view('users/perfilPrivado', ['user'=>$user]);
-        } else 
-            return view('users/perfilPublico', ['user'=>$user]);
-     
+            return view('users.perfilPrivado', ['user'=>$user]);
+        } else
+            return view('users.perfilPublico', ['user'=>$user]);
+
     }
 
     public function seguidos(){
         $user = new User();
         $user = $user->find(Auth::user()->id);
         $follows = $user->follows;
-        return view('users/seguidos', ['follows'=>$follows]);
+        return view('users.seguidos', ['follows'=>$follows]);
     }
 
     public function seguidores(){
         $user = new User();
         $user = $user->find(Auth::user()->id);
-     
 
-        return view('users/seguidores', ['user'=>$user]);
+
+        return view('users.seguidores', ['user'=>$user]);
     }
 
-        public function usuarios($columna = 'username', $orden = 'asc'){
-            $users = new User();
-            $users = $users->orderBy($columna, $orden)->get();
-     
+    public function usuarios($columna = 'username', $orden = 'asc'){
+        $users = new User();
+        //Solo usuarios de perfil USUARIO (perfil_id >> [2])
+        $perfil_id_usuario = 2;
+        $users = User::orderBy($columna, $orden)
+                    ->where('perfil_id', $perfil_id_usuario)
+                    ->get();
 
-        return view('users/usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
+        return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
     }
 
 }
