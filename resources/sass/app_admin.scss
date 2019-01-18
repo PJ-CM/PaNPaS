@@ -77,3 +77,15 @@ hr { width: 100%; height: 1px; background-color: #4f5962; }
     border-radius: 50%;
 }
 
+//Modal(es)
+#regInsModal .modal-footer > div { display: flex; width: 50%; }
+#regInsModal .modal-footer > div:first-child > small {
+    margin-top: 1px;
+    padding: 3px 5px 5px;
+}
+#regInsModal .modal-footer > div:nth-child(2) {
+    justify-content: flex-end;
+}
+#regInsModal .modal-footer > div:nth-child(2) > :last-child {
+    margin-left: 5px;
+}

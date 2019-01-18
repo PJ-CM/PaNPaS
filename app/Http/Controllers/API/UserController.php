@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserStoreRequest;
 
 class UserController extends Controller
 {
@@ -16,9 +18,13 @@ class UserController extends Controller
     public function index()
     {
         ////return User::all();
-        //Para obtener datos de perfil a través de la relación perfil() del modelo
-        //  >> recogiendo, solamente, lsa columnas de ID y el NOMBRE de "perfiles"
-        return User::with('perfil:id,nombre')->get();
+        //  >> Empleo de with() para obtener datos del perfil de cada registro
+        //  a través de la relación perfil() del modelo
+        //      -> recogiendo, solamente, las columnas de ID y el NOMBRE de "perfiles"
+        //Sin orden establecido
+        ////return User::with('perfil:id,nombre')->get();
+        //En orden DESC
+        return User::with('perfil:id,nombre')->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -27,9 +33,26 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        //
+        //if($request->avatar == '')
+            //$request->avatar = 'sin-avatar';
+        //if(!$request->input('avatar'))
+        //    $request->request->add(['avatar' => 'sin-avatar']);
+        //dd($request);
+        ////User::create($request->all());
+        $user = new User;
+        $user->username = $request->username;
+        $user->name = $request->name;
+        $user->lastname = $request->lastname;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->perfil_id = $request->perfil_id;
+        $user->save();
+
+        //simplemente, se hace un RETURN vacío pues JS se encargará de avisar
+        //del OK del proceso
+        return;
     }
 
     /**
