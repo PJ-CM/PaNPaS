@@ -24,9 +24,6 @@
                         <li class="nav-item p-2">
                             <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/recetas') active @endif" href="/recetas" title="Ir a la sección de Recetas">Recetas</a>
                         </li>
-                        <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/contacto') active @endif" href="#contacto" title="Ir a la sección de Contacto">Contacto</a>
-                        </li>
                         {{--
                             Deberá ser un DropdownMenu con las opciones de:
                                 >> ir al escritorio/dashboard del usuario
@@ -36,7 +33,7 @@
                         <li class="nav-item p-3 dropdown" style="float: right;">
                             <a class="btn btn-primary text-uppercase dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Tu Cuenta"><img src="{{Auth::user()->avatar}}" class="fa fa-user" style="width: 40px; height: 40px;"> {{Auth::user()->username}}</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Perfil</a>
+                                <a class="dropdown-item" href="{{route('user_perfil', Auth::user()->username)}}">Perfil</a>
                                 <a class="dropdown-item" href="{{route('user_panel_logout')}}" title="Cerrar Sesión">   Logout</a>
                             </div>
                             

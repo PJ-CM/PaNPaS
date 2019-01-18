@@ -19,7 +19,8 @@ Auth::routes();
 Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos'); //guarda los datos del formulario de la landing page en la DDBB
 
 //Panel donde se muestra la Receta
-Route::get ('/receta/{id}', 'RecetaController@mostrar');
+Route::get ('/receta/{id}', 'RecetaController@mostrar')->name('receta');
+Route::post ('/insertarComentario', 'RecetaController@insertarComentario');
 
 //Panel de Usuarios
 Route::get('/users/{username?}', 'UserPanelController@index')
@@ -40,10 +41,23 @@ Route::get('/seguidores', 'UserPanelController@seguidores')
 Route::get('/usuarios/{columna?}/{orden?}', 'UserPanelController@usuarios')
     ->name('user_usuarios');
 
-//Panel Público de Usuario
-Route::get('/{username}', 'UserPanelController@perfilPublico')
-    ->name('user_perfilPublico');
+Route::post('/insertarReceta', 'RecetaController@insertarReceta')
+    ->name('insertar_receta');
 
+
+
+
+//Panel Público de Usuario
+Route::get('/{username}', 'UserPanelController@perfil')
+    ->name('user_perfil');
+
+//rutas de usuario PRIVADAS
+Route::post('/user/guardarFotoPerfil', 'UserPerfilController@guardarFotoPerfil');
+Route::post('/user/actualizarDatos', 'UserPerfilController@actualizarDatos');
+
+//FOLLOW SYSTEM routes
+Route::get('/unfollow/{id}', 'FollowController@unfollow')
+    ->name('follow_unfollow');
 
 
 
@@ -68,7 +82,8 @@ Route::get('/home', 'HomeController@index')
 
 
 
-
+//AJAX
+Route::post ('/ajax/usuarios', 'AjaxController@updateUsers');
 
 
 // [API]recoger datos
@@ -108,9 +123,7 @@ Route::get ('/user/perfilPublico/{id}', 'UserPerfilController@mostrarPerfilPubli
 Route::get ('/user/index', 'UserPerfilController@index'); //mostrar perfil del usuario con información pública
 
 
-//rutas de usuario PRIVADAS
-Route::get('/user/perfilprivado', 'UserPerfilController@mostrarPerfilPrivado');
-Route::post('/user/guardarFotoPerfil', 'UserPerfilController@guardarFotoPerfil');
+
 
 //prueba carga de foto de perfil (Borrar al terminar)
 //se carga desde la modificación del perfil privado

@@ -34,18 +34,21 @@ class UserPanelController extends Controller
 
     public function listaRecetas(){
         $recetas = new Receta;
-        $recetas = $recetas->orderBy('votos', 'asc')->get();
+        $recetas = $recetas->orderBy('created_at', 'desc')->get();
 
         return view('/users/recetas', ['recetas'=>$recetas]);
     }
 
-    public function perfilPublico($username){
+    public function perfil($username){
         $user = new User();
         $var = $user->where('username', $username)->get();
         $user = $var[0];
-     
 
-        return view('users/perfilPublico', ['user'=>$user]);
+        if ($user->id == Auth::user()->id){
+            return view('users/perfilPrivado', ['user'=>$user]);
+        } else 
+            return view('users/perfilPublico', ['user'=>$user]);
+     
     }
 
     public function seguidos(){

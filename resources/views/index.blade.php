@@ -81,7 +81,7 @@
                 <div class="row">
                     <div class="col-lg-12 text-center">
                         <h2 class="section-heading text-uppercase">Ranking</h2>
-                        <h3 class="section-subheading text-muted">Visualiza las recetas más destacadas</h3>
+                        <h3 class="section-subheading text-muted">Visualiza las 3 recetas más destacadas entre {{$totalRecetas}}</h3>
                     </div>
                 </div>
                 <div class="row">
@@ -473,14 +473,19 @@
                                                     <div class="modal-body">
                                                         <!-- Project Details Go Here -->
                                                         <h2 class="text-uppercase">{{$receta->titulo}}</h2>
-                                                        <p class="item-intro text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
+                                                        <p class="item-intro text-muted">por 
+                                                            @if (Auth::user()!= null)
+                                                                <a href="/{{$receta->user->username}}" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a>
+                                                                @else
+                                                                    <span>{{$receta->user->username}}</span>
+                                                            @endif</p>
                                                         <img class="img-fluid d-block mx-auto" src="{{$receta->imagen}}" alt="{{$receta->titulo}}">
                                                         <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
 
                                                         <table class="mx-auto mb-5">
                                                             <tr>
                                                                 <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                                                <td style="width: 50%;" class="text-left px-2">Enero 2017</td>
+                                                                <td style="width: 50%;" class="text-left px-2">{{$receta->created_at}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-right px-2">Categoría:</td>

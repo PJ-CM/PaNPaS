@@ -20,9 +20,10 @@ class CreateComentariosTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('receta_id')->unsigned();
             $table->integer('time');
+            $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('receta_id')->references('id')->on('recetas');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('receta_id')->references('id')->on('recetas')->onDelete('cascade');
         });
     }
 

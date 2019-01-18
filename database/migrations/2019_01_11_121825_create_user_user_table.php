@@ -18,8 +18,8 @@ class CreateUserUserTable extends Migration
             $table->integer('follower')->unsigned();
             $table->integer('followed')->unsigned();
 
-            $table->foreign('follower')->references('id')->on('users');
-            $table->foreign('followed')->references('id')->on('users');
+            $table->foreign('follower')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('followed')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

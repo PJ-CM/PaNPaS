@@ -29,7 +29,7 @@
 							                <div class="row">
 							                	@foreach($follows as $usuario)
 							                    	<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">
-								                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
+								                        <a class="ranking-link" data-toggle="modal" href="/unfollow/{{$usuario->id}}">
 								                            <div class="ranking-hover">
 								                                <div class="ranking-hover-content">
 								                                    <i class="fas fa-minus fa-3x"></i>
