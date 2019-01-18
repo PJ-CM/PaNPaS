@@ -480,12 +480,12 @@
                                                                     <span>{{$receta->user->username}}</span>
                                                             @endif</p>
                                                         <img class="img-fluid d-block mx-auto" src="{{$receta->imagen}}" alt="{{$receta->titulo}}">
-                                                        <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+                                                        <p>{{($receta->descripcion)}}</p>
 
                                                         <table class="mx-auto mb-5">
                                                             <tr>
                                                                 <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                                                <td style="width: 50%;" class="text-left px-2">{{$receta->created_at}}</td>
+                                                                <td style="width: 50%;" class="text-left px-2">{{$receta->created_at->format("d-m-Y")}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-right px-2">Categoría:</td>

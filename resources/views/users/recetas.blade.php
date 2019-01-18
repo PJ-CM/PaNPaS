@@ -8,6 +8,42 @@
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var addid = 0;
+				$("#añadirCampoElaboracion").click(function(){
+					var addList = document.getElementById('elaboracion');
+					    var docstyle = addList.style.display;
+					    if (docstyle == 'none') addList.style.display = '';
+
+					    addid++;
+
+					    var text = document.createElement('div');
+					    text.id = 'elaboracion' + addid;
+					    text.innerHTML = "<label><h4>Paso " + addid + "</h4></label><input required type='text' value='' class='paso w3-input' name='elaboracion' id=elaboracion" + addid + ">";
+
+					    addList.appendChild(text);
+				});
+
+
+				var addiding = 0;
+				$("#añadirCampoIngrediente").click(function(){
+					var addListIng = document.getElementById('ingrediente');
+					    var docstyle = addListIng.style.display;
+					    if (docstyle == 'none') addListIng.style.display = '';
+
+					    addiding++;
+
+					    var text = document.createElement('div');
+					    text.id = 'ingrediente' + addiding;
+					    text.innerHTML = "<label><h4>Ingrediente " + addiding + "</h4></label><input required type='text' value='' class='ingrediente w3-input' id=ingrediente name='ingrediente'" + addiding+ ">";
+
+					    addListIng.appendChild(text);
+				});
+				
+
+			});
+		</script>
 
 		<title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
 @endsection
@@ -108,19 +144,19 @@
 
             <form action="/insertarReceta" method="post" enctype="multipart/form-data">
 	            <p class="col-lg-12">
-	                <label>Título</label>   			<input type="text" name="titulo" class="w3-input">
+	                <label>Título</label>   			<input type="text" name="titulo" class="w3-input" required="">
 	            </p>
 	            <p class="col-lg-12">
-	                <label>Descripción</label>     		<input type="text" name="descripcion" class="w3-input">
+	                <label>Descripción</label>     		<input type="text" name="descripcion" class="w3-input" required="">
 	            </p>
 	            <p class="col-lg-12">
-	             <label>Imagen</label>               	<input type="text" name="imagen" class="w3-input" value="https://lorempixel.com/640/480/?14725">
+	             <label>Imagen</label>               	<input type="text" name="imagen" class="w3-input" value="https://lorempixel.com/640/480/?14725" required="">
 	            </p>
-	            <p class="col-lg-12">
-	                <label>Elaboración:</label>        	<input type="text" name="elaboracion" class="w3-input">
+	            <p class="col-lg-12" id="elaboracion">
+	                <label>Elaboración:  </label><span style="font-size: 15px" id="añadirCampoElaboracion" class="btn btn-primary">+</span>
 	            </p>
-	           	<p class="col-lg-12">
-	                <label>Ingredientes:</label>        <input type="text" name="ingredientes" class="w3-input">
+	           	<p class="col-lg-12" id="ingrediente">
+	                <label>Ingredientes:</label>      <span style="font-size: 15px" id="añadirCampoIngrediente" class="btn btn-primary">+</span> 
 	            </p>
 	            <input type="submit" name="sub_avatar", value="Actualizar" class="btn btn-primary right">
         	</form>
@@ -134,3 +170,8 @@
       
     </div>
   </div>
+
+
+
+
+
