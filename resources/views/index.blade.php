@@ -485,7 +485,7 @@
                                                         <table class="mx-auto mb-5">
                                                             <tr>
                                                                 <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                                                <td style="width: 50%;" class="text-left px-2">{{-- $receta->created_at->format("d-m-Y") --}}</td>
+                                                                <td style="width: 50%;" class="text-left px-2"> {{$receta->created_at->format("d-m-Y")}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-right px-2">Categoría:</td>
