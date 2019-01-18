@@ -23,7 +23,7 @@ class UserPanelController extends Controller
         if (Auth::user()->perfil_id != 1){
             return view('users.dashboard');
         } else
-            return redirect('admin.dashboard');
+            return redirect('admin/dashboard');
 
     }
 

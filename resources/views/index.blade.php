@@ -473,7 +473,7 @@
                                                     <div class="modal-body">
                                                         <!-- Project Details Go Here -->
                                                         <h2 class="text-uppercase">{{$receta->titulo}}</h2>
-                                                        <p class="item-intro text-muted">por 
+                                                        <p class="item-intro text-muted">por
                                                             @if (Auth::user()!= null)
                                                                 <a href="/{{$receta->user->username}}" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a>
                                                                 @else
@@ -485,7 +485,7 @@
                                                         <table class="mx-auto mb-5">
                                                             <tr>
                                                                 <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                                                <td style="width: 50%;" class="text-left px-2">{{$receta->created_at->format("d-m-Y")}}</td>
+                                                                <td style="width: 50%;" class="text-left px-2">{{-- $receta->created_at->format("d-m-Y") --}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-right px-2">Categoría:</td>
@@ -493,7 +493,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-right px-2">Votos:</td>
-                                                                <td class="text-left px-2">{{$receta->votos}}</td>
+                                                                <td class="text-left px-2">{{ $receta->votos }}</td>
                                                             </tr>
                                                         </table>
 
