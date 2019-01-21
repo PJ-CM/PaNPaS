@@ -24,7 +24,10 @@ class UserController extends Controller
         //Sin orden establecido
         ////return User::with('perfil:id,nombre')->get();
         //En orden DESC
-        return User::with('perfil:id,nombre')->orderBy('id', 'desc')->get();
+        ////return User::with('perfil:id,nombre')->orderBy('id', 'desc')->get();
+        //  >>CON Soft Delete activado
+        //      -> incluyendo los registros en papelera
+        return User::withTrashed()->with('perfil:id,nombre')->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -80,6 +83,9 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *      >> Teniendo Soft Delete activado
+     *          -> el DELETE() pasa mandar el registro
+     *          a la papelera
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -90,8 +96,59 @@ class UserController extends Controller
             $user = User::findOrFail($id);
 
             $user->delete();
-            $msg = 'Usuario borrado definitivamente ... OK';
+            //SIN Soft Delete
+            ////$msg = 'Usuario borrado definitivamente ... OK';
+            //CON Soft Delete
+            $msg = 'Usuario mandado a la papelera ... OK';
 
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+        }
+
+        return [
+            'message' => $msg,
+        ];
+    }
+
+    /**
+     * Forcing remove the specified resource.
+     *      >> Teniendo Soft Delete activado
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function forceDelete($id)
+    {
+        try {
+            //  >>CON Soft Delete activado
+            //      -> incluyendo los registros en papelera
+            $user = User::withTrashed()->findOrFail($id);
+
+            $user->forceDelete();
+            $msg = 'Usuario borrado definitivamente ... OK';
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+        }
+
+        return [
+            'message' => $msg,
+        ];
+    }
+
+    /**
+     * Restore form trash the specified resource.
+     *      >> Teniendo Soft Delete activado
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restoreDelete($id)
+    {
+        try {
+            $user = User::onlyTrashed()->findOrFail($id);
+
+            $user->restore();
+            $msg = 'Usuario restaurado de la papelera ... OK';
         } catch (\Exception $e) {
             $msg = $e->getMessage();
         }

@@ -70,7 +70,15 @@ const router = new VueRouter({
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('user-create-component', require('./components' + patron + '/UserCreateComponent.vue').default);
+Vue.component('user-ins-edit-component', require('./components' + patron + '/UserInsEditComponent.vue').default);
+
+//Instancia de Vue para emplear como Bus de eventos
+//para la emisión/recepción de los mismos de forma global
+//  >> Forma larga de declarar variable y registrarla globalmente en el objeto WINDOW
+////let BusEvent = new Vue();
+////window.BusEvent = BusEvent;
+//  >> Forma corta de hacer lo mismo
+window.BusEvent = new Vue();
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

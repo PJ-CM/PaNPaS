@@ -1983,10 +1983,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserCreateComponent.vue?vue&type=script&lang=js&":
-/*!************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/UserCreateComponent.vue?vue&type=script&lang=js& ***!
-  \************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserInsEditComponent.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/UserInsEditComponent.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2110,7 +2110,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    console.log('Component mounted.');
+    var _this = this;
+
+    console.log('Component mounted.'); //Recibiendo evento si es que es emitido (en este caso, desde el componente Padre)
+
+    BusEvent.$on('fillFormEvent', function (user) {
+      _this.fillEditUser(user);
+    });
   },
   //datos devueltos por el componente:
   data: function data() {
@@ -2146,7 +2152,7 @@ __webpack_require__.r(__webpack_exports__);
      * Almacenando nuevo registro
     */
     storeUser: function storeUser() {
-      var _this = this;
+      var _this2 = this;
 
       console.log('Registrando nuevo registro...');
       var url = '/api/users';
@@ -2154,7 +2160,7 @@ __webpack_require__.r(__webpack_exports__);
         //SI TODO OK
         ////document.location = '/';
         //reseteando panel
-        _this.restartPanel(); //Lanzando notificación satisfactoria
+        _this2.restartPanel(); //Lanzando notificación satisfactoria
 
 
         toast({
@@ -2162,14 +2168,27 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Nuevo registro creado'
         }); //ocultando la ventana modal de creación de registro
 
-        $('#regInsModal').modal('hide'); //Emitiendo solicitud de recarga del listado
+        $('#regInsEditModal').modal('hide'); //Emitiendo solicitud de recarga del listado
 
-        _this.$emit('storeUser');
+        _this2.$emit('storeUserEvent');
       }).catch(function (error) {
         //SI HAY ALGÚN ERROR
         //registrando los errores recibidos
-        _this.errors.record(error.response.data.errors);
+        _this2.errors.record(error.response.data.errors);
       });
+    },
+    fillEditUser: function fillEditUser(user) {
+      //reseteando a vacío la variable de datos
+      this.newUser = {
+        'name': user.name,
+        'lastname': user.lastname,
+        'username': user.username,
+        'email': user.email,
+        'password': user.password,
+        //'password_confirmation': '',
+        'perfil_id': user.perfil_id //'avatar': '',
+
+      };
     },
     restartPanel: function restartPanel() {
       //reseteando a vacío la variable de datos
@@ -2200,6 +2219,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2356,11 +2381,23 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /**
-     * Almacenando nuevo registro
+     * Abriendo ventana modal para crear registro
     */
-    ////storeUser() {
-    ////    console.log('Registrando nuevo registro...');
-    ////},
+    regInsModal: function regInsModal() {
+      $('#regInsEditModal').modal('show');
+    },
+
+    /**
+     * Abriendo ventana modal para editar registro
+    */
+    regEditModal: function regEditModal(reg) {
+      console.log('Abriendo MODAL para editar registro [' + reg + '].'); //Emitiendo evento global para cargar, en el componente hijo,
+      //la ventana de edición con el objeto pasado
+
+      BusEvent.$emit('fillFormEvent', reg); //Abriendo modal con los datos cargados para su edición
+
+      $('#regInsEditModal').modal('show');
+    },
 
     /**
      * Editando registro
@@ -2375,9 +2412,9 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /**
-     * Borrado definitivo del registro
+     * Mandar a papelera / Borrado definitivo del registro
     */
-    deleteUser: function deleteUser(id) {
+    trashDeleteUser: function trashDeleteUser(id) {
       var _this2 = this;
 
       /* BORRADO SIN CONFIRMACIÓN */
@@ -2401,41 +2438,127 @@ __webpack_require__.r(__webpack_exports__);
 
       /**/
       Swal.fire({
-        title: '¿Estás seguro?',
-        text: 'La operación no es reversible',
+        title: 'Elección de Borrado',
+        text: 'El ELIMINAR no es reversible',
         ////type: 'warning',
         type: 'question',
         showCloseButton: true,
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: '#f6993f',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Eliminar',
-        cancelButtonText: 'Cancelar'
+        confirmButtonText: 'A papelera',
+        cancelButtonText: 'Eliminar'
       }).then(function (result) {
         if (result.value) {
           /**/
-          //URL hacia la ruta de borrado de registro
+          console.log('Se efectuará un Soft Delete...'); //URL hacia la ruta de borrado temporal de registro
+
           var url = '/api/users/' + id; //Empleado el método DELETE de Axios, el cliente AJAX,
           //que es el método referido a la ruta llamada
 
           axios.delete(url).then(function (response) {
             //SI TODO OK
-            //tras borrado, si todo OK, se muestra el listado tras recargarlo
+            //tras borrado temporal, si todo OK, se muestra
+            //el listado tras recargarlo
             _this2.getUsers();
 
             var server_msg_del = response.data.message;
-            alert(server_msg_del); //Lanzando notificación satisfactoria
+            console.log(server_msg_del); //Lanzando notificación satisfactoria
 
-            Swal.fire('¡Borrado!', 'El registro con ID [' + id + '] fue eliminado correctamente.', 'success');
+            Swal.fire('¡A la papelera!', 'El registro con ID [' + id + '] fue mandado a la papelera correctamente.', 'success');
           }).catch(function (error) {
             //SI HAY ALGÚN ERROR
             //Lanzando notificación errónea
             toast({
               type: 'warning',
-              title: 'ERROR al querer eliminar totalmente el registro con ID [' + id + ']'
+              title: 'ERROR al querer mandar a la papelera el registro con ID [' + id + ']'
             });
           });
+        } else {
+          //Borrado definitivo del registro
+          _this2.deleteTotalUser(id);
         }
+      });
+    },
+
+    /**
+     * Restaurar / Borrado definitivo del registro
+    */
+    restoreDeleteUser: function restoreDeleteUser(id) {
+      var _this3 = this;
+
+      /* BORRADO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: 'Restaurar o Eliminar',
+        text: 'El ELIMINAR no es reversible',
+        type: 'question',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#3490dc',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Restaurar',
+        cancelButtonText: 'Eliminar'
+      }).then(function (result) {
+        if (result.value) {
+          /**/
+          //URL hacia la ruta de restaurar de la papelera el registro
+          var url = '/api/users/restore-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
+          //que es el método referido a la ruta llamada
+
+          axios.get(url).then(function (response) {
+            //SI TODO OK
+            //tras restaurar de la papelera, si todo OK, se muestra
+            //el listado tras recargarlo
+            _this3.getUsers();
+
+            var server_msg_del = response.data.message;
+            console.log(server_msg_del); //Lanzando notificación satisfactoria
+
+            Swal.fire('¡Activado!', 'El registro con ID [' + id + '] fue restaurado de la papelera correctamente.', 'success');
+          }).catch(function (error) {
+            //SI HAY ALGÚN ERROR
+            //Lanzando notificación errónea
+            toast({
+              type: 'warning',
+              title: 'ERROR al querer restaurar de la papelera el registro con ID [' + id + ']'
+            });
+          });
+        } else {
+          //Borrado definitivo del registro
+          _this3.deleteTotalUser(id);
+        }
+      });
+    },
+
+    /**
+     * Borrado definitivo del registro
+    */
+    deleteTotalUser: function deleteTotalUser(id) {
+      var _this4 = this;
+
+      //URL hacia la ruta de borrado definitivo de registro
+      var url = '/api/users/force-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+
+      axios.get(url).then(function (response) {
+        //SI TODO OK
+        //tras borrado definitivo, si todo OK, se muestra
+        //el listado tras recargarlo
+        _this4.getUsers();
+
+        var server_msg_del = response.data.message;
+        console.log(server_msg_del); //Lanzando notificación satisfactoria
+
+        Swal.fire('¡Borrado!', 'El registro con ID [' + id + '] fue eliminado correctamente.', 'success');
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        //Lanzando notificación errónea
+        toast({
+          type: 'warning',
+          title: 'ERROR al querer eliminar totalmente el registro con ID [' + id + ']'
+        });
       });
     }
   }
@@ -40329,10 +40452,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserCreateComponent.vue?vue&type=template&id=2fb49b0a&":
-/*!****************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/UserCreateComponent.vue?vue&type=template&id=2fb49b0a& ***!
-  \****************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserInsEditComponent.vue?vue&type=template&id=69e8ac1b&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/UserInsEditComponent.vue?vue&type=template&id=69e8ac1b& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -40349,10 +40472,10 @@ var render = function() {
     {
       staticClass: "modal fade",
       attrs: {
-        id: "regInsModal",
+        id: "regInsEditModal",
         tabindex: "-1",
         role: "dialog",
-        "aria-labelledby": "regInsModalLabel",
+        "aria-labelledby": "regInsEditModalLabel",
         "aria-hidden": "true"
       }
     },
@@ -40376,7 +40499,7 @@ var render = function() {
                   "h5",
                   {
                     staticClass: "modal-title",
-                    attrs: { id: "regInsModalLabel" }
+                    attrs: { id: "regInsEditModalLabel" }
                   },
                   [_vm._v("Insertar registro")]
                 ),
@@ -40924,12 +41047,27 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _vm._m(1)
+                  _c("ul", { staticClass: "nav ml-auto p-2" }, [
+                    _c("li", { staticClass: "nav-item" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "nav-link btn btn-primary txt_blanco",
+                          attrs: { type: "button", title: "Insertar registro" },
+                          on: { click: _vm.regInsModal }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-user-plus" }),
+                          _vm._v(" Nuevo")
+                        ]
+                      )
+                    ])
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "card-body table-responsive p-0" }, [
                   _c("table", { staticClass: "table table-hover" }, [
-                    _vm._m(2),
+                    _vm._m(1),
                     _vm._v(" "),
                     _c(
                       "tbody",
@@ -40946,9 +41084,13 @@ var render = function() {
                               "td",
                               { staticClass: "lista_indice text-center" },
                               [
-                                _c("span", [
-                                  _vm._v(_vm._s(_vm.users.length - index))
-                                ])
+                                user.deleted_at == null
+                                  ? _c("span", { staticClass: "reg-activo" }, [
+                                      _vm._v(_vm._s(_vm.users.length - index))
+                                    ])
+                                  : _c("span", { staticClass: "reg-trashed" }, [
+                                      _vm._v(_vm._s(_vm.users.length - index))
+                                    ])
                               ]
                             ),
                             _vm._v(" "),
@@ -41006,7 +41148,13 @@ var render = function() {
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(user.perfil.nombre))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(user.created_at))]),
+                            _c("td", [
+                              _c(
+                                "small",
+                                { attrs: { title: user.created_at } },
+                                [_vm._v(_vm._s(user.created_at))]
+                              )
+                            ]),
                             _vm._v(" "),
                             _c("td", { staticClass: "text-center" }, [
                               _c(
@@ -41015,35 +41163,66 @@ var render = function() {
                                   staticClass: "text-primary",
                                   attrs: {
                                     href: "javascript: void(0);",
-                                    title: "Editar registro"
+                                    title: "Editar registro [" + user.id + "]"
                                   },
                                   on: {
                                     click: function($event) {
-                                      $event.preventDefault()
-                                      _vm.editUser(user)
+                                      _vm.regEditModal(user)
                                     }
                                   }
                                 },
                                 [_c("i", { staticClass: "fas fa-edit" })]
                               ),
                               _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "text-danger",
-                                  attrs: {
-                                    href: "javascript: void(0);",
-                                    title: "Borrar registro"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      _vm.deleteUser(user.id)
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fas fa-trash-alt" })]
-                              )
+                              user.deleted_at == null
+                                ? _c(
+                                    "a",
+                                    {
+                                      staticClass: "text-danger",
+                                      attrs: {
+                                        href: "javascript: void(0);",
+                                        title:
+                                          "A papelera / Borrar registro [" +
+                                          user.id +
+                                          "]"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          _vm.trashDeleteUser(user.id)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-trash-alt"
+                                      })
+                                    ]
+                                  )
+                                : _c(
+                                    "a",
+                                    {
+                                      staticClass: "text-warning-trash",
+                                      attrs: {
+                                        href: "javascript: void(0);",
+                                        title:
+                                          "Restaurar / Borrar registro [" +
+                                          user.id +
+                                          "]"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          _vm.restoreDeleteUser(user.id)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-sync-alt"
+                                      })
+                                    ]
+                                  )
                             ])
                           ]
                         )
@@ -41058,7 +41237,7 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("user-create-component", { on: { storeUser: _vm.getUsers } })
+      _c("user-ins-edit-component", { on: { storeUserEvent: _vm.getUsers } })
     ],
     1
   )
@@ -41070,28 +41249,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-sm-6" }, [
       _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Usuarios")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("ul", { staticClass: "nav ml-auto p-2" }, [
-      _c("li", { staticClass: "nav-item" }, [
-        _c(
-          "button",
-          {
-            staticClass: "nav-link btn btn-primary txt_blanco",
-            attrs: {
-              type: "button",
-              title: "Insertar registro",
-              "data-toggle": "modal",
-              "data-target": "#regInsModal"
-            }
-          },
-          [_c("i", { staticClass: "fa fa-user-plus" }), _vm._v(" Nuevo")]
-        )
-      ])
     ])
   },
   function() {
@@ -55054,15 +55211,15 @@ webpackContext.id = "./resources/js sync recursive ^\\.\\/components.*\\/Dashboa
 
 /***/ }),
 
-/***/ "./resources/js sync recursive ^\\.\\/components.*\\/UserCreateComponent\\.vue$":
-/*!************************************************************************!*\
-  !*** ./resources/js sync ^\.\/components.*\/UserCreateComponent\.vue$ ***!
-  \************************************************************************/
+/***/ "./resources/js sync recursive ^\\.\\/components.*\\/UserInsEditComponent\\.vue$":
+/*!*************************************************************************!*\
+  !*** ./resources/js sync ^\.\/components.*\/UserInsEditComponent\.vue$ ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./components/admin/UserCreateComponent.vue": "./resources/js/components/admin/UserCreateComponent.vue"
+	"./components/admin/UserInsEditComponent.vue": "./resources/js/components/admin/UserInsEditComponent.vue"
 };
 
 
@@ -55084,7 +55241,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = "./resources/js sync recursive ^\\.\\/components.*\\/UserCreateComponent\\.vue$";
+webpackContext.id = "./resources/js sync recursive ^\\.\\/components.*\\/UserInsEditComponent\\.vue$";
 
 /***/ }),
 
@@ -55200,7 +55357,14 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue").default);
-Vue.component('user-create-component', __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/UserCreateComponent\\.vue$")("./components" + patron + "/UserCreateComponent.vue").default);
+Vue.component('user-ins-edit-component', __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/UserInsEditComponent\\.vue$")("./components" + patron + "/UserInsEditComponent.vue").default); //Instancia de Vue para emplear como Bus de eventos
+//para la emisión/recepción de los mismos de forma global
+//  >> Forma larga de declarar variable y registrarla globalmente en el objeto WINDOW
+////let BusEvent = new Vue();
+////window.BusEvent = BusEvent;
+//  >> Forma corta de hacer lo mismo
+
+window.BusEvent = new Vue();
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -55430,17 +55594,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/UserCreateComponent.vue":
-/*!***************************************************************!*\
-  !*** ./resources/js/components/admin/UserCreateComponent.vue ***!
-  \***************************************************************/
+/***/ "./resources/js/components/admin/UserInsEditComponent.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/admin/UserInsEditComponent.vue ***!
+  \****************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _UserCreateComponent_vue_vue_type_template_id_2fb49b0a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserCreateComponent.vue?vue&type=template&id=2fb49b0a& */ "./resources/js/components/admin/UserCreateComponent.vue?vue&type=template&id=2fb49b0a&");
-/* harmony import */ var _UserCreateComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserCreateComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/UserCreateComponent.vue?vue&type=script&lang=js&");
+/* harmony import */ var _UserInsEditComponent_vue_vue_type_template_id_69e8ac1b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserInsEditComponent.vue?vue&type=template&id=69e8ac1b& */ "./resources/js/components/admin/UserInsEditComponent.vue?vue&type=template&id=69e8ac1b&");
+/* harmony import */ var _UserInsEditComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserInsEditComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/UserInsEditComponent.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -55450,9 +55614,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _UserCreateComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _UserCreateComponent_vue_vue_type_template_id_2fb49b0a___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _UserCreateComponent_vue_vue_type_template_id_2fb49b0a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _UserInsEditComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _UserInsEditComponent_vue_vue_type_template_id_69e8ac1b___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _UserInsEditComponent_vue_vue_type_template_id_69e8ac1b___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -55462,38 +55626,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/admin/UserCreateComponent.vue"
+component.options.__file = "resources/js/components/admin/UserInsEditComponent.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/UserCreateComponent.vue?vue&type=script&lang=js&":
-/*!****************************************************************************************!*\
-  !*** ./resources/js/components/admin/UserCreateComponent.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************************/
+/***/ "./resources/js/components/admin/UserInsEditComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/admin/UserInsEditComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserCreateComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./UserCreateComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserCreateComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserCreateComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserInsEditComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./UserInsEditComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserInsEditComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserInsEditComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/UserCreateComponent.vue?vue&type=template&id=2fb49b0a&":
-/*!**********************************************************************************************!*\
-  !*** ./resources/js/components/admin/UserCreateComponent.vue?vue&type=template&id=2fb49b0a& ***!
-  \**********************************************************************************************/
+/***/ "./resources/js/components/admin/UserInsEditComponent.vue?vue&type=template&id=69e8ac1b&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/admin/UserInsEditComponent.vue?vue&type=template&id=69e8ac1b& ***!
+  \***********************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserCreateComponent_vue_vue_type_template_id_2fb49b0a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./UserCreateComponent.vue?vue&type=template&id=2fb49b0a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserCreateComponent.vue?vue&type=template&id=2fb49b0a&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserCreateComponent_vue_vue_type_template_id_2fb49b0a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserInsEditComponent_vue_vue_type_template_id_69e8ac1b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./UserInsEditComponent.vue?vue&type=template&id=69e8ac1b& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserInsEditComponent.vue?vue&type=template&id=69e8ac1b&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserInsEditComponent_vue_vue_type_template_id_69e8ac1b___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserCreateComponent_vue_vue_type_template_id_2fb49b0a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserInsEditComponent_vue_vue_type_template_id_69e8ac1b___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

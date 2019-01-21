@@ -3,12 +3,17 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
     use Notifiable;
+
+    //Aplicando Soft Delete al borrar registro
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
     protected $primarykey = "username";
     protected $table = "users";

@@ -75,8 +75,10 @@ hr { width: 100%; height: 1px; background-color: #4f5962; }
 .lista_indice { font-weight: bold; }
 
 .lista_indice > span {
-    text-align: center; width: 50px; display: block; border: 4px solid #3490dc; border-radius: 5px; padding: 0 2px 1px 2px;
+    text-align: center; width: 50px; display: block; border: 4px solid; border-radius: 5px; padding: 0 2px 1px 2px;
 }
+.lista_indice > span.reg-activo { border-color: #3490dc; }
+.lista_indice > span.reg-trashed { border-color: #f6993f; }
 
 .lista-usuarios img.avatar {
     width: 45px;

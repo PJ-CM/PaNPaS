@@ -23,3 +23,10 @@ use Illuminate\Http\Request;
 Route::apiResources([
     'users' => 'API\UserController',
 ]);
+// -------------------------------------------------------------------------------
+//Con el Soft Delete activado, esta ruta es para forzar el borrado definitivo
+Route::get('/users/force-delete/{id}', 'API\UserController@forceDelete')
+    ->name('user.force-delete');
+
+Route::get('/users/restore-delete/{id}', 'API\UserController@restoreDelete')
+    ->name('user.restore-delete');

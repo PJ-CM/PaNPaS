@@ -1,12 +1,12 @@
 <template>
-    <div class="modal fade" id="regInsModal" tabindex="-1" role="dialog" aria-labelledby="regInsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="regInsEditModal" tabindex="-1" role="dialog" aria-labelledby="regInsEditModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
                 <form @submit.prevent="storeUser" novalidate>
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="regInsModalLabel">Insertar registro</h5>
+                    <h5 class="modal-title" id="regInsEditModalLabel">Insertar registro</h5>
                     <button type="button" @click="restartPanel" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -115,7 +115,12 @@
     import { Errors } from '../../libs/errors';// '../../libs/errors.js';
     export default {
         mounted() {
-            console.log('Component mounted.')
+            console.log('Component mounted.');
+
+            //Recibiendo evento si es que es emitido (en este caso, desde el componente Padre)
+            BusEvent.$on('fillFormEvent', (user) => {
+                this.fillEditUser(user);
+            });
         },
 
         //datos devueltos por el componente:
@@ -171,15 +176,29 @@
                     });
 
                     //ocultando la ventana modal de creación de registro
-                    $('#regInsModal').modal('hide');
+                    $('#regInsEditModal').modal('hide');
 
                     //Emitiendo solicitud de recarga del listado
-                    this.$emit('storeUser');
+                    this.$emit('storeUserEvent');
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR
                     //registrando los errores recibidos
                     this.errors.record(error.response.data.errors);
                 });
+            },
+
+            fillEditUser(user) {
+                //reseteando a vacío la variable de datos
+                this.newUser = {
+                    'name': user.name,
+                    'lastname': user.lastname,
+                    'username': user.username,
+                    'email': user.email,
+                    'password': user.password,
+                    //'password_confirmation': '',
+                    'perfil_id': user.perfil_id,
+                    //'avatar': '',
+                };
             },
 
             restartPanel() {

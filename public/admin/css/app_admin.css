@@ -29327,9 +29327,17 @@ hr {
   text-align: center;
   width: 50px;
   display: block;
-  border: 4px solid #3490dc;
+  border: 4px solid;
   border-radius: 5px;
   padding: 0 2px 1px 2px;
+}
+
+.lista_indice > span.reg-activo {
+  border-color: #3490dc;
+}
+
+.lista_indice > span.reg-trashed {
+  border-color: #f6993f;
 }
 
 .lista-usuarios img.avatar {

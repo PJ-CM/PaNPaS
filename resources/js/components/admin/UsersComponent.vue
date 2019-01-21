@@ -39,7 +39,8 @@
                                         del texto del botón salga en blanco por defecto-->
                                         <ul class="nav ml-auto p-2">
                                             <li class="nav-item">
-                                                <button class="nav-link btn btn-primary txt_blanco" type="button" title="Insertar registro" data-toggle="modal" data-target="#regInsModal"><i class="fa fa-user-plus"></i> Nuevo</button>
+                                                <!--<button class="nav-link btn btn-primary txt_blanco" type="button" title="Insertar registro" data-toggle="modal" data-target="#regInsEditModal"><i class="fa fa-user-plus"></i> Nuevo</button>-->
+                                                <button class="nav-link btn btn-primary txt_blanco" type="button" title="Insertar registro" @click="regInsModal"><i class="fa fa-user-plus"></i> Nuevo</button>
                                             </li>
                                         </ul>
                                     </div><!-- /.card-header -->
@@ -64,7 +65,10 @@
                                                     <!--<td class="lista_indice text-center" v-if="(index + 1) < 10">{{ '0' + (index + 1) }}</td>
                                                     <td class="lista_indice text-center" v-else v-text="index + 1"></td>-->
                                                     <!-- ORDEN DESC -->
-                                                    <td class="lista_indice text-center"><span>{{ users.length - index }}</span></td>
+                                                    <td class="lista_indice text-center">
+                                                        <span v-if="user.deleted_at == null" class="reg-activo">{{ users.length - index }}</span>
+                                                        <span v-else class="reg-trashed">{{ users.length - index }}</span>
+                                                    </td>
                                                     <td class="text-center"><a :href="'admin/users/detalle/' + user.id" title="Ir al detalle" class="negrita"><img class="avatar" :src="user.avatar" alt="Avatar del usuario"></a></td>
                                                     <td v-if="user.name == ''"><small>Sin detallar</small></td>
                                                     <td v-else-if="user.name == null"><small>Sin detallar</small></td>
@@ -75,12 +79,14 @@
                                                     <td>{{ user.username }}</td>
                                                     <td>{{ user.email }}</td>
                                                     <td>{{ user.perfil.nombre }}</td>
-                                                    <td>{{ user.created_at }}</td>
+                                                    <td><small :title="user.created_at">{{ user.created_at }}</small></td>
                                                     <td class="text-center">
-                                                        <a href="javascript: void(0);" v-on:click.prevent="editUser(user)" class="text-primary" title="Editar registro">
+                                                        <a href="javascript: void(0);" @click="regEditModal(user)" class="text-primary" :title="'Editar registro [' + user.id + ']'">
                                                             <i class="fas fa-edit"></i>
-                                                        </a> <a href="javascript: void(0);" @click.prevent="deleteUser(user.id)" class="text-danger" title="Borrar registro">
+                                                        </a> <a v-if="user.deleted_at == null" href="javascript: void(0);" @click.prevent="trashDeleteUser(user.id)" class="text-danger" :title="'A papelera / Borrar registro [' + user.id + ']'">
                                                             <i class="fas fa-trash-alt"></i>
+                                                        </a><a v-else href="javascript: void(0);" @click.prevent="restoreDeleteUser(user.id)" class="text-warning-trash" :title="'Restaurar / Borrar registro [' + user.id + ']'">
+                                                            <i class="fas fa-sync-alt"></i>
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -97,7 +103,7 @@
                 <!-- /.content -->
 
                 <!-- MODALES :: ini -->
-                <user-create-component @storeUser="getUsers"></user-create-component>
+                <user-ins-edit-component @storeUserEvent="getUsers"></user-ins-edit-component>
                 <!-- Modal-inserto :: ini -->
 
                 <!-- Modal-inserto :: fin -->
@@ -157,11 +163,25 @@
             },
 
             /**
-             * Almacenando nuevo registro
+             * Abriendo ventana modal para crear registro
             */
-            ////storeUser() {
-            ////    console.log('Registrando nuevo registro...');
-            ////},
+            regInsModal() {
+                $('#regInsEditModal').modal('show');
+            },
+
+            /**
+             * Abriendo ventana modal para editar registro
+            */
+            regEditModal(reg) {
+                console.log('Abriendo MODAL para editar registro [' + reg + '].');
+
+                //Emitiendo evento global para cargar, en el componente hijo,
+                //la ventana de edición con el objeto pasado
+                BusEvent.$emit('fillFormEvent', reg);
+
+                //Abriendo modal con los datos cargados para su edición
+                $('#regInsEditModal').modal('show');
+            },
 
             /**
              * Editando registro
@@ -178,9 +198,9 @@
             },
 
             /**
-             * Borrado definitivo del registro
+             * Mandar a papelera / Borrado definitivo del registro
             */
-            deleteUser(id) {
+            trashDeleteUser(id) {
                 /* BORRADO SIN CONFIRMACIÓN */
                 /*
                 //URL hacia la ruta de borrado de registro
@@ -201,36 +221,38 @@
                 /* BORRADO CON CONFIRMACIÓN */
                 /**/
                 Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: 'La operación no es reversible',
+                    title: 'Elección de Borrado',
+                    text: 'El ELIMINAR no es reversible',
                     ////type: 'warning',
                     type: 'question',
                     showCloseButton: true,
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: '#f6993f',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Eliminar',
-                    cancelButtonText: 'Cancelar'
+                    confirmButtonText: 'A papelera',
+                    cancelButtonText: 'Eliminar'
                 }).then((result) => {
 
                     if (result.value) {
 
                         /**/
-                        //URL hacia la ruta de borrado de registro
+                        console.log('Se efectuará un Soft Delete...');
+                        //URL hacia la ruta de borrado temporal de registro
                         let url = '/api/users/' + id;
                         //Empleado el método DELETE de Axios, el cliente AJAX,
                         //que es el método referido a la ruta llamada
                         axios.delete(url)
                         .then(response => {       //SI TODO OK
-                            //tras borrado, si todo OK, se muestra el listado tras recargarlo
+                            //tras borrado temporal, si todo OK, se muestra
+                            //el listado tras recargarlo
                             this.getUsers();
                             let server_msg_del = response.data.message;
-                            alert(server_msg_del);
+                            console.log(server_msg_del);
 
                             //Lanzando notificación satisfactoria
                             Swal.fire(
-                                '¡Borrado!',
-                                'El registro con ID [' + id + '] fue eliminado correctamente.',
+                                '¡A la papelera!',
+                                'El registro con ID [' + id + '] fue mandado a la papelera correctamente.',
                                 'success'
                             )
                         })
@@ -238,12 +260,108 @@
                             //Lanzando notificación errónea
                             toast({
                                 type: 'warning',
-                                title: 'ERROR al querer eliminar totalmente el registro con ID [' + id + ']'
+                                title: 'ERROR al querer mandar a la papelera el registro con ID [' + id + ']'
                             });
                         });
 
+                    } else {
+
+                        //Borrado definitivo del registro
+                        this.deleteTotalUser(id);
+
                     }
                 })
+            },
+
+            /**
+             * Restaurar / Borrado definitivo del registro
+            */
+            restoreDeleteUser(id) {
+                /* BORRADO CON CONFIRMACIÓN */
+                /**/
+                Swal.fire({
+                    title: 'Restaurar o Eliminar',
+                    text: 'El ELIMINAR no es reversible',
+                    type: 'question',
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3490dc',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Restaurar',
+                    cancelButtonText: 'Eliminar'
+                }).then((result) => {
+
+                    if (result.value) {
+
+                        /**/
+                        //URL hacia la ruta de restaurar de la papelera el registro
+                        let url = '/api/users/restore-delete/' + id;
+                        //Empleado el método GET de Axios, el cliente AJAX,
+                        //que es el método referido a la ruta llamada
+                        axios.get(url)
+                        .then(response => {       //SI TODO OK
+                            //tras restaurar de la papelera, si todo OK, se muestra
+                            //el listado tras recargarlo
+                            this.getUsers();
+                            let server_msg_del = response.data.message;
+                            console.log(server_msg_del);
+
+                            //Lanzando notificación satisfactoria
+                            Swal.fire(
+                                '¡Activado!',
+                                'El registro con ID [' + id + '] fue restaurado de la papelera correctamente.',
+                                'success'
+                            )
+                        })
+                        .catch(error => {           //SI HAY ALGÚN ERROR
+                            //Lanzando notificación errónea
+                            toast({
+                                type: 'warning',
+                                title: 'ERROR al querer restaurar de la papelera el registro con ID [' + id + ']'
+                            });
+                        });
+
+                    } else {
+
+                        //Borrado definitivo del registro
+                        this.deleteTotalUser(id);
+
+                    }
+                })
+            },
+
+            /**
+             * Borrado definitivo del registro
+            */
+            deleteTotalUser(id) {
+
+                //URL hacia la ruta de borrado definitivo de registro
+                let url = '/api/users/force-delete/' + id;
+                //Empleado el método GET de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
+                axios.get(url)
+                .then(response => {       //SI TODO OK
+                    //tras borrado definitivo, si todo OK, se muestra
+                    //el listado tras recargarlo
+                    this.getUsers();
+                    let server_msg_del = response.data.message;
+                    console.log(server_msg_del);
+
+                    //Lanzando notificación satisfactoria
+                    Swal.fire(
+                        '¡Borrado!',
+                        'El registro con ID [' + id + '] fue eliminado correctamente.',
+                        'success'
+                    )
+                })
+                .catch(error => {           //SI HAY ALGÚN ERROR
+                    //Lanzando notificación errónea
+                    toast({
+                        type: 'warning',
+                        title: 'ERROR al querer eliminar totalmente el registro con ID [' + id + ']'
+                    });
+                });
+
             },
 
         },
