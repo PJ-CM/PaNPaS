@@ -11,10 +11,11 @@ class follow_seeder extends Seeder
      */
     public function run()
     {
-    	for($i = 0; $i < 100; $i++){
-	        DB::table('user_user')->insert([
-	                    'follower' => random_int(1, 11),
-	                    'followed' => random_int(1, 11)            ]);
-    	}
+        for ($i = 0; $i < 100; $i++) {
+            DB::table('user_user')->insert([
+                'follower' => random_int(1, 11),
+                'followed' => random_int(1, 11),
+            ]);
+        }
     }
 }

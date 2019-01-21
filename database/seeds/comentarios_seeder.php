@@ -13,13 +13,13 @@ class comentarios_seeder extends Seeder
     {
         $faker = Factory::create();
         for ($i = 0; $i < 30; $i++){
-	         DB::table('comentarios')->insert([
-		            'padre' => null,
-		            'mensaje' => $faker->realText($faker->numberBetween(10,50)),
-		            'user_id' => random_int(1, 5),
-		            'receta_id' => random_int(1, 5),
-		            'time' => time()
-	        ]);
-	    }
+            DB::table('comentarios')->insert([
+                'padre' => null,
+                'mensaje' => $faker->realText($faker->numberBetween(10,50)),
+                'user_id' => random_int(1, 5),
+                'receta_id' => random_int(1, 5),
+                'time' => time(),
+            ]);
+        }
     }
 }

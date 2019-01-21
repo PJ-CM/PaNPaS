@@ -11,9 +11,10 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $tot_users = 11;
+        //  >> usuarios genéricos fijos
+        $tot_users = 3;
         $faker = Factory::create();
-        for ($i = 0; $i < 11; $i++) {
+        for ($i = 0; $i < $tot_users; $i++) {
 
             $timestamp = mt_rand(1, time());
             $randomDate = date('Y-m-d H:i:s', $timestamp);
@@ -24,6 +25,7 @@ class UsersTableSeeder extends Seeder
                     'name' => 'admin',
                     'lastname' => 'Admin',
                     'email' => 'admin@gmail.com',
+                    'email_verified_at' => now(),
                     'password' => Hash::make('admin'),
                     'perfil_id' => 1,
                     'avatar' => $faker->imageUrl($width = 640, $height = 480),
@@ -37,6 +39,7 @@ class UsersTableSeeder extends Seeder
                     'name' => 'usu',
                     'lastname' => 'Usu',
                     'email' => 'usu@gmail.com',
+                    'email_verified_at' => now(),
                     'password' => Hash::make('xxxxxx'),
                     'avatar' => $faker->imageUrl($width = 640, $height = 480),
                     'created_at' => $randomDate,
@@ -49,23 +52,13 @@ class UsersTableSeeder extends Seeder
                     'name' => 'Eneko',
                     'lastname' => 'Apellido',
                     'email' => 'Eneko@gmail.com',
+                    'email_verified_at' => now(),
                     'password' => Hash::make('usuario'),
                     'avatar' => $faker->imageUrl($width = 640, $height = 480),
                     'created_at' => $randomDate,
                     'updated_at' => $randomDate,
                 ]);
 
-            } else {
-                DB::table('users')->insert([
-                    'username' => $faker->username(),
-                    'name' => $faker->firstname(),
-                    'lastname' => $faker->lastname(),
-                    'email' => $faker->email(),
-                    'password' => Hash::make(str_random(10)),
-                    'avatar' => $faker->imageUrl($width = 640, $height = 480),
-                    'created_at' => $randomDate,
-                    'updated_at' => $randomDate,
-                ]);
             }
 
         }

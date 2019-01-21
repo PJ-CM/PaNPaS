@@ -2153,19 +2153,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.post(url, this.newUser).then(function (response) {
         //SI TODO OK
         ////document.location = '/';
-        //reseteando a vacío la variable de datos
-        _this.newUser = {
-          'name': '',
-          'lastname': '',
-          'username': '',
-          'email': '',
-          'password': '',
-          'password_confirmation': '',
-          'perfil_id': '',
-          'avatar': ''
-        }; //vaciando los posibles errores que se produjeron
+        //reseteando panel
+        _this.restartPanel(); //Lanzando notificación satisfactoria
 
-        _this.errors.clear();
 
         toast({
           type: 'success',
@@ -2180,6 +2170,21 @@ __webpack_require__.r(__webpack_exports__);
         //registrando los errores recibidos
         _this.errors.record(error.response.data.errors);
       });
+    },
+    restartPanel: function restartPanel() {
+      //reseteando a vacío la variable de datos
+      this.newUser = {
+        'name': '',
+        'lastname': '',
+        'username': '',
+        'email': '',
+        'password': '',
+        'password_confirmation': '',
+        'perfil_id': '',
+        'avatar': ''
+      }; //vaciando los posibles errores que se produjeron
+
+      this.errors.clear();
     }
   }
 });
@@ -2302,6 +2307,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     //console.log('Component mounted.')
@@ -2313,17 +2322,6 @@ __webpack_require__.r(__webpack_exports__);
     return {
       //Puede ser también     >>      users: [],
       users: {} //variable contenedora de los registros a listar
-      //////variable para almacenar los datos del registro a almacenar
-      ////newUser: {
-      ////    'name': '',
-      ////    'lastname': '',
-      ////    'username': '',
-      ////    'email': '',
-      ////    'password': '',
-      ////    'password_confirmation': '',
-      ////    'perfil_id': '',
-      ////    'avatar': '',
-      ////},
 
     };
   },
@@ -2346,9 +2344,8 @@ __webpack_require__.r(__webpack_exports__);
 
       //URL hacia la ruta del listado de registros
       //  >> SIN paginación
-      var url = '/api/users'; //Se emplea el método GET de Axios, el cliente AJAX
-      //pues es el método referido a la ruta a la que se
-      //llama.
+      var url = '/api/users'; //Empleado el método GET de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
       //  -> Si es correcto, se recogen los datos
       //  dentro del contenedor definido
 
@@ -2378,9 +2375,68 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /**
-     * Actualizando registro
+     * Borrado definitivo del registro
     */
-    deleteUser: function deleteUser(user) {//
+    deleteUser: function deleteUser(id) {
+      var _this2 = this;
+
+      /* BORRADO SIN CONFIRMACIÓN */
+
+      /*
+      //URL hacia la ruta de borrado de registro
+      var url = '/api/users/' + id;
+      //Empleado el método DELETE de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+      axios.delete(url).then(response => {
+          //tras borrado, si todo OK, se muestra el listado tras recargarlo
+          this.getUsers();
+           //Lanzando notificación satisfactoria
+          toast({
+              type: 'success',
+              title: 'Eliminado, correctamente, registro con ID [' + id + ']'
+          });
+      });*/
+
+      /* BORRADO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'La operación no es reversible',
+        ////type: 'warning',
+        type: 'question',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then(function (result) {
+        if (result.value) {
+          /**/
+          //URL hacia la ruta de borrado de registro
+          var url = '/api/users/' + id; //Empleado el método DELETE de Axios, el cliente AJAX,
+          //que es el método referido a la ruta llamada
+
+          axios.delete(url).then(function (response) {
+            //SI TODO OK
+            //tras borrado, si todo OK, se muestra el listado tras recargarlo
+            _this2.getUsers();
+
+            var server_msg_del = response.data.message;
+            alert(server_msg_del); //Lanzando notificación satisfactoria
+
+            Swal.fire('¡Borrado!', 'El registro con ID [' + id + '] fue eliminado correctamente.', 'success');
+          }).catch(function (error) {
+            //SI HAY ALGÚN ERROR
+            //Lanzando notificación errónea
+            toast({
+              type: 'warning',
+              title: 'ERROR al querer eliminar totalmente el registro con ID [' + id + ']'
+            });
+          });
+        }
+      });
     }
   }
 });
@@ -40306,6 +40362,7 @@ var render = function() {
           _c(
             "form",
             {
+              attrs: { novalidate: "" },
               on: {
                 submit: function($event) {
                   $event.preventDefault()
@@ -40314,7 +40371,34 @@ var render = function() {
               }
             },
             [
-              _vm._m(0),
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h5",
+                  {
+                    staticClass: "modal-title",
+                    attrs: { id: "regInsModalLabel" }
+                  },
+                  [_vm._v("Insertar registro")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "close",
+                    attrs: {
+                      type: "button",
+                      "data-dismiss": "modal",
+                      "aria-label": "Close"
+                    },
+                    on: { click: _vm.restartPanel }
+                  },
+                  [
+                    _c("span", { attrs: { "aria-hidden": "true" } }, [
+                      _vm._v("×")
+                    ])
+                  ]
+                )
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c("div", { staticClass: "form-row" }, [
@@ -40333,6 +40417,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
+                      class: { "is-invalid": _vm.errors.has("name") },
                       attrs: {
                         type: "text",
                         name: "name",
@@ -40374,6 +40459,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
+                      class: { "is-invalid": _vm.errors.has("lastname") },
                       attrs: {
                         type: "text",
                         name: "lastname",
@@ -40417,6 +40503,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
+                      class: { "is-invalid": _vm.errors.has("email") },
                       attrs: {
                         type: "text",
                         name: "email",
@@ -40450,7 +40537,7 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-group" }, [
-                      _vm._m(1),
+                      _vm._m(0),
                       _vm._v(" "),
                       _c("input", {
                         directives: [
@@ -40462,6 +40549,14 @@ var render = function() {
                           }
                         ],
                         staticClass: "form-control",
+                        class: [
+                          { "is-invalid": _vm.errors.has("username") },
+                          {
+                            borde_redondeo_lateral_dcho: _vm.errors.has(
+                              "username"
+                            )
+                          }
+                        ],
                         attrs: {
                           type: "text",
                           name: "username",
@@ -40503,7 +40598,7 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-group" }, [
-                      _vm._m(2),
+                      _vm._m(1),
                       _vm._v(" "),
                       _c("input", {
                         directives: [
@@ -40515,6 +40610,14 @@ var render = function() {
                           }
                         ],
                         staticClass: "form-control",
+                        class: [
+                          { "is-invalid": _vm.errors.has("password") },
+                          {
+                            borde_redondeo_lateral_dcho: _vm.errors.has(
+                              "password"
+                            )
+                          }
+                        ],
                         attrs: {
                           type: "password",
                           name: "password",
@@ -40554,7 +40657,7 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-group" }, [
-                      _vm._m(3),
+                      _vm._m(2),
                       _vm._v(" "),
                       _c("input", {
                         directives: [
@@ -40610,6 +40713,7 @@ var render = function() {
                           }
                         ],
                         staticClass: "custom-select",
+                        class: { "is-invalid": _vm.errors.has("perfil_id") },
                         attrs: {
                           name: "perfil_id",
                           id: "perfil-id",
@@ -40661,7 +40765,30 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(4)
+              _c("div", { staticClass: "modal-footer" }, [
+                _vm._m(3),
+                _vm._v(" "),
+                _c("div", [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-secondary",
+                      attrs: { type: "button", "data-dismiss": "modal" },
+                      on: { click: _vm.restartPanel }
+                    },
+                    [_vm._v("Cancelar")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "submit", title: "Insertar registro" }
+                    },
+                    [_vm._v("Insertar")]
+                  )
+                ])
+              ])
             ]
           )
         ])
@@ -40670,31 +40797,6 @@ var render = function() {
   )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "h5",
-        { staticClass: "modal-title", attrs: { id: "regInsModalLabel" } },
-        [_vm._v("Insertar registro")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -40738,31 +40840,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c("div", [
-        _c("small", { staticClass: "text-white bg-danger" }, [
-          _vm._v("(*) campo requerido")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-secondary",
-            attrs: { type: "button", "data-dismiss": "modal" }
-          },
-          [_vm._v("Cancelar")]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary",
-            attrs: { type: "submit", title: "Insertar registro" }
-          },
-          [_vm._v("Insertar")]
-        )
+    return _c("div", [
+      _c("small", { staticClass: "text-white bg-danger" }, [
+        _vm._v("(*) campo requerido")
       ])
     ])
   }
@@ -40856,12 +40936,20 @@ var render = function() {
                       _vm._l(_vm.users, function(user, index) {
                         return _c(
                           "tr",
-                          { key: user.id, staticClass: "lista-usuarios" },
+                          {
+                            key: user.id,
+                            staticClass: "lista-usuarios",
+                            staticStyle: { "vertical-align": "middle" }
+                          },
                           [
                             _c(
                               "td",
                               { staticClass: "lista_indice text-center" },
-                              [_vm._v(_vm._s(_vm.users.length - index))]
+                              [
+                                _c("span", [
+                                  _vm._v(_vm._s(_vm.users.length - index))
+                                ])
+                              ]
                             ),
                             _vm._v(" "),
                             _c("td", { staticClass: "text-center" }, [
@@ -40886,13 +40974,31 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _c("td", {
-                              domProps: { textContent: _vm._s(user.name) }
-                            }),
+                            user.name == ""
+                              ? _c("td", [
+                                  _c("small", [_vm._v("Sin detallar")])
+                                ])
+                              : user.name == null
+                                ? _c("td", [
+                                    _c("small", [_vm._v("Sin detallar")])
+                                  ])
+                                : _c("td", {
+                                    domProps: { textContent: _vm._s(user.name) }
+                                  }),
                             _vm._v(" "),
-                            _c("td", {
-                              domProps: { textContent: _vm._s(user.lastname) }
-                            }),
+                            user.lastname == ""
+                              ? _c("td", [
+                                  _c("small", [_vm._v("Sin detallar")])
+                                ])
+                              : user.lastname == null
+                                ? _c("td", [
+                                    _c("small", [_vm._v("Sin detallar")])
+                                  ])
+                                : _c("td", {
+                                    domProps: {
+                                      textContent: _vm._s(user.lastname)
+                                    }
+                                  }),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(user.username))]),
                             _vm._v(" "),
@@ -40920,7 +41026,7 @@ var render = function() {
                                 },
                                 [_c("i", { staticClass: "fas fa-edit" })]
                               ),
-                              _vm._v(" / "),
+                              _vm._v(" "),
                               _c(
                                 "a",
                                 {
@@ -40932,7 +41038,7 @@ var render = function() {
                                   on: {
                                     click: function($event) {
                                       $event.preventDefault()
-                                      _vm.deleteUser(user)
+                                      _vm.deleteUser(user.id)
                                     }
                                   }
                                 },
@@ -43768,8 +43874,8 @@ if (inBrowser && window.Vue) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
- * Vue.js v2.5.22
- * (c) 2014-2019 Evan You
+ * Vue.js v2.5.21
+ * (c) 2014-2018 Evan You
  * Released under the MIT License.
  */
 
@@ -44398,7 +44504,7 @@ if (true) {
       ? vm.options
       : vm._isVue
         ? vm.$options || vm.constructor.options
-        : vm;
+        : vm || {};
     var name = options.name || options._componentTag;
     var file = options.__file;
     if (!name && file) {
@@ -44493,9 +44599,9 @@ Dep.prototype.notify = function notify () {
   }
 };
 
-// The current target watcher being evaluated.
-// This is globally unique because only one watcher
-// can be evaluated at a time.
+// the current target watcher being evaluated.
+// this is globally unique because there could be only one
+// watcher being evaluated at any time.
 Dep.target = null;
 var targetStack = [];
 
@@ -45023,26 +45129,13 @@ function mergeHook (
   parentVal,
   childVal
 ) {
-  var res = childVal
+  return childVal
     ? parentVal
       ? parentVal.concat(childVal)
       : Array.isArray(childVal)
         ? childVal
         : [childVal]
-    : parentVal;
-  return res
-    ? dedupeHooks(res)
-    : res
-}
-
-function dedupeHooks (hooks) {
-  var res = [];
-  for (var i = 0; i < hooks.length; i++) {
-    if (res.indexOf(hooks[i]) === -1) {
-      res.push(hooks[i]);
-    }
-  }
-  return res
+    : parentVal
 }
 
 LIFECYCLE_HOOKS.forEach(function (hook) {
@@ -45278,7 +45371,7 @@ function mergeOptions (
   normalizeProps(child, vm);
   normalizeInject(child, vm);
   normalizeDirectives(child);
-
+  
   // Apply extends and mixins on the child options,
   // but only if it is a raw options object that isn't
   // the result of another mergeOptions call.
@@ -46211,8 +46304,6 @@ function resolveAsyncComponent (
       // (async resolves are shimmed as synchronous during SSR)
       if (!sync) {
         forceRender(true);
-      } else {
-        contexts.length = 0;
       }
     });
 
@@ -46380,8 +46471,8 @@ function eventsMixin (Vue) {
     }
     // array of events
     if (Array.isArray(event)) {
-      for (var i$1 = 0, l = event.length; i$1 < l; i$1++) {
-        vm.$off(event[i$1], fn);
+      for (var i = 0, l = event.length; i < l; i++) {
+        vm.$off(event[i], fn);
       }
       return vm
     }
@@ -46394,14 +46485,16 @@ function eventsMixin (Vue) {
       vm._events[event] = null;
       return vm
     }
-    // specific handler
-    var cb;
-    var i = cbs.length;
-    while (i--) {
-      cb = cbs[i];
-      if (cb === fn || cb.fn === fn) {
-        cbs.splice(i, 1);
-        break
+    if (fn) {
+      // specific handler
+      var cb;
+      var i$1 = cbs.length;
+      while (i$1--) {
+        cb = cbs[i$1];
+        if (cb === fn || cb.fn === fn) {
+          cbs.splice(i$1, 1);
+          break
+        }
       }
     }
     return vm
@@ -48562,14 +48655,34 @@ function resolveConstructorOptions (Ctor) {
 function resolveModifiedOptions (Ctor) {
   var modified;
   var latest = Ctor.options;
+  var extended = Ctor.extendOptions;
   var sealed = Ctor.sealedOptions;
   for (var key in latest) {
     if (latest[key] !== sealed[key]) {
       if (!modified) { modified = {}; }
-      modified[key] = latest[key];
+      modified[key] = dedupe(latest[key], extended[key], sealed[key]);
     }
   }
   return modified
+}
+
+function dedupe (latest, extended, sealed) {
+  // compare latest and sealed to ensure lifecycle hooks won't be duplicated
+  // between merges
+  if (Array.isArray(latest)) {
+    var res = [];
+    sealed = Array.isArray(sealed) ? sealed : [sealed];
+    extended = Array.isArray(extended) ? extended : [extended];
+    for (var i = 0; i < latest.length; i++) {
+      // push original options and not sealed options to exclude duplicated options
+      if (extended.indexOf(latest[i]) >= 0 || sealed.indexOf(latest[i]) < 0) {
+        res.push(latest[i]);
+      }
+    }
+    return res
+  } else {
+    return latest
+  }
 }
 
 function Vue (options) {
@@ -48940,7 +49053,7 @@ Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
 
-Vue.version = '2.5.22';
+Vue.version = '2.5.21';
 
 /*  */
 
@@ -55032,7 +55145,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
  //y pasando variable a global para que sea accesible en toda la aplicación
 
-window.Swal = sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a; //  >> Registrando modo de alerta simple
+window.Swal = sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a; //  >> Registrando modo de alerta simple (notificaciones esquina superior)
 
 var toast = sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.mixin({
   toast: true,
@@ -55573,7 +55686,7 @@ function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /var/www/html/panpas-restructurado/resources/js/app_admin.js */"./resources/js/app_admin.js");
+module.exports = __webpack_require__(/*! D:\inetpubapache-www\__laravel-homestead-proyectos\panpas-restructurado-git\resources\js\app_admin.js */"./resources/js/app_admin.js");
 
 
 /***/ })

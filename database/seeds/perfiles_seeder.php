@@ -11,17 +11,14 @@ class perfiles_seeder extends Seeder
      */
     public function run()
     {
-            DB::table('perfiles')->insert([
-                    'nombre' => 'Administrador',
-                    'descripcion' => 'Usuario Root'
-            ]);
-            
-	         DB::table('perfiles')->insert([
-		            'nombre' => 'Usuario',
-		            'descripcion' => 'Usuario Normal'
-	        ]);
+        DB::table('perfiles')->insert([
+            'nombre' => 'Administrador',
+            'descripcion' => 'Usuario Root',
+        ]);
 
-
-
+        DB::table('perfiles')->insert([
+            'nombre' => 'Usuario',
+            'descripcion' => 'Usuario Normal',
+        ]);
     }
 }

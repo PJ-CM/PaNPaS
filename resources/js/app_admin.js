@@ -13,7 +13,7 @@ window.Vue = require('vue');
 import Swal from 'sweetalert2'
 //y pasando variable a global para que sea accesible en toda la aplicación
 window.Swal = Swal;
-//  >> Registrando modo de alerta simple
+//  >> Registrando modo de alerta simple (notificaciones esquina superior)
 const toast = Swal.mixin({
     toast: true,
     position: 'top-end',

@@ -11,12 +11,11 @@ class comentarioUser_seeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < 30; $i++){
-	         DB::table('comentario_user')->insert([
-		            'comentario_id' => random_int(1, 5),
-		            'user_id' => random_int(1, 5)
-		            
-	        ]);
-	    }
+        for ($i = 0; $i < 30; $i++) {
+            DB::table('comentario_user')->insert([
+                'comentario_id' => random_int(1, 5),
+                'user_id' => random_int(1, 5),
+            ]);
+        }
     }
 }

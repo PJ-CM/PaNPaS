@@ -11,11 +11,11 @@ class ingredientes_seeder extends Seeder
      */
     public function run()
     {
-       	for ($i = 0; $i < 50; $i++){
-	         DB::table('ingredientes')->insert([
-		            'nombre' => 'NombreIngrediente'.$i,
-		            'descripcion' => 'DescripcionIngrediente'.$i
-	        ]);
-	    }
+        for ($i = 0; $i < 50; $i++) {
+            DB::table('ingredientes')->insert([
+                'nombre' => 'NombreIngrediente'.$i,
+                'descripcion' => 'DescripcionIngrediente'.$i,
+            ]);
+        }
     }
 }

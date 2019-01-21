@@ -3,11 +3,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
-                <form @submit.prevent="storeUser">
+                <form @submit.prevent="storeUser" novalidate>
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="regInsModalLabel">Insertar registro</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" @click="restartPanel" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -16,19 +16,19 @@
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="name-id">Nombre</label>
-                            <input v-model="newUser.name" type="text" class="form-control" name="name" id="name-id" placeholder="Nombre">
+                            <input v-model="newUser.name" type="text" class="form-control" :class="{ 'is-invalid': errors.has('name') }" name="name" id="name-id" placeholder="Nombre">
                             <span v-if="errors.has('name')" class="block text-sm text-danger mt-2">{{ errors.get('name') }}</span>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="lastname-id">Apellido</label>
-                            <input v-model="newUser.lastname" type="text" class="form-control" name="lastname" id="lastname-id" placeholder="Apellido">
+                            <input v-model="newUser.lastname" type="text" class="form-control" :class="{ 'is-invalid': errors.has('lastname') }" name="lastname" id="lastname-id" placeholder="Apellido">
                             <span v-if="errors.has('lastname')" class="block text-sm text-danger mt-2">{{ errors.get('lastname') }}</span>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="email-id">Email*</label>
-                            <input v-model="newUser.email" type="text" class="form-control" name="email" id="email-id" placeholder="Email" required>
+                            <input v-model="newUser.email" type="text" class="form-control" :class="{ 'is-invalid': errors.has('email') }" name="email" id="email-id" placeholder="Email" required>
                             <span v-if="errors.has('email')" class="block text-sm text-danger mt-2">{{ errors.get('email') }}</span>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -37,7 +37,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroupUserN">@</span>
                                 </div>
-                                <input v-model="newUser.username" type="text" class="form-control" name="username" id="username-id" placeholder="Nick" aria-describedby="inputGroupUserN" required>
+                                <input v-model="newUser.username" type="text" class="form-control" :class="[{ 'is-invalid': errors.has('username') }, { 'borde_redondeo_lateral_dcho': errors.has('username') }]" name="username" id="username-id" placeholder="Nick" aria-describedby="inputGroupUserN" required>
                                 <span v-if="errors.has('username')" class="block text-sm text-danger mt-2">{{ errors.get('username') }}</span>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroupPass">&bull;</span>
                                 </div>
-                                <input v-model="newUser.password" type="password" class="form-control" name="password" id="pass_id" placeholder="Contraseña" aria-describedby="inputGroupPass" required>
+                                <input v-model="newUser.password" type="password" class="form-control" :class="[{ 'is-invalid': errors.has('password') }, { 'borde_redondeo_lateral_dcho': errors.has('password') }]" name="password" id="pass_id" placeholder="Contraseña" aria-describedby="inputGroupPass" required>
                                 <span v-if="errors.has('password')" class="block text-sm text-danger mt-2">{{ errors.get('password') }}</span>
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                     <div class="form-row">
                         <div class="col-md-4 mb-3">
                             <label for="perfil-id">Perfil*</label>
-                            <select v-model="newUser.perfil_id" name="perfil_id" id="perfil-id" class="custom-select" required>
+                            <select v-model="newUser.perfil_id" name="perfil_id" id="perfil-id" class="custom-select" :class="{ 'is-invalid': errors.has('perfil_id') }" required>
                                 <option value="">Seleccionar un perfil</option>
                                 <option value="1">Administrador</option>
                                 <option value="2">Usuario</option>
@@ -98,7 +98,7 @@
                 <div class="modal-footer">
                     <div><small class="text-white bg-danger">(*) campo requerido</small></div>
                     <div>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="restartPanel">Cancelar</button>
                         <button class="btn btn-primary" type="submit" title="Insertar registro">Insertar</button>
                     </div>
                 </div>
@@ -161,26 +161,14 @@
                 .then((response) => {       //SI TODO OK
                     ////document.location = '/';
 
-                    //reseteando a vacío la variable de datos
-                    this.newUser = {
-                        'name': '',
-                        'lastname': '',
-                        'username': '',
-                        'email': '',
-                        'password': '',
-                        'password_confirmation': '',
-                        'perfil_id': '',
-                        'avatar': '',
-                    };
-                    //vaciando los posibles errores que se produjeron
-                    this.errors.clear();
+                    //reseteando panel
+                    this.restartPanel();
 
-
-
+                    //Lanzando notificación satisfactoria
                     toast({
                         type: 'success',
                         title: 'Nuevo registro creado'
-                    })
+                    });
 
                     //ocultando la ventana modal de creación de registro
                     $('#regInsModal').modal('hide');
@@ -192,6 +180,23 @@
                     //registrando los errores recibidos
                     this.errors.record(error.response.data.errors);
                 });
+            },
+
+            restartPanel() {
+                //reseteando a vacío la variable de datos
+                this.newUser = {
+                    'name': '',
+                    'lastname': '',
+                    'username': '',
+                    'email': '',
+                    'password': '',
+                    'password_confirmation': '',
+                    'perfil_id': '',
+                    'avatar': '',
+                };
+
+                //vaciando los posibles errores que se produjeron
+                this.errors.clear();
             },
 
         },

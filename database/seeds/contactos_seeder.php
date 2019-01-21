@@ -11,14 +11,12 @@ class contactos_seeder extends Seeder
      */
     public function run()
     {
-
-
-	    for ($i = 0; $i < 10; $i++){
-	         DB::table('contactos')->insert([
-		            'nombre' => 'nombre'.$i,
-		            'correo' => 'correo'.$i,
-		            'mensaje' => 'mensaje'.$i
-	        ]);
-	    }
+        for ($i = 0; $i < 10; $i++) {
+            DB::table('contactos')->insert([
+                'nombre' => 'nombre'.$i,
+                'correo' => 'correo'.$i,
+                'mensaje' => 'mensaje'.$i,
+            ]);
+        }
     }
 }

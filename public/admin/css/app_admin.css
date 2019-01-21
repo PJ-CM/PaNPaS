@@ -13275,8 +13275,7 @@ abbr[data-original-title] {
           text-decoration: underline dotted;
   cursor: help;
   border-bottom: 0;
-  -webkit-text-decoration-skip-ink: none;
-          text-decoration-skip-ink: none;
+  text-decoration-skip-ink: none;
 }
 
 address {
@@ -29320,9 +29319,31 @@ hr {
   display: none;
 }
 
+.lista_indice {
+  font-weight: bold;
+}
+
+.lista_indice > span {
+  text-align: center;
+  width: 50px;
+  display: block;
+  border: 4px solid #3490dc;
+  border-radius: 5px;
+  padding: 0 2px 1px 2px;
+}
+
 .lista-usuarios img.avatar {
   width: 45px;
   border-radius: 50%;
+}
+
+a.text-warning-trash {
+  color: #f6993f;
+}
+
+a.text-warning-trash:hover,
+a.text-warning-trash:focus {
+  color: #d39e00;
 }
 
 #regInsModal .modal-footer > div {
@@ -29341,5 +29362,9 @@ hr {
 
 #regInsModal .modal-footer > div:nth-child(2) > :last-child {
   margin-left: 5px;
+}
+
+.borde_redondeo_lateral_dcho {
+  border-radius: 0 5px 5px 0 !important;
 }
 

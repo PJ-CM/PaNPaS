@@ -59,15 +59,19 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr class="lista-usuarios" v-for="(user, index) in users" :key="user.id">
+                                                <tr class="lista-usuarios" v-for="(user, index) in users" :key="user.id" style="vertical-align: middle;">
                                                     <!-- ORDEN ASC -->
                                                     <!--<td class="lista_indice text-center" v-if="(index + 1) < 10">{{ '0' + (index + 1) }}</td>
                                                     <td class="lista_indice text-center" v-else v-text="index + 1"></td>-->
                                                     <!-- ORDEN DESC -->
-                                                    <td class="lista_indice text-center">{{ users.length - index }}</td>
+                                                    <td class="lista_indice text-center"><span>{{ users.length - index }}</span></td>
                                                     <td class="text-center"><a :href="'admin/users/detalle/' + user.id" title="Ir al detalle" class="negrita"><img class="avatar" :src="user.avatar" alt="Avatar del usuario"></a></td>
-                                                    <td v-text="user.name"></td>
-                                                    <td v-text="user.lastname"></td>
+                                                    <td v-if="user.name == ''"><small>Sin detallar</small></td>
+                                                    <td v-else-if="user.name == null"><small>Sin detallar</small></td>
+                                                    <td v-else v-text="user.name"></td>
+                                                    <td v-if="user.lastname == ''"><small>Sin detallar</small></td>
+                                                    <td v-else-if="user.lastname == null"><small>Sin detallar</small></td>
+                                                    <td v-else v-text="user.lastname"></td>
                                                     <td>{{ user.username }}</td>
                                                     <td>{{ user.email }}</td>
                                                     <td>{{ user.perfil.nombre }}</td>
@@ -75,7 +79,7 @@
                                                     <td class="text-center">
                                                         <a href="javascript: void(0);" v-on:click.prevent="editUser(user)" class="text-primary" title="Editar registro">
                                                             <i class="fas fa-edit"></i>
-                                                        </a> / <a href="javascript: void(0);" v-on:click.prevent="deleteUser(user)" class="text-danger" title="Borrar registro">
+                                                        </a> <a href="javascript: void(0);" @click.prevent="deleteUser(user.id)" class="text-danger" title="Borrar registro">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a>
                                                     </td>
@@ -119,17 +123,6 @@
             return {
                 //Puede ser también     >>      users: [],
                 users: {},  //variable contenedora de los registros a listar
-                //////variable para almacenar los datos del registro a almacenar
-                ////newUser: {
-                ////    'name': '',
-                ////    'lastname': '',
-                ////    'username': '',
-                ////    'email': '',
-                ////    'password': '',
-                ////    'password_confirmation': '',
-                ////    'perfil_id': '',
-                ////    'avatar': '',
-                ////},
             }
         },
 
@@ -153,9 +146,8 @@
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
                 let url = '/api/users';
-                //Se emplea el método GET de Axios, el cliente AJAX
-                //pues es el método referido a la ruta a la que se
-                //llama.
+                //Empleado el método GET de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
                 //  -> Si es correcto, se recogen los datos
                 //  dentro del contenedor definido
                 axios.get(url).then( response => {
@@ -186,10 +178,72 @@
             },
 
             /**
-             * Actualizando registro
+             * Borrado definitivo del registro
             */
-            deleteUser(user) {
-                //
+            deleteUser(id) {
+                /* BORRADO SIN CONFIRMACIÓN */
+                /*
+                //URL hacia la ruta de borrado de registro
+                var url = '/api/users/' + id;
+                //Empleado el método DELETE de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
+                axios.delete(url).then(response => {
+                    //tras borrado, si todo OK, se muestra el listado tras recargarlo
+                    this.getUsers();
+
+                    //Lanzando notificación satisfactoria
+                    toast({
+                        type: 'success',
+                        title: 'Eliminado, correctamente, registro con ID [' + id + ']'
+                    });
+                });*/
+
+                /* BORRADO CON CONFIRMACIÓN */
+                /**/
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: 'La operación no es reversible',
+                    ////type: 'warning',
+                    type: 'question',
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+
+                    if (result.value) {
+
+                        /**/
+                        //URL hacia la ruta de borrado de registro
+                        let url = '/api/users/' + id;
+                        //Empleado el método DELETE de Axios, el cliente AJAX,
+                        //que es el método referido a la ruta llamada
+                        axios.delete(url)
+                        .then(response => {       //SI TODO OK
+                            //tras borrado, si todo OK, se muestra el listado tras recargarlo
+                            this.getUsers();
+                            let server_msg_del = response.data.message;
+                            alert(server_msg_del);
+
+                            //Lanzando notificación satisfactoria
+                            Swal.fire(
+                                '¡Borrado!',
+                                'El registro con ID [' + id + '] fue eliminado correctamente.',
+                                'success'
+                            )
+                        })
+                        .catch(error => {           //SI HAY ALGÚN ERROR
+                            //Lanzando notificación errónea
+                            toast({
+                                type: 'warning',
+                                title: 'ERROR al querer eliminar totalmente el registro con ID [' + id + ']'
+                            });
+                        });
+
+                    }
+                })
             },
 
         },

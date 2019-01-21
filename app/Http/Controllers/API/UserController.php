@@ -86,6 +86,18 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $user = User::findOrFail($id);
+
+            $user->delete();
+            $msg = 'Usuario borrado definitivamente ... OK';
+
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+        }
+
+        return [
+            'message' => $msg,
+        ];
     }
 }
