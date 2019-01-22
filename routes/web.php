@@ -43,6 +43,9 @@ Route::get('/usuarios/{columna?}/{orden?}', 'UserPanelController@usuarios')
 Route::post('/buscarUsuario', 'UserPanelController@buscarUsuario')
     ->name('user_buscarUsuario');
 
+Route::post('/buscarReceta', 'UserPanelController@buscarReceta')
+    ->name('user_buscarReceta');
+
 
 
 Route::post('/insertarReceta', 'RecetaController@insertarReceta')

@@ -27,7 +27,8 @@
 	                            	<form action="/buscarUsuario" method="post" class="right">
 										<input type="text" name="buscador" class="btn btn-dark" placeholder="buscador...">
 										<input type="submit" name="buscadorSubmit" class="btn btn-dark">
-									</form></h1>
+									</form>
+								</h1>
 
 									<div class="dropdown" style="float: right;">
 									  {{--<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -46,6 +47,9 @@
 	                                {{-- Usuarios Grid --}}
 									        <section class="bg-light" id="ranking">
 									            <div class="container">
+													@if (isset($busqueda))
+														<h1>Resultado de la búsqueda... "{{$busqueda}}"</h1>
+													@endif
 									                <div class="row">
 									                	@foreach($users as $user)
 									                	{{-- usuarios a los que sigues --}}

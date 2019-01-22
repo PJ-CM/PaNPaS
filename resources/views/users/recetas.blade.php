@@ -59,7 +59,11 @@
                 <div class="row justify-content-center">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header">Usuarios <a href="/insertarReceta" class="btn btn-primary right" data-toggle="modal" data-target="#modalInsertar">Nueva Receta</a> </div>
+                            <div class="card-header"><h1>Lista de Recetas 	                            	
+                            		<form action="/buscarReceta" method="post" class="right">
+										<input type="text" name="buscador" class="btn btn-dark" placeholder="buscador...">
+										<input type="submit" name="buscadorSubmit" class="btn btn-dark">
+									</form><a href="/insertarReceta" class="btn btn-primary" data-toggle="modal" data-target="#modalInsertar">Nueva Receta</a></h1>  </div>
 
                             <div class="card-body">
                                 
@@ -67,7 +71,11 @@
 
 								        <section class="bg-light" id="ranking">
 								            <div class="container">
+								            	@if (isset($busqueda))
+								                		<h1>Resultado de la búsqueda... "{{$busqueda}}"</h1>
+								                @endif
 								                <div class="row">
+
 								                	@foreach($recetas as $receta)
 								                    	<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">
 									                        <a class="ranking-link" data-toggle="modal" href="/receta/{{$receta->titulo}}">

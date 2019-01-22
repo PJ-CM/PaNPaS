@@ -89,7 +89,27 @@ class UserPanelController extends Controller
                         ->where('username', 'LIKE', "%{$buscar}%")
                         ->get();
 
-            return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
+
+            if ($buscar == ""){
+                return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
+            }else {
+                return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden, 'busqueda'=>$buscar]);
+            }
+
+    }
+
+    public function buscarReceta($columna = 'titulo', $orden = 'asc'){
+
+            $buscar = $_POST['buscador'];
+
+            $recetas = Receta::orderBy($columna, $orden)
+                        ->where('titulo', 'LIKE', "%{$buscar}%")
+                        ->get();
+            if ($buscar == ""){
+                return view('users.recetas', ['recetas'=>$recetas, 'columna' => $columna, 'orden' => $orden]);
+            }else {
+                return view('users.recetas', ['recetas'=>$recetas, 'columna' => $columna, 'orden' => $orden, 'busqueda'=>$buscar]);
+            }
     }
 
 }
