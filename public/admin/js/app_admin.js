@@ -2105,6 +2105,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 //librería para tratar los errores capturados en el servidor
  // '../../libs/errors.js';
 
@@ -2112,10 +2114,13 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    console.log('Component mounted.'); //Recibiendo evento si es que es emitido (en este caso, desde el componente Padre)
+    console.log('Component mounted.'); //Recibiendo evento(s) si emitido(s) (en este caso, desde el componente Padre)
 
-    BusEvent.$on('fillFormEvent', function (user) {
-      _this.fillEditUser(user);
+    BusEvent.$on('insModeChangeEvent', function (status) {
+      _this.insModeChange(status);
+    });
+    BusEvent.$on('fillFormEvent', function (user, status) {
+      _this.fillEditUser(user, status);
     });
   },
   //datos devueltos por el componente:
@@ -2124,7 +2129,7 @@ __webpack_require__.r(__webpack_exports__);
       //variable que guarda el archivo seleccionado
       avatarSelecc: null,
       //variable para almacenar los datos del registro a almacenar
-      newUser: {
+      objUser: {
         'name': '',
         'lastname': '',
         'username': '',
@@ -2134,18 +2139,26 @@ __webpack_require__.r(__webpack_exports__);
         'perfil_id': '',
         'avatar': ''
       },
+      //útil para condicionar el muestreo del modal para crear o editar registro
+      insMode: true,
       //posibles errores
       errors: new _libs_errors__WEBPACK_IMPORTED_MODULE_0__["Errors"]()
     };
   },
   methods: {
+    insModeChange: function insModeChange(status) {
+      //Cambiando estado
+      this.insMode = status;
+      console.log('insMode ACTUAL: ' + this.insMode);
+    },
+
     /**
      * En el evento de seleccionar archivo, se captura el archivo elegido
      * guardándolo en la variable correspondiente
     */
     onAvatarSelecc: function onAvatarSelecc(evento) {
       console.log(evento); ////this.avatarSelecc = evento.target.files[0];
-      //this.newUser.avatar = evento.target.files[0];
+      //this.objUser.avatar = evento.target.files[0];
     },
 
     /**
@@ -2156,7 +2169,7 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log('Registrando nuevo registro...');
       var url = '/api/users';
-      axios.post(url, this.newUser).then(function (response) {
+      axios.post(url, this.objUser).then(function (response) {
         //SI TODO OK
         ////document.location = '/';
         //reseteando panel
@@ -2177,9 +2190,13 @@ __webpack_require__.r(__webpack_exports__);
         _this2.errors.record(error.response.data.errors);
       });
     },
-    fillEditUser: function fillEditUser(user) {
-      //reseteando a vacío la variable de datos
-      this.newUser = {
+
+    /**
+     * Mostrando registro para editar
+    */
+    fillEditUser: function fillEditUser(user, status) {
+      //rellenando la variable de datos para la edición
+      this.objUser = {
         'name': user.name,
         'lastname': user.lastname,
         'username': user.username,
@@ -2188,11 +2205,22 @@ __webpack_require__.r(__webpack_exports__);
         //'password_confirmation': '',
         'perfil_id': user.perfil_id //'avatar': '',
 
-      };
+      }; //desactivando el modo de inserto
+
+      console.log('STATUS recibido por evento: ' + status);
+      this.insModeChange(status);
+    },
+
+    /**
+     * Actualizando registro
+    */
+    updateUser: function updateUser() {
+      //id
+      console.log('Actualizando registro...');
     },
     restartPanel: function restartPanel() {
       //reseteando a vacío la variable de datos
-      this.newUser = {
+      this.objUser = {
         'name': '',
         'lastname': '',
         'username': '',
@@ -2219,11 +2247,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2384,6 +2407,12 @@ __webpack_require__.r(__webpack_exports__);
      * Abriendo ventana modal para crear registro
     */
     regInsModal: function regInsModal() {
+      //Emitiendo evento global para cargar, en el componente hijo,
+      //la ventana de edición
+      //  >> con el objeto pasado
+      //  >> deshabilitando el insMode
+      BusEvent.$emit('insModeChangeEvent', true); //Abriendo modal para la creación de registro
+
       $('#regInsEditModal').modal('show');
     },
 
@@ -2391,10 +2420,12 @@ __webpack_require__.r(__webpack_exports__);
      * Abriendo ventana modal para editar registro
     */
     regEditModal: function regEditModal(reg) {
-      console.log('Abriendo MODAL para editar registro [' + reg + '].'); //Emitiendo evento global para cargar, en el componente hijo,
-      //la ventana de edición con el objeto pasado
+      console.log('Abriendo MODAL para editar registro [' + reg + ', ' + false + '].'); //Emitiendo evento global para cargar, en el componente hijo,
+      //la ventana de edición
+      //  >> con el objeto pasado
+      //  >> deshabilitando el insMode
 
-      BusEvent.$emit('fillFormEvent', reg); //Abriendo modal con los datos cargados para su edición
+      BusEvent.$emit('fillFormEvent', reg, false); //Abriendo modal con los datos cargados para su edición
 
       $('#regInsEditModal').modal('show');
     },
@@ -2403,12 +2434,6 @@ __webpack_require__.r(__webpack_exports__);
      * Editando registro
     */
     editUser: function editUser(user) {//
-    },
-
-    /**
-     * Actualizando registro
-    */
-    updateUser: function updateUser(id) {//
     },
 
     /**
@@ -40489,7 +40514,7 @@ var render = function() {
               on: {
                 submit: function($event) {
                   $event.preventDefault()
-                  return _vm.storeUser($event)
+                  _vm.insMode ? _vm.storeUser() : _vm.updateUser()
                 }
               }
             },
@@ -40498,10 +40523,35 @@ var render = function() {
                 _c(
                   "h5",
                   {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.insMode,
+                        expression: "insMode"
+                      }
+                    ],
                     staticClass: "modal-title",
                     attrs: { id: "regInsEditModalLabel" }
                   },
                   [_vm._v("Insertar registro")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "h5",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.insMode,
+                        expression: "!insMode"
+                      }
+                    ],
+                    staticClass: "modal-title",
+                    attrs: { id: "regInsEditModalLabel" }
+                  },
+                  [_vm._v("Actualizar registro")]
                 ),
                 _vm._v(" "),
                 _c(
@@ -40535,8 +40585,8 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.newUser.name,
-                          expression: "newUser.name"
+                          value: _vm.objUser.name,
+                          expression: "objUser.name"
                         }
                       ],
                       staticClass: "form-control",
@@ -40547,13 +40597,13 @@ var render = function() {
                         id: "name-id",
                         placeholder: "Nombre"
                       },
-                      domProps: { value: _vm.newUser.name },
+                      domProps: { value: _vm.objUser.name },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.$set(_vm.newUser, "name", $event.target.value)
+                          _vm.$set(_vm.objUser, "name", $event.target.value)
                         }
                       }
                     }),
@@ -40577,8 +40627,8 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.newUser.lastname,
-                          expression: "newUser.lastname"
+                          value: _vm.objUser.lastname,
+                          expression: "objUser.lastname"
                         }
                       ],
                       staticClass: "form-control",
@@ -40589,13 +40639,13 @@ var render = function() {
                         id: "lastname-id",
                         placeholder: "Apellido"
                       },
-                      domProps: { value: _vm.newUser.lastname },
+                      domProps: { value: _vm.objUser.lastname },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.$set(_vm.newUser, "lastname", $event.target.value)
+                          _vm.$set(_vm.objUser, "lastname", $event.target.value)
                         }
                       }
                     }),
@@ -40621,8 +40671,8 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.newUser.email,
-                          expression: "newUser.email"
+                          value: _vm.objUser.email,
+                          expression: "objUser.email"
                         }
                       ],
                       staticClass: "form-control",
@@ -40634,13 +40684,13 @@ var render = function() {
                         placeholder: "Email",
                         required: ""
                       },
-                      domProps: { value: _vm.newUser.email },
+                      domProps: { value: _vm.objUser.email },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.$set(_vm.newUser, "email", $event.target.value)
+                          _vm.$set(_vm.objUser, "email", $event.target.value)
                         }
                       }
                     }),
@@ -40667,8 +40717,8 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.newUser.username,
-                            expression: "newUser.username"
+                            value: _vm.objUser.username,
+                            expression: "objUser.username"
                           }
                         ],
                         staticClass: "form-control",
@@ -40688,14 +40738,14 @@ var render = function() {
                           "aria-describedby": "inputGroupUserN",
                           required: ""
                         },
-                        domProps: { value: _vm.newUser.username },
+                        domProps: { value: _vm.objUser.username },
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
                             _vm.$set(
-                              _vm.newUser,
+                              _vm.objUser,
                               "username",
                               $event.target.value
                             )
@@ -40714,109 +40764,125 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "form-row" }, [
-                  _c("div", { staticClass: "col-md-6 mb-3" }, [
-                    _c("label", { attrs: { for: "pass_id" } }, [
-                      _vm._v("Contraseña*")
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.insMode,
+                        expression: "insMode"
+                      }
+                    ],
+                    staticClass: "form-row"
+                  },
+                  [
+                    _c("div", { staticClass: "col-md-6 mb-3" }, [
+                      _c("label", { attrs: { for: "pass_id" } }, [
+                        _vm._v("Contraseña*")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-group" }, [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.objUser.password,
+                              expression: "objUser.password"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: [
+                            { "is-invalid": _vm.errors.has("password") },
+                            {
+                              borde_redondeo_lateral_dcho: _vm.errors.has(
+                                "password"
+                              )
+                            }
+                          ],
+                          attrs: {
+                            type: "password",
+                            name: "password",
+                            id: "pass_id",
+                            placeholder: "Contraseña",
+                            "aria-describedby": "inputGroupPass",
+                            required: ""
+                          },
+                          domProps: { value: _vm.objUser.password },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.objUser,
+                                "password",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.has("password")
+                          ? _c(
+                              "span",
+                              { staticClass: "block text-sm text-danger mt-2" },
+                              [_vm._v(_vm._s(_vm.errors.get("password")))]
+                            )
+                          : _vm._e()
+                      ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "input-group" }, [
-                      _vm._m(1),
+                    _c("div", { staticClass: "col-md-6 mb-3" }, [
+                      _c("label", { attrs: { for: "pass_confirm_id" } }, [
+                        _vm._v("Confirmar contraseña*")
+                      ]),
                       _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.newUser.password,
-                            expression: "newUser.password"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        class: [
-                          { "is-invalid": _vm.errors.has("password") },
-                          {
-                            borde_redondeo_lateral_dcho: _vm.errors.has(
-                              "password"
-                            )
-                          }
-                        ],
-                        attrs: {
-                          type: "password",
-                          name: "password",
-                          id: "pass_id",
-                          placeholder: "Contraseña",
-                          "aria-describedby": "inputGroupPass",
-                          required: ""
-                        },
-                        domProps: { value: _vm.newUser.password },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                      _c("div", { staticClass: "input-group" }, [
+                        _vm._m(2),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.objUser.password_confirmation,
+                              expression: "objUser.password_confirmation"
                             }
-                            _vm.$set(
-                              _vm.newUser,
-                              "password",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _vm.errors.has("password")
-                        ? _c(
-                            "span",
-                            { staticClass: "block text-sm text-danger mt-2" },
-                            [_vm._v(_vm._s(_vm.errors.get("password")))]
-                          )
-                        : _vm._e()
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-6 mb-3" }, [
-                    _c("label", { attrs: { for: "pass_confirm_id" } }, [
-                      _vm._v("Confirmar contraseña*")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-group" }, [
-                      _vm._m(2),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.newUser.password_confirmation,
-                            expression: "newUser.password_confirmation"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "password",
-                          name: "password_confirmation",
-                          id: "pass_confirm_id",
-                          placeholder: "Confirmar contraseña",
-                          "aria-describedby": "inputGroupPassConf",
-                          required: ""
-                        },
-                        domProps: { value: _vm.newUser.password_confirmation },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "password",
+                            name: "password_confirmation",
+                            id: "pass_confirm_id",
+                            placeholder: "Confirmar contraseña",
+                            "aria-describedby": "inputGroupPassConf",
+                            required: ""
+                          },
+                          domProps: {
+                            value: _vm.objUser.password_confirmation
+                          },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.objUser,
+                                "password_confirmation",
+                                $event.target.value
+                              )
                             }
-                            _vm.$set(
-                              _vm.newUser,
-                              "password_confirmation",
-                              $event.target.value
-                            )
                           }
-                        }
-                      })
+                        })
+                      ])
                     ])
-                  ])
-                ]),
+                  ]
+                ),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-row" }, [
                   _c("div", { staticClass: "col-md-4 mb-3" }, [
@@ -40831,8 +40897,8 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.newUser.perfil_id,
-                            expression: "newUser.perfil_id"
+                            value: _vm.objUser.perfil_id,
+                            expression: "objUser.perfil_id"
                           }
                         ],
                         staticClass: "custom-select",
@@ -40853,7 +40919,7 @@ var render = function() {
                                 return val
                               })
                             _vm.$set(
-                              _vm.newUser,
+                              _vm.objUser,
                               "perfil_id",
                               $event.target.multiple
                                 ? $$selectedVal
@@ -40905,10 +40971,35 @@ var render = function() {
                   _c(
                     "button",
                     {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.insMode,
+                          expression: "insMode"
+                        }
+                      ],
                       staticClass: "btn btn-primary",
                       attrs: { type: "submit", title: "Insertar registro" }
                     },
                     [_vm._v("Insertar")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: !_vm.insMode,
+                          expression: "!insMode"
+                        }
+                      ],
+                      staticClass: "btn btn-success",
+                      attrs: { type: "submit", title: "Actualizar registro" }
+                    },
+                    [_vm._v("Actualizar")]
                   )
                 ])
               ])

@@ -3,10 +3,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
-                <form @submit.prevent="storeUser" novalidate>
+                <form @submit.prevent="insMode ? storeUser() : updateUser()" novalidate>
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="regInsEditModalLabel">Insertar registro</h5>
+                    <h5 v-show="insMode" class="modal-title" id="regInsEditModalLabel">Insertar registro</h5>
+                    <h5 v-show="!insMode" class="modal-title" id="regInsEditModalLabel">Actualizar registro</h5>
                     <button type="button" @click="restartPanel" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -16,19 +17,19 @@
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="name-id">Nombre</label>
-                            <input v-model="newUser.name" type="text" class="form-control" :class="{ 'is-invalid': errors.has('name') }" name="name" id="name-id" placeholder="Nombre">
+                            <input v-model="objUser.name" type="text" class="form-control" :class="{ 'is-invalid': errors.has('name') }" name="name" id="name-id" placeholder="Nombre">
                             <span v-if="errors.has('name')" class="block text-sm text-danger mt-2">{{ errors.get('name') }}</span>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="lastname-id">Apellido</label>
-                            <input v-model="newUser.lastname" type="text" class="form-control" :class="{ 'is-invalid': errors.has('lastname') }" name="lastname" id="lastname-id" placeholder="Apellido">
+                            <input v-model="objUser.lastname" type="text" class="form-control" :class="{ 'is-invalid': errors.has('lastname') }" name="lastname" id="lastname-id" placeholder="Apellido">
                             <span v-if="errors.has('lastname')" class="block text-sm text-danger mt-2">{{ errors.get('lastname') }}</span>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="email-id">Email*</label>
-                            <input v-model="newUser.email" type="text" class="form-control" :class="{ 'is-invalid': errors.has('email') }" name="email" id="email-id" placeholder="Email" required>
+                            <input v-model="objUser.email" type="text" class="form-control" :class="{ 'is-invalid': errors.has('email') }" name="email" id="email-id" placeholder="Email" required>
                             <span v-if="errors.has('email')" class="block text-sm text-danger mt-2">{{ errors.get('email') }}</span>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -37,19 +38,19 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroupUserN">@</span>
                                 </div>
-                                <input v-model="newUser.username" type="text" class="form-control" :class="[{ 'is-invalid': errors.has('username') }, { 'borde_redondeo_lateral_dcho': errors.has('username') }]" name="username" id="username-id" placeholder="Nick" aria-describedby="inputGroupUserN" required>
+                                <input v-model="objUser.username" type="text" class="form-control" :class="[{ 'is-invalid': errors.has('username') }, { 'borde_redondeo_lateral_dcho': errors.has('username') }]" name="username" id="username-id" placeholder="Nick" aria-describedby="inputGroupUserN" required>
                                 <span v-if="errors.has('username')" class="block text-sm text-danger mt-2">{{ errors.get('username') }}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="form-row">
+                    <div v-show="insMode" class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="pass_id">Contraseña*</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroupPass">&bull;</span>
                                 </div>
-                                <input v-model="newUser.password" type="password" class="form-control" :class="[{ 'is-invalid': errors.has('password') }, { 'borde_redondeo_lateral_dcho': errors.has('password') }]" name="password" id="pass_id" placeholder="Contraseña" aria-describedby="inputGroupPass" required>
+                                <input v-model="objUser.password" type="password" class="form-control" :class="[{ 'is-invalid': errors.has('password') }, { 'borde_redondeo_lateral_dcho': errors.has('password') }]" name="password" id="pass_id" placeholder="Contraseña" aria-describedby="inputGroupPass" required>
                                 <span v-if="errors.has('password')" class="block text-sm text-danger mt-2">{{ errors.get('password') }}</span>
                             </div>
                         </div>
@@ -59,14 +60,14 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroupPassConf">&bull;</span>
                                 </div>
-                                <input v-model="newUser.password_confirmation" type="password" class="form-control" name="password_confirmation" id="pass_confirm_id" placeholder="Confirmar contraseña" aria-describedby="inputGroupPassConf" required>
+                                <input v-model="objUser.password_confirmation" type="password" class="form-control" name="password_confirmation" id="pass_confirm_id" placeholder="Confirmar contraseña" aria-describedby="inputGroupPassConf" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-4 mb-3">
                             <label for="perfil-id">Perfil*</label>
-                            <select v-model="newUser.perfil_id" name="perfil_id" id="perfil-id" class="custom-select" :class="{ 'is-invalid': errors.has('perfil_id') }" required>
+                            <select v-model="objUser.perfil_id" name="perfil_id" id="perfil-id" class="custom-select" :class="{ 'is-invalid': errors.has('perfil_id') }" required>
                                 <option value="">Seleccionar un perfil</option>
                                 <option value="1">Administrador</option>
                                 <option value="2">Usuario</option>
@@ -99,7 +100,8 @@
                     <div><small class="text-white bg-danger">(*) campo requerido</small></div>
                     <div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="restartPanel">Cancelar</button>
-                        <button class="btn btn-primary" type="submit" title="Insertar registro">Insertar</button>
+                        <button v-show="insMode" class="btn btn-primary" type="submit" title="Insertar registro">Insertar</button>
+                        <button v-show="!insMode" class="btn btn-success" type="submit" title="Actualizar registro">Actualizar</button>
                     </div>
                 </div>
 
@@ -117,9 +119,12 @@
         mounted() {
             console.log('Component mounted.');
 
-            //Recibiendo evento si es que es emitido (en este caso, desde el componente Padre)
-            BusEvent.$on('fillFormEvent', (user) => {
-                this.fillEditUser(user);
+            //Recibiendo evento(s) si emitido(s) (en este caso, desde el componente Padre)
+            BusEvent.$on('insModeChangeEvent', (status) => {
+                this.insModeChange(status);
+            });
+            BusEvent.$on('fillFormEvent', (user, status) => {
+                this.fillEditUser(user, status);
             });
         },
 
@@ -129,7 +134,7 @@
                 //variable que guarda el archivo seleccionado
                 avatarSelecc: null,
                 //variable para almacenar los datos del registro a almacenar
-                newUser: {
+                objUser: {
                     'name': '',
                     'lastname': '',
                     'username': '',
@@ -139,12 +144,20 @@
                     'perfil_id': '',
                     'avatar': '',
                 },
+                //útil para condicionar el muestreo del modal para crear o editar registro
+                insMode: true,
                 //posibles errores
                 errors: new Errors(),
             }
         },
 
         methods: {
+
+            insModeChange(status) {
+                //Cambiando estado
+                this.insMode = status;
+                console.log('insMode ACTUAL: ' + this.insMode);
+            },
 
             /**
              * En el evento de seleccionar archivo, se captura el archivo elegido
@@ -153,7 +166,7 @@
             onAvatarSelecc(evento) {
                 console.log(evento);
                 ////this.avatarSelecc = evento.target.files[0];
-                //this.newUser.avatar = evento.target.files[0];
+                //this.objUser.avatar = evento.target.files[0];
             },
 
             /**
@@ -162,7 +175,7 @@
             storeUser() {
                 console.log('Registrando nuevo registro...');
                 let url = '/api/users';
-                axios.post(url, this.newUser)
+                axios.post(url, this.objUser)
                 .then((response) => {       //SI TODO OK
                     ////document.location = '/';
 
@@ -187,9 +200,12 @@
                 });
             },
 
-            fillEditUser(user) {
-                //reseteando a vacío la variable de datos
-                this.newUser = {
+            /**
+             * Mostrando registro para editar
+            */
+            fillEditUser(user, status) {
+                //rellenando la variable de datos para la edición
+                this.objUser = {
                     'name': user.name,
                     'lastname': user.lastname,
                     'username': user.username,
@@ -199,11 +215,21 @@
                     'perfil_id': user.perfil_id,
                     //'avatar': '',
                 };
+                //desactivando el modo de inserto
+                console.log('STATUS recibido por evento: ' + status);
+                this.insModeChange(status);
+            },
+
+            /**
+             * Actualizando registro
+            */
+            updateUser() {//id
+                console.log('Actualizando registro...');
             },
 
             restartPanel() {
                 //reseteando a vacío la variable de datos
-                this.newUser = {
+                this.objUser = {
                     'name': '',
                     'lastname': '',
                     'username': '',

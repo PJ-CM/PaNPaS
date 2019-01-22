@@ -102,13 +102,8 @@
                 </div>
                 <!-- /.content -->
 
-                <!-- MODALES :: ini -->
+                <!-- Modal-inserto-edición :: ini -->
                 <user-ins-edit-component @storeUserEvent="getUsers"></user-ins-edit-component>
-                <!-- Modal-inserto :: ini -->
-
-                <!-- Modal-inserto :: fin -->
-
-                <!-- MODALES :: fin -->
 
         <!-- CONTENIDO a Mostrar :: fin -->
 
@@ -166,6 +161,13 @@
              * Abriendo ventana modal para crear registro
             */
             regInsModal() {
+                //Emitiendo evento global para cargar, en el componente hijo,
+                //la ventana de edición
+                //  >> con el objeto pasado
+                //  >> deshabilitando el insMode
+                BusEvent.$emit('insModeChangeEvent', true);
+
+                //Abriendo modal para la creación de registro
                 $('#regInsEditModal').modal('show');
             },
 
@@ -173,11 +175,13 @@
              * Abriendo ventana modal para editar registro
             */
             regEditModal(reg) {
-                console.log('Abriendo MODAL para editar registro [' + reg + '].');
+                console.log('Abriendo MODAL para editar registro [' + reg + ', ' + false + '].');
 
                 //Emitiendo evento global para cargar, en el componente hijo,
-                //la ventana de edición con el objeto pasado
-                BusEvent.$emit('fillFormEvent', reg);
+                //la ventana de edición
+                //  >> con el objeto pasado
+                //  >> deshabilitando el insMode
+                BusEvent.$emit('fillFormEvent', reg, false);
 
                 //Abriendo modal con los datos cargados para su edición
                 $('#regInsEditModal').modal('show');
@@ -187,13 +191,6 @@
              * Editando registro
             */
             editUser(user) {
-                //
-            },
-
-            /**
-             * Actualizando registro
-            */
-            updateUser(id) {
                 //
             },
 
