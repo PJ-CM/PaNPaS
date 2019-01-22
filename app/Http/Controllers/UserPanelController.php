@@ -77,4 +77,19 @@ class UserPanelController extends Controller
         return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
     }
 
+        public function buscarUsuario($columna = 'username', $orden = 'asc'){
+
+            $buscar = $_POST['buscador'];
+
+            $users = new User();
+            //Solo usuarios de perfil USUARIO (perfil_id >> [2])
+            $perfil_id_usuario = 2;
+            $users = User::orderBy($columna, $orden)
+                        ->where('perfil_id', $perfil_id_usuario)
+                        ->where('username', 'LIKE', "%{$buscar}%")
+                        ->get();
+
+            return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
+    }
+
 }

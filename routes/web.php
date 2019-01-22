@@ -40,6 +40,10 @@ Route::get('/seguidores', 'UserPanelController@seguidores')
 
 Route::get('/usuarios/{columna?}/{orden?}', 'UserPanelController@usuarios')
     ->name('user_usuarios');
+Route::post('/buscarUsuario', 'UserPanelController@buscarUsuario')
+    ->name('user_buscarUsuario');
+
+
 
 Route::post('/insertarReceta', 'RecetaController@insertarReceta')
     ->name('insertar_receta');

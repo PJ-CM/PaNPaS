@@ -23,16 +23,21 @@
 	                    <div class="col-md-12">
 	                        <div class="card">
 	                            <div class="card-header">
-	                            Dashboard
+	                            <h1>Lista de Usuarios 
+	                            	<form action="/buscarUsuario" method="post" class="right">
+										<input type="text" name="buscador" class="btn btn-dark" placeholder="buscador...">
+										<input type="submit" name="buscadorSubmit" class="btn btn-dark">
+									</form></h1>
 
 									<div class="dropdown" style="float: right;">
-									  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									  {{--<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									    {{$columna}} [{{$orden}}]
 									  </button>
 									  	<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 										    <a class="dropdown-item" href="/usuarios/username/asc">Nombre [ASC]</a>
 										    <a class="dropdown-item" href="/usuarios/username/desc">Nombre [DESC]</a>
-										</div>
+										</div> --}}
+										
 									</div>
 
 	                        </div>
