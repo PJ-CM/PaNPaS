@@ -58,6 +58,8 @@ Route::post('/user/actualizarDatos', 'UserPerfilController@actualizarDatos');
 //FOLLOW SYSTEM routes
 Route::get('/unfollow/{id}', 'FollowController@unfollow')
     ->name('follow_unfollow');
+Route::get('/follow/{id}', 'FollowController@follow')
+    ->name('follow_follow');
 
 
 
