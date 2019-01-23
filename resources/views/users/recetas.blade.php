@@ -8,41 +8,26 @@
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+		<!-- JavaScript -->
+		<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/alertify.min.css"/>
+		<!-- Default theme -->
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/default.min.css"/>
+		<!-- Semantic UI theme -->
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/semantic.min.css"/>
+		<!-- Bootstrap theme -->
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/bootstrap.min.css"/>
+
+
 		<script type="text/javascript">
 			$(document).ready(function(){
-				var addid = 0;
-				$("#añadirCampoElaboracion").click(function(){
-					var addList = document.getElementById('elaboracion');
-					    var docstyle = addList.style.display;
-					    if (docstyle == 'none') addList.style.display = '';
-
-					    addid++;
-
-					    var text = document.createElement('div');
-					    text.id = 'elaboracion' + addid;
-					    text.innerHTML = "<label><h4>Paso " + addid + "</h4></label><input required type='text' value='' class='paso w3-input' name='elaboracion' id=elaboracion" + addid + ">";
-
-					    addList.appendChild(text);
+					@if (isset($toast) != null)
+						alertify.set('notifier','position', 'top-right');
+						alertify.notify('<a href="http://www.google.es">Receta</a> Insertada', 'success');
+					@endif
 				});
-
-
-				var addiding = 0;
-				$("#añadirCampoIngrediente").click(function(){
-					var addListIng = document.getElementById('ingrediente');
-					    var docstyle = addListIng.style.display;
-					    if (docstyle == 'none') addListIng.style.display = '';
-
-					    addiding++;
-
-					    var text = document.createElement('div');
-					    text.id = 'ingrediente' + addiding;
-					    text.innerHTML = "<label><h4>Ingrediente " + addiding + "</h4></label><input required type='text' value='' class='ingrediente w3-input' id=ingrediente name='ingrediente'" + addiding+ ">";
-
-					    addListIng.appendChild(text);
-				});
-				
-
-			});
 		</script>
 
 		<title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>

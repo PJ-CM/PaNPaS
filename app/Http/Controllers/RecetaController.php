@@ -12,6 +12,7 @@ class RecetaController extends Controller
 {
     
 	public function mostrar($titulo) {
+		
 
 		$receta = new Receta();
 
@@ -74,7 +75,7 @@ class RecetaController extends Controller
 		
 		$receta->save();
 
-		return redirect('recetas');
+		return redirect('/recetas/RecetaInsertada');
 
 	}
 
