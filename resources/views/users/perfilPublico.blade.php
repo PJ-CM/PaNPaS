@@ -18,7 +18,7 @@
                 <div class="row justify-content-center">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header">{{$user->username}}</div>
+                            <div class="card-header">{{$user->username}} @if (Auth::user()->follows->contains('username', $user->username))<a class="btn btn-primary right" href="/unfollow/{{$user->id}}">Dejar de Seguir</a> @else <a class="btn btn-primary right" href="/follow/{{$user->id}}">Seguir</a> @endif </div>
 
                             <div class="card-body">
                                 @if (session('status'))

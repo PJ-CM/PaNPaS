@@ -20,6 +20,9 @@ class UsersTableSeeder extends Seeder
             $randomDate = date('Y-m-d H:i:s', $timestamp);
 
             if ($i == 0) {
+
+                
+
                 DB::table('users')->insert([
                     'username' => 'admin',
                     'name' => 'admin',

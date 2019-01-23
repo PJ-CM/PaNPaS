@@ -77,4 +77,39 @@ class UserPanelController extends Controller
         return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
     }
 
+        public function buscarUsuario($columna = 'username', $orden = 'asc'){
+
+            $buscar = $_POST['buscador'];
+
+            $users = new User();
+            //Solo usuarios de perfil USUARIO (perfil_id >> [2])
+            $perfil_id_usuario = 2;
+            $users = User::orderBy($columna, $orden)
+                        ->where('perfil_id', $perfil_id_usuario)
+                        ->where('username', 'LIKE', "%{$buscar}%")
+                        ->get();
+
+
+            if ($buscar == ""){
+                return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
+            }else {
+                return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden, 'busqueda'=>$buscar]);
+            }
+
+    }
+
+    public function buscarReceta($columna = 'titulo', $orden = 'asc'){
+
+            $buscar = $_POST['buscador'];
+
+            $recetas = Receta::orderBy($columna, $orden)
+                        ->where('titulo', 'LIKE', "%{$buscar}%")
+                        ->get();
+            if ($buscar == ""){
+                return view('users.recetas', ['recetas'=>$recetas, 'columna' => $columna, 'orden' => $orden]);
+            }else {
+                return view('users.recetas', ['recetas'=>$recetas, 'columna' => $columna, 'orden' => $orden, 'busqueda'=>$buscar]);
+            }
+    }
+
 }

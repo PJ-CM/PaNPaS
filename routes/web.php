@@ -40,6 +40,13 @@ Route::get('/seguidores', 'UserPanelController@seguidores')
 
 Route::get('/usuarios/{columna?}/{orden?}', 'UserPanelController@usuarios')
     ->name('user_usuarios');
+Route::post('/buscarUsuario', 'UserPanelController@buscarUsuario')
+    ->name('user_buscarUsuario');
+
+Route::post('/buscarReceta', 'UserPanelController@buscarReceta')
+    ->name('user_buscarReceta');
+
+
 
 Route::post('/insertarReceta', 'RecetaController@insertarReceta')
     ->name('insertar_receta');
@@ -58,6 +65,8 @@ Route::post('/user/actualizarDatos', 'UserPerfilController@actualizarDatos');
 //FOLLOW SYSTEM routes
 Route::get('/unfollow/{id}', 'FollowController@unfollow')
     ->name('follow_unfollow');
+Route::get('/follow/{id}', 'FollowController@follow')
+    ->name('follow_follow');
 
 
 

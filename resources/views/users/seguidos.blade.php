@@ -39,6 +39,11 @@
 								                        </a>
 								                        <div class="ranking-caption">
 								                            <h4><a href="/{{$usuario->username}}">{{$usuario->username}}</a></h4>
+								                            <h5 class="stars-votos" style="">
+										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$usuario->username}} está siguiendo a  {{count ($usuario->follows)}} usuarios" style="color: green;"></i > {{ count($usuario->follows) }}  
+										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+										                                <i class="fas fa-lg fas fa-sign-in-alt" title="{{$usuario->username}} tiene {{count($usuario->followers)}} seguidores" style="color: blue;"></i > {{ count($usuario->followers) }}
+										                    </h5>
 								                        </div>
 							                    	</div>
 							   

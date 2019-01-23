@@ -63,4 +63,6 @@ class RecetaController extends Controller
 		return redirect('recetas');
 	}
 
+	
+
 }
