@@ -32,11 +32,11 @@ class UserPanelController extends Controller
         return redirect('/');
     }
 
-    public function listaRecetas(){
+    public function listaRecetas($toast=null){
         $recetas = new Receta;
         $recetas = $recetas->orderBy('created_at', 'desc')->get();
 
-        return view('users.recetas', ['recetas'=>$recetas]);
+        return view('users.recetas', ['recetas'=>$recetas, 'toast'=>$toast]);
     }
 
     public function perfil($username){

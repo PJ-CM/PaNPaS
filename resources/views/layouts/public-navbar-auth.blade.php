@@ -10,19 +10,19 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav text-uppercase ml-auto">
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/users/dashboard') active @endif" href="/users/dashboard" title="Ir a tu página principal">Inicio</a>
+                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/users/dashboard') active @endif" href="/users/dashboard" title="Ir a tu página principal"><h6>Inicio</h6></a>
+                        </li>
+                        <li class="nav-item p-2" style="text-align: center;">
+                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/seguidos') active @endif" href="/seguidos" title="Ir a la sección de Seguidos"><h6>Seguidos<br><h4>{{count(Auth::user()->follows)}}</h4></h6></a>
+                        </li>
+                        <li class="nav-item p-2" style="text-align: center;">
+                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/seguidores') active @endif" href="/seguidores" title="Ir a la sección de Seguidores" "><h6>Seguidores<br><h4>{{count(Auth::user()->followers)}}</h4></h6></a>
                         </li>
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/seguidos') active @endif" href="/seguidos" title="Ir a la sección de Seguidos">Seguidos<br>{{count(Auth::user()->follows)}}</a>
+                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/usuarios') active @endif" href="/usuarios" title="Ir a la sección de Usuarios"><h6>Usuarios</h6></a>
                         </li>
                         <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/seguidores') active @endif" href="/seguidores" title="Ir a la sección de Seguidores" ">Seguidores<br>{{count(Auth::user()->followers)}}</a>
-                        </li>
-                        <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/usuarios') active @endif" href="/usuarios" title="Ir a la sección de Usuarios">Usuarios</a>
-                        </li>
-                        <li class="nav-item p-2">
-                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/recetas') active @endif" href="/recetas" title="Ir a la sección de Recetas">Recetas</a>
+                            <a class="nav-link js-scroll-trigger center @if($_SERVER['PATH_INFO'] == '/recetas') active @endif" href="/recetas" title="Ir a la sección de Recetas"><h6>Recetas</h6></a>
                         </li>
                         {{--
                             Deberá ser un DropdownMenu con las opciones de:

@@ -8,41 +8,26 @@
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+		<!-- JavaScript -->
+		<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/alertify.min.css"/>
+		<!-- Default theme -->
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/default.min.css"/>
+		<!-- Semantic UI theme -->
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/semantic.min.css"/>
+		<!-- Bootstrap theme -->
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/bootstrap.min.css"/>
+
+
 		<script type="text/javascript">
 			$(document).ready(function(){
-				var addid = 0;
-				$("#añadirCampoElaboracion").click(function(){
-					var addList = document.getElementById('elaboracion');
-					    var docstyle = addList.style.display;
-					    if (docstyle == 'none') addList.style.display = '';
-
-					    addid++;
-
-					    var text = document.createElement('div');
-					    text.id = 'elaboracion' + addid;
-					    text.innerHTML = "<label><h4>Paso " + addid + "</h4></label><input required type='text' value='' class='paso w3-input' name='elaboracion' id=elaboracion" + addid + ">";
-
-					    addList.appendChild(text);
+					@if (isset($toast) != null)
+						alertify.set('notifier','position', 'top-right');
+						alertify.notify('<a href="http://www.google.es">Receta</a> Insertada', 'success');
+					@endif
 				});
-
-
-				var addiding = 0;
-				$("#añadirCampoIngrediente").click(function(){
-					var addListIng = document.getElementById('ingrediente');
-					    var docstyle = addListIng.style.display;
-					    if (docstyle == 'none') addListIng.style.display = '';
-
-					    addiding++;
-
-					    var text = document.createElement('div');
-					    text.id = 'ingrediente' + addiding;
-					    text.innerHTML = "<label><h4>Ingrediente " + addiding + "</h4></label><input required type='text' value='' class='ingrediente w3-input' id=ingrediente name='ingrediente'" + addiding+ ">";
-
-					    addListIng.appendChild(text);
-				});
-				
-
-			});
 		</script>
 
 		<title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
@@ -141,7 +126,7 @@
     <div class="modal-dialog">
     
       <!-- Modal content-->
-      <div class="modal-content">
+      <div class="modal-content col-sm-12">
         <div class="modal-header">
         	<h4 class="modal-title">Insertar Receta</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -160,12 +145,19 @@
 	            <p class="col-lg-12">
 	             <label>Imagen</label>               	<input type="text" name="imagen" class="w3-input" value="https://lorempixel.com/640/480/?14725" required="">
 	            </p>
-	            <p class="col-lg-12" id="elaboracion">
+	            {{-- <p class="col-lg-12" id="elaboracion">
 	                <label>Elaboración:  </label><span style="font-size: 15px" id="añadirCampoElaboracion" class="btn btn-primary">+</span>
 	            </p>
 	           	<p class="col-lg-12" id="ingrediente">
 	                <label>Ingredientes:</label>      <span style="font-size: 15px" id="añadirCampoIngrediente" class="btn btn-primary">+</span> 
 	            </p>
+	        	--}}
+				<label>Elaboración:  </label>
+	        		<textarea name="elaboracion" class="col-lg-12"></textarea>
+
+	        	<label>Ingredientes:  </label>
+	        		<textarea name="ingredientes" class="col-lg-12" placeholder=" Ingrediente1 500ml, Ingrediente2 250gr, Ingrediente3 100ml..."></textarea>
+
 	            <input type="submit" name="sub_avatar", value="Actualizar" class="btn btn-primary right">
         	</form>
 

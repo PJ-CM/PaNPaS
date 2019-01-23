@@ -6,6 +6,15 @@
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/app.css') }}">
 
         <title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
+
+        <style type="text/css">
+            .img{
+                max-width:640px;
+                max-height:480px;
+                width: 350px;
+                height: 350px;
+            }
+        </style>
 @endsection
 
 @section('content')
@@ -18,16 +27,17 @@
                 <div class="row justify-content-center">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header">{{$user->username}} @if (Auth::user()->follows->contains('username', $user->username))<a class="btn btn-primary right" href="/unfollow/{{$user->id}}">Dejar de Seguir</a> @else <a class="btn btn-primary right" href="/follow/{{$user->id}}">Seguir</a> @endif </div>
+                            <div class="card-header"><h1>{{$user->username}} @if (Auth::user()->follows->contains('username', $user->username))<a class="btn btn-primary right" href="/unfollow/{{$user->id}}">Dejar de Seguir</a> @else <a class="btn btn-primary right" href="/follow/{{$user->id}}">Seguir</a> @endif </h1></div>
 
-                            <div class="card-body">
+                            <div class="card-body" style="float: left;">
                                 @if (session('status'))
                                     <div class="alert alert-success" role="alert">
                                         {{ session('status') }}
                                     </div>
                                 @endif
 
-                               <img src="{{$user->avatar}}" id="avatar">
+                               <img src="{{$user->avatar}}" id="avatar" class="img">
+                               <h1>{{$user->nombre}} {{$user->apellido}}</h1>
 
                                <!-- Recetas del Usuario Seleccionado -->
                                <br>
@@ -38,7 +48,7 @@
 								                <div class="row">
 								                	@foreach($user->recetas as $receta)
 								                    	<div class="col-md-4 col-sm-6 ranking-item">
-									                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
+									                        <a class="ranking-link" data-toggle="modal" href="/receta/{{$receta->titulo}}">
 									                            <div class="ranking-hover">
 									                                <div class="ranking-hover-content">
 									                                    <i class="fas fa-plus fa-3x"></i>

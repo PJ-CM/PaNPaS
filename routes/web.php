@@ -29,7 +29,7 @@ Route::get('/users/{username?}', 'UserPanelController@index')
 Route::get('/logout', 'UserPanelController@logout')
     ->name('user_panel_logout');
 
-Route::get('/recetas', 'UserPanelController@listaRecetas')
+Route::get('/recetas/{toast?}', 'UserPanelController@listaRecetas')
     ->name('user_recetas');
 
 Route::get('/seguidos/{columna?}/{orden?}', 'UserPanelController@seguidos')

@@ -13,9 +13,10 @@ class Receta extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function ingredientes(){
+   /* public function ingredientes(){
     	return $this->belongsToMany('App\Ingrediente')->withPivot('cantidad');
     }
+    */
 
     public function comentarios(){
     	return $this->hasMany('App\Comentario');
