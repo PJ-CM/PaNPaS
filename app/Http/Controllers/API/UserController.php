@@ -7,9 +7,28 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserStoreRequest;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validatorUpdate(array $data)
+    {
+        return Validator::make($data, [
+            //'username'  => 'required|string|max:69|unique:users',
+            'username' => 'required|string|max:255|unique:users,username,' . $data->id,
+            //'email'     => 'required|string|email|max:100|unique:users',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $data->id,
+            'password'  => ['required', 'string', 'min:6', 'confirmed'],
+            'perfil_id' => 'required',
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -78,7 +97,15 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = $this->validatorUpdate($request->all());
+        //Si la validación falla
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return $errors;
+        }
+        User::findOrFail($id)->update($request->all());
+
+        return;
     }
 
     /**

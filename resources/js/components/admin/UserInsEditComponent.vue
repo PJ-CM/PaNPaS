@@ -3,7 +3,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
-                <form @submit.prevent="insMode ? storeUser() : updateUser()" novalidate>
+                <form @submit.prevent="insMode ? storeUser() : updateUser(objUser.id)" novalidate>
 
                 <div class="modal-header">
                     <h5 v-show="insMode" class="modal-title" id="regInsEditModalLabel">Insertar registro</h5>
@@ -99,6 +99,7 @@
                 <div class="modal-footer">
                     <div><small class="text-white bg-danger">(*) campo requerido</small></div>
                     <div>
+                        <input type="hidden" v-model="objUser.id" name="id">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="restartPanel">Cancelar</button>
                         <button v-show="insMode" class="btn btn-primary" type="submit" title="Insertar registro">Insertar</button>
                         <button v-show="!insMode" class="btn btn-success" type="submit" title="Actualizar registro">Actualizar</button>
@@ -143,6 +144,8 @@
                     'password_confirmation': '',
                     'perfil_id': '',
                     'avatar': '',
+                    //para la edición
+                    'id': '',
                 },
                 //útil para condicionar el muestreo del modal para crear o editar registro
                 insMode: true,
@@ -192,7 +195,7 @@
                     $('#regInsEditModal').modal('hide');
 
                     //Emitiendo solicitud de recarga del listado
-                    this.$emit('storeUserEvent');
+                    this.$emit('insModifUserEvent');
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR
                     //registrando los errores recibidos
@@ -214,6 +217,8 @@
                     //'password_confirmation': '',
                     'perfil_id': user.perfil_id,
                     //'avatar': '',
+                    //para la edición
+                    'id': user.id,
                 };
                 //desactivando el modo de inserto
                 console.log('STATUS recibido por evento: ' + status);
@@ -223,8 +228,32 @@
             /**
              * Actualizando registro
             */
-            updateUser() {//id
-                console.log('Actualizando registro...');
+            updateUser(id) {
+                console.log('Actualizando registro... [' + id + ']');
+                let url = '/api/users/' + id;
+                axios.put(url, this.objUser)
+                .then((response) => {       //SI TODO OK
+                    ////document.location = '/';
+
+                    //reseteando panel
+                    this.restartPanel();
+
+                    //Lanzando notificación satisfactoria
+                    toast({
+                        type: 'success',
+                        title: 'Registro actualizado'
+                    });
+
+                    //ocultando la ventana modal de creación de registro
+                    $('#regInsEditModal').modal('hide');
+
+                    //Emitiendo solicitud de recarga del listado
+                    this.$emit('insModifUserEvent');
+                })
+                .catch(error => {           //SI HAY ALGÚN ERROR
+                    //registrando los errores recibidos
+                    this.errors.record(error.response.data.errors);
+                });/**/
             },
 
             restartPanel() {
@@ -238,6 +267,7 @@
                     'password_confirmation': '',
                     'perfil_id': '',
                     'avatar': '',
+                    'id': '',
                 };
 
                 //vaciando los posibles errores que se produjeron

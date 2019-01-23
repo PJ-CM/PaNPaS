@@ -103,7 +103,7 @@
                 <!-- /.content -->
 
                 <!-- Modal-inserto-edición :: ini -->
-                <user-ins-edit-component @storeUserEvent="getUsers"></user-ins-edit-component>
+                <user-ins-edit-component @insModifUserEvent="getUsers"></user-ins-edit-component>
 
         <!-- CONTENIDO a Mostrar :: fin -->
 
