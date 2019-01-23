@@ -18,7 +18,16 @@ class RecetaController extends Controller
 		$receta = $receta->where('titulo', $titulo)->get();
 		$receta = $receta[0];
 
-		return view ('receta/receta', ['receta'=>$receta, 'time'=>time()]);
+		$ingredientes = preg_split('/,/', $receta->ingredientes);
+		
+		for ($i=0; $i < count($ingredientes); $i++) { 
+			$ingredientes[$i] = preg_split("/\s/", $ingredientes[$i]);
+			if ($ingredientes[$i][0] == ""){
+				 array_splice($ingredientes[$i], 0, 1);
+			}
+		}
+
+		return view ('receta/receta', ['receta'=>$receta, 'time'=>time(), 'ingredientes'=> $ingredientes]);
 	}
 
 	public function getRecetasRanking() {
@@ -55,12 +64,18 @@ class RecetaController extends Controller
 		$receta->titulo = $data['titulo'];
 		$receta->descripcion = $data['descripcion'];
 		$receta->elaboracion = $data['elaboracion'];
+
+		
+		$receta->elaboracion=nl2br($receta->elaboracion);
+
+		$receta->ingredientes = $data['ingredientes'];
 		$receta->imagen = $data['imagen'];
 		$receta->user_id = Auth::user()->id;
 		
 		$receta->save();
 
 		return redirect('recetas');
+
 	}
 
 	
