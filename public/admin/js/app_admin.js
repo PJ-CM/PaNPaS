@@ -2107,6 +2107,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //librería para tratar los errores capturados en el servidor
  // '../../libs/errors.js';
 
@@ -2137,7 +2158,9 @@ __webpack_require__.r(__webpack_exports__);
         'password': '',
         'password_confirmation': '',
         'perfil_id': '',
-        'avatar': ''
+        'avatar': '',
+        //para la edición
+        'id': ''
       },
       //útil para condicionar el muestreo del modal para crear o editar registro
       insMode: true,
@@ -2183,7 +2206,7 @@ __webpack_require__.r(__webpack_exports__);
 
         $('#regInsEditModal').modal('hide'); //Emitiendo solicitud de recarga del listado
 
-        _this2.$emit('storeUserEvent');
+        _this2.$emit('insModifUserEvent');
       }).catch(function (error) {
         //SI HAY ALGÚN ERROR
         //registrando los errores recibidos
@@ -2203,8 +2226,10 @@ __webpack_require__.r(__webpack_exports__);
         'email': user.email,
         'password': user.password,
         //'password_confirmation': '',
-        'perfil_id': user.perfil_id //'avatar': '',
-
+        'perfil_id': user.perfil_id,
+        //'avatar': '',
+        //para la edición
+        'id': user.id
       }; //desactivando el modo de inserto
 
       console.log('STATUS recibido por evento: ' + status);
@@ -2215,8 +2240,30 @@ __webpack_require__.r(__webpack_exports__);
      * Actualizando registro
     */
     updateUser: function updateUser() {
-      //id
-      console.log('Actualizando registro...');
+      var _this3 = this;
+
+      console.log('Actualizando registro... [' + this.objUser.id + ']');
+      var url = '/api/users/' + this.objUser.id;
+      axios.put(url, this.objUser).then(function (response) {
+        //SI TODO OK
+        //reseteando panel
+        _this3.restartPanel(); //Lanzando notificación satisfactoria
+
+
+        toast({
+          type: 'success',
+          title: 'Registro actualizado'
+        }); //ocultando la ventana modal de creación de registro
+
+        $('#regInsEditModal').modal('hide'); //Emitiendo solicitud de recarga del listado
+
+        _this3.$emit('insModifUserEvent');
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        //registrando los errores recibidos
+        _this3.errors.record(error.response.data.errors);
+      });
+      /**/
     },
     restartPanel: function restartPanel() {
       //reseteando a vacío la variable de datos
@@ -2228,7 +2275,8 @@ __webpack_require__.r(__webpack_exports__);
         'password': '',
         'password_confirmation': '',
         'perfil_id': '',
-        'avatar': ''
+        'avatar': '',
+        'id': ''
       }; //vaciando los posibles errores que se produjeron
 
       this.errors.clear();
@@ -2362,8 +2410,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     //console.log('Component mounted.')
-    //para cargar el listado de usuarios
-    this.getUsers();
+    //para cargar el listado de usuarios al llegar al componente
+    this.getUsers(); //para volverlo a cargar en cada intervalo de X tiempo
+    //aunque esta forma de recarga va en contra del rendimiento
+    ////setInterval(() => this.getUsers(), 3000);
   },
   //datos devueltos por el componente:
   data: function data() {
@@ -40764,125 +40814,215 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.insMode,
-                        expression: "insMode"
-                      }
-                    ],
-                    staticClass: "form-row"
-                  },
-                  [
-                    _c("div", { staticClass: "col-md-6 mb-3" }, [
-                      _c("label", { attrs: { for: "pass_id" } }, [
-                        _vm._v("Contraseña*")
+                _vm.insMode
+                  ? _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "col-md-6 mb-3" }, [
+                        _c("label", { attrs: { for: "pass_id" } }, [
+                          _vm._v("Contraseña*")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group" }, [
+                          _vm._m(1),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.objUser.password,
+                                expression: "objUser.password"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: [
+                              { "is-invalid": _vm.errors.has("password") },
+                              {
+                                borde_redondeo_lateral_dcho: _vm.errors.has(
+                                  "password"
+                                )
+                              }
+                            ],
+                            attrs: {
+                              type: "password",
+                              name: "password",
+                              id: "pass_id",
+                              placeholder: "Contraseña",
+                              "aria-describedby": "inputGroupPass",
+                              required: ""
+                            },
+                            domProps: { value: _vm.objUser.password },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.objUser,
+                                  "password",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.has("password")
+                            ? _c(
+                                "span",
+                                {
+                                  staticClass: "block text-sm text-danger mt-2"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.get("password")))]
+                              )
+                            : _vm._e()
+                        ])
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "input-group" }, [
-                        _vm._m(1),
+                      _c("div", { staticClass: "col-md-6 mb-3" }, [
+                        _c("label", { attrs: { for: "pass_confirm_id" } }, [
+                          _vm._v("Confirmar contraseña*")
+                        ]),
                         _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.objUser.password,
-                              expression: "objUser.password"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          class: [
-                            { "is-invalid": _vm.errors.has("password") },
-                            {
-                              borde_redondeo_lateral_dcho: _vm.errors.has(
-                                "password"
-                              )
-                            }
-                          ],
-                          attrs: {
-                            type: "password",
-                            name: "password",
-                            id: "pass_id",
-                            placeholder: "Contraseña",
-                            "aria-describedby": "inputGroupPass",
-                            required: ""
-                          },
-                          domProps: { value: _vm.objUser.password },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                        _c("div", { staticClass: "input-group" }, [
+                          _vm._m(2),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.objUser.password_confirmation,
+                                expression: "objUser.password_confirmation"
                               }
-                              _vm.$set(
-                                _vm.objUser,
-                                "password",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _vm.errors.has("password")
-                          ? _c(
-                              "span",
-                              { staticClass: "block text-sm text-danger mt-2" },
-                              [_vm._v(_vm._s(_vm.errors.get("password")))]
-                            )
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-6 mb-3" }, [
-                      _c("label", { attrs: { for: "pass_confirm_id" } }, [
-                        _vm._v("Confirmar contraseña*")
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "input-group" }, [
-                        _vm._m(2),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.objUser.password_confirmation,
-                              expression: "objUser.password_confirmation"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "password",
-                            name: "password_confirmation",
-                            id: "pass_confirm_id",
-                            placeholder: "Confirmar contraseña",
-                            "aria-describedby": "inputGroupPassConf",
-                            required: ""
-                          },
-                          domProps: {
-                            value: _vm.objUser.password_confirmation
-                          },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "password",
+                              name: "password_confirmation",
+                              id: "pass_confirm_id",
+                              placeholder: "Confirmar contraseña",
+                              "aria-describedby": "inputGroupPassConf",
+                              required: ""
+                            },
+                            domProps: {
+                              value: _vm.objUser.password_confirmation
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.objUser,
+                                  "password_confirmation",
+                                  $event.target.value
+                                )
                               }
-                              _vm.$set(
-                                _vm.objUser,
-                                "password_confirmation",
-                                $event.target.value
-                              )
                             }
-                          }
-                        })
+                          })
+                        ])
                       ])
                     ])
-                  ]
-                ),
+                  : _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "col-md-6 mb-3" }, [
+                        _vm._m(3),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group" }, [
+                          _vm._m(4),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.objUser.password,
+                                expression: "objUser.password"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: [
+                              { "is-invalid": _vm.errors.has("password") },
+                              {
+                                borde_redondeo_lateral_dcho: _vm.errors.has(
+                                  "password"
+                                )
+                              }
+                            ],
+                            attrs: {
+                              type: "password",
+                              name: "password",
+                              id: "pass_id",
+                              placeholder: "Contraseña",
+                              "aria-describedby": "inputGroupPass"
+                            },
+                            domProps: { value: _vm.objUser.password },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.objUser,
+                                  "password",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.has("password")
+                            ? _c(
+                                "span",
+                                {
+                                  staticClass: "block text-sm text-danger mt-2"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.get("password")))]
+                              )
+                            : _vm._e()
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-6 mb-3" }, [
+                        _vm._m(5),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group" }, [
+                          _vm._m(6),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.objUser.password_confirmation,
+                                expression: "objUser.password_confirmation"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "password",
+                              name: "password_confirmation",
+                              id: "pass_confirm_id",
+                              placeholder: "Confirmar contraseña",
+                              "aria-describedby": "inputGroupPassConf"
+                            },
+                            domProps: {
+                              value: _vm.objUser.password_confirmation
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.objUser,
+                                  "password_confirmation",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ])
+                    ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-row" }, [
                   _c("div", { staticClass: "col-md-4 mb-3" }, [
@@ -40955,7 +41095,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "modal-footer" }, [
-                _vm._m(3),
+                _vm._m(7),
                 _vm._v(" "),
                 _c("div", [
                   _c(
@@ -41033,6 +41173,51 @@ var staticRenderFns = [
         { staticClass: "input-group-text", attrs: { id: "inputGroupPass" } },
         [_vm._v("•")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c(
+        "span",
+        {
+          staticClass: "input-group-text",
+          attrs: { id: "inputGroupPassConf" }
+        },
+        [_vm._v("•")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "pass_id" } }, [
+      _vm._v("Contraseña "),
+      _c("small", [_vm._v("(solo para modificarla)")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c(
+        "span",
+        { staticClass: "input-group-text", attrs: { id: "inputGroupPass" } },
+        [_vm._v("•")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "pass_confirm_id" } }, [
+      _vm._v("Confirmar "),
+      _c("small", [_vm._v("(si especificada nueva)")])
     ])
   },
   function() {
@@ -41328,7 +41513,7 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("user-ins-edit-component", { on: { storeUserEvent: _vm.getUsers } })
+      _c("user-ins-edit-component", { on: { insModifUserEvent: _vm.getUsers } })
     ],
     1
   )

@@ -7,9 +7,29 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validatorUpdate(array $data)
+    {
+        return Validator::make($data, [
+            //'username'  => 'required|string|max:69|unique:users',
+            'username' => 'required|string|max:255|unique:users,username,' . $data->id,
+            //'email'     => 'required|string|email|max:100|unique:users',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $data->id,
+            'password'  => ['required', 'string', 'min:6', 'confirmed'],
+            'perfil_id' => 'required',
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -44,6 +64,10 @@ class UserController extends Controller
         //    $request->request->add(['avatar' => 'sin-avatar']);
         //dd($request);
         ////User::create($request->all());
+        //----------------------------------------------------
+        //En este caso, como se tiene que tratar el campo de PASSWORD de forma especial
+        //no se puede hacer el registro con el CREATE, por eso, se emplea el SAVE
+        //Lo mismo pasará en el UPDATE si se incluye, también, en este método el PASSWORD
         $user = new User;
         $user->username = $request->username;
         $user->name = $request->name;
@@ -53,8 +77,9 @@ class UserController extends Controller
         $user->perfil_id = $request->perfil_id;
         $user->save();
 
-        //simplemente, se hace un RETURN vacío pues JS se encargará de avisar
-        //del OK del proceso
+        //Simplemente, se hace un RETURN vacío pues JS se encargará de avisar
+        //del OK del proceso, a no ser que se quiera enviar, por ejemplo,
+        //enviar un mensaje informativo para verlo por consola
         return;
     }
 
@@ -76,9 +101,58 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    /*public function update(Request $request, $id)
     {
-        //
+        ////$validator = $this->validatorUpdate($request->all());
+        //////Si la validación falla
+        ////if ($validator->fails()) {
+        ////    $errors = $validator->errors();
+        ////    return $errors;
+        ////}
+        ////User::findOrFail($id)->update($request->all());
+
+        ////$this->validate($request, [
+        ////    //'username'  => 'required|string|max:69|unique:users',
+        ////    'username' => 'required|string|max:255|unique:users,username,' . $request->id,
+        ////    //'email'     => 'required|string|email|max:100|unique:users',
+        ////    'email' => 'required|string|email|max:255|unique:users,email,' . $request->id,
+        ////    //'password'  => ['required', 'string', 'min:6', 'confirmed'],
+        ////    //'password'  => ['sometimes', 'string', 'min:6', 'confirmed'],
+        ////    'perfil_id' => 'required',
+        ////]);
+        //************************************************
+        //Validación
+        //Estableciendo reglas de validación
+        $reglas = [
+            'username' => 'required|string|max:255|unique:users,username,' . $request->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $request->id,
+            'perfil_id' => 'required',
+        ];
+        //Validando petición
+        $request->validate($reglas);
+
+        $user = User::findOrFail($id)->update($request->all());
+
+        return ['message' => 'Actualizando el registro con ID => [' . $id . ']'];
+    }*/
+    //Forma más corta empleando el FormRequest
+    public function update(UserUpdateRequest $request, $id) {
+        $user = User::findOrFail($id)->update($request->all());
+        //Lo mismo que en el STORE, siempre que se tenga que tratar el PASSWORD,
+        //se empleará el SAVE en vez del UPDATE
+        $user = User::findOrFail($id);
+        $user->username = $request->username;
+        $user->name = $request->name;
+        $user->lastname = $request->lastname;
+        $user->email = $request->email;
+        //Si no es NULO
+        if( !is_null($request->password) ) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->perfil_id = $request->perfil_id;
+        $user->save();
+
+        return ['message' => 'Actualizando el registro con ID => [' . $id . ']'];
     }
 
     /**

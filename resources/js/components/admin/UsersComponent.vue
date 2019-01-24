@@ -103,7 +103,7 @@
                 <!-- /.content -->
 
                 <!-- Modal-inserto-edición :: ini -->
-                <user-ins-edit-component @storeUserEvent="getUsers"></user-ins-edit-component>
+                <user-ins-edit-component @insModifUserEvent="getUsers"></user-ins-edit-component>
 
         <!-- CONTENIDO a Mostrar :: fin -->
 
@@ -115,8 +115,11 @@
         created() {
             //console.log('Component mounted.')
 
-            //para cargar el listado de usuarios
+            //para cargar el listado de usuarios al llegar al componente
             this.getUsers();
+            //para volverlo a cargar en cada intervalo de X tiempo
+            //aunque esta forma de recarga va en contra del rendimiento
+            ////setInterval(() => this.getUsers(), 3000);
         },
 
         //datos devueltos por el componente:

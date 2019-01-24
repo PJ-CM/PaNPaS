@@ -43,7 +43,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-show="insMode" class="form-row">
+                    <div v-if="insMode" class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="pass_id">Contraseña*</label>
                             <div class="input-group">
@@ -61,6 +61,27 @@
                                     <span class="input-group-text" id="inputGroupPassConf">&bull;</span>
                                 </div>
                                 <input v-model="objUser.password_confirmation" type="password" class="form-control" name="password_confirmation" id="pass_confirm_id" placeholder="Confirmar contraseña" aria-describedby="inputGroupPassConf" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="pass_id">Contraseña <small>(solo para modificarla)</small></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupPass">&bull;</span>
+                                </div>
+                                <input v-model="objUser.password" type="password" class="form-control" :class="[{ 'is-invalid': errors.has('password') }, { 'borde_redondeo_lateral_dcho': errors.has('password') }]" name="password" id="pass_id" placeholder="Contraseña" aria-describedby="inputGroupPass">
+                                <span v-if="errors.has('password')" class="block text-sm text-danger mt-2">{{ errors.get('password') }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="pass_confirm_id">Confirmar <small>(si especificada nueva)</small></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupPassConf">&bull;</span>
+                                </div>
+                                <input v-model="objUser.password_confirmation" type="password" class="form-control" name="password_confirmation" id="pass_confirm_id" placeholder="Confirmar contraseña" aria-describedby="inputGroupPassConf">
                             </div>
                         </div>
                     </div>
@@ -143,6 +164,8 @@
                     'password_confirmation': '',
                     'perfil_id': '',
                     'avatar': '',
+                    //para la edición
+                    'id': '',
                 },
                 //útil para condicionar el muestreo del modal para crear o editar registro
                 insMode: true,
@@ -192,7 +215,7 @@
                     $('#regInsEditModal').modal('hide');
 
                     //Emitiendo solicitud de recarga del listado
-                    this.$emit('storeUserEvent');
+                    this.$emit('insModifUserEvent');
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR
                     //registrando los errores recibidos
@@ -214,6 +237,8 @@
                     //'password_confirmation': '',
                     'perfil_id': user.perfil_id,
                     //'avatar': '',
+                    //para la edición
+                    'id': user.id,
                 };
                 //desactivando el modo de inserto
                 console.log('STATUS recibido por evento: ' + status);
@@ -223,8 +248,31 @@
             /**
              * Actualizando registro
             */
-            updateUser() {//id
-                console.log('Actualizando registro...');
+            updateUser() {
+                console.log('Actualizando registro... [' + this.objUser.id + ']');
+                let url = '/api/users/' + this.objUser.id;
+                axios.put(url, this.objUser)
+                .then((response) => {       //SI TODO OK
+
+                    //reseteando panel
+                    this.restartPanel();
+
+                    //Lanzando notificación satisfactoria
+                    toast({
+                        type: 'success',
+                        title: 'Registro actualizado'
+                    });
+
+                    //ocultando la ventana modal de creación de registro
+                    $('#regInsEditModal').modal('hide');
+
+                    //Emitiendo solicitud de recarga del listado
+                    this.$emit('insModifUserEvent');
+                })
+                .catch(error => {           //SI HAY ALGÚN ERROR
+                    //registrando los errores recibidos
+                    this.errors.record(error.response.data.errors);
+                });/**/
             },
 
             restartPanel() {
@@ -238,6 +286,7 @@
                     'password_confirmation': '',
                     'perfil_id': '',
                     'avatar': '',
+                    'id': '',
                 };
 
                 //vaciando los posibles errores que se produjeron
