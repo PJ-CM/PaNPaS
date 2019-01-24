@@ -36,7 +36,7 @@ class recetas_seeder extends Seeder
                 ////'user_id' => random_int(1, 9),
                 //  >> Aleatorio entre los IDs resultantes de la consulta
                 'user_id' => $users->random()->id,
-                'votos' => random_int(0, 999),
+                'votos' => random_int(0, 0),
                 'created_at' => $faker->date($format = 'Y-m-d', $max = 'now'),
             ]);
         }

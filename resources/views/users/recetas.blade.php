@@ -62,14 +62,14 @@
 								                <div class="row">
 
 								                	@foreach($recetas as $receta)
-								                    	<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">
+								                    	<div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 ranking-item">
 									                        <a class="ranking-link" data-toggle="modal" href="/receta/{{$receta->titulo}}">
 									                            <div class="ranking-hover" title="Preparar {{$receta->titulo}}">
 									                                <div class="ranking-hover-content">
 									                                    <i class="fas fa-plus fa-3x"></i>
 									                                </div>
 									                            </div>
-									                            <img class="img-fluid" src="{{$receta->imagen}}" title="Bollos Suizos">
+									                            <img class="img-fluid" src="{{$receta->imagen}}" title="{{$receta->titulo}}">
 									                        </a>
 									                        <div class="ranking-caption">
 									                            <h4 title="{{$receta->titulo}}">{{$receta->titulo}}</h4>
@@ -79,7 +79,18 @@
 
 									                            <h5 class="stars-votos" title="{{$receta->titulo}} tiene {{$receta->votos}} votos">
 									                            	@if (Auth::user()->username != $receta->user->username)
-									                                	<a href="#"><i class="fas fa-star fa-lg" title="Votar"></i> </a>
+									                            		{{-- Si el usuario no coincide con el de la receta --}}
+
+									                            		@if(Auth::user()->favoritos->contains('id', $receta->id)) {{-- si ya la tiene en favoritos --}}
+									                            			<a href="unfav/{{$receta->id}}"><i class="fas fa fa-star fa-lg" title="Votar" style="color: red;"></i> </a>
+									                            		@else {{-- si no la tiene en favoritos --}}
+									                            			<a href="fav/{{$receta->id}}"><i class="fas fa-star fa-lg" title="Votar"></i> </a>
+									                            		
+									                            		
+									                            		
+									                            		@endif
+
+									                                	
 									                                	@else
 									                                		<i class="fas fa-star fa-lg" title="No puedes votar una receta tuya"></i>
 									                                @endif

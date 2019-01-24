@@ -68,6 +68,11 @@ Route::get('/unfollow/{id}', 'FollowController@unfollow')
 Route::get('/follow/{id}', 'FollowController@follow')
     ->name('follow_follow');
 
+//FAVORITOS SYSTEN routes
+Route::get('/fav/{id}', 'RecetaController@insertarFavoritos')
+    ->name('fav_insertarFavoritos'); 
+Route::get('/unfav/{id}', 'RecetaController@eliminarFavoritos')
+    ->name('fav_eliminarFavoritos'); 
 
 
 //Panel Admin
