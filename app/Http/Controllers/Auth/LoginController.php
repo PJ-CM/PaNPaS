@@ -32,7 +32,7 @@ class LoginController extends Controller
                     return '/admin/dashboard';
                 break;
             case 2:
-                    $url = "/users/".Auth::user()->username;
+                    $url = '/users/'.Auth::user()->username;
                     return $url;
                 break;
             default:
@@ -40,13 +40,6 @@ class LoginController extends Controller
                 break;
         }
     }
-
-
-
-
-
-
-
 
     /**
      * Create a new controller instance.

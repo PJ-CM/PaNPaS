@@ -13,6 +13,21 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //Exigiendo: autenticarse, verificar-email-registro
+        ////$this->middleware('auth');
+        ////$this->middleware('verified');
+        //----------------------------------------------------------
+        //  >> Desactivado mientras se desarrolla
+        ////$this->middleware(['auth', 'verified']);
+    }
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data

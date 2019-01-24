@@ -13,7 +13,8 @@
 
 Route::get('/', 'RecetaController@getRecetasRanking')->name('index');
 
-Auth::routes();
+//Con Verificación por Email
+Auth::routes(['verify' => true]);
 
 //Landing Page
 Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos'); //guarda los datos del formulario de la landing page en la DDBB
