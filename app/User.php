@@ -44,6 +44,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function recetas(){
         return $this->hasMany('App\Receta');
     }
+    public function favoritos(){
+        return $this->belongsToMany('App\Receta');
+    }
 
     public function panaderias(){
         return $this->hasMany('App\Panaderia');

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Receta;
 use App\Comentario;
 use Auth;
+use DB;
+use Redirect;
 
 class RecetaController extends Controller
 {
@@ -87,6 +89,41 @@ class RecetaController extends Controller
 
 		return redirect('/recetas/RecetaInsertada');
 
+	}
+
+	public function insertarFavoritos($id){
+
+		//insertar registro en base de datos
+		DB::table('receta_user')->insert([
+			'user_id' => Auth::user()->id,
+			'receta_id' => $id
+		]);
+
+		//actualizar votos de la receta
+		$receta = new Receta;
+		$receta = $receta->where('id', $id)->first();
+
+		$receta->votos += 1;
+
+		$receta->save();
+
+		return Redirect::back();
+	}
+
+	public function eliminarFavoritos($id){
+
+		//eliminar registro en base de datos
+		DB::table('receta_user')->where('user_id', Auth::user()->id)->where('receta_id', $id)->delete();
+
+		//actualizar votos de la receta
+		$receta = new Receta;
+		$receta = $receta->where('id', $id)->first();
+
+		$receta->votos -= 1;
+
+		$receta->save();
+
+		return Redirect::back();
 	}
 
 	

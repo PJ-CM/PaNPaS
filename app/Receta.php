@@ -13,10 +13,9 @@ class Receta extends Model
         return $this->belongsTo('App\User');
     }
 
-   /* public function ingredientes(){
-    	return $this->belongsToMany('App\Ingrediente')->withPivot('cantidad');
+    public function users(){ //usuarios que han dado favorito a la receta
+        return $this->belongsToMany('App\User');
     }
-    */
 
     public function comentarios(){
     	return $this->hasMany('App\Comentario');
