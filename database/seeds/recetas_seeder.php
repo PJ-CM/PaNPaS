@@ -30,7 +30,7 @@ class recetas_seeder extends Seeder
                 'titulo' => 'titulo'.$i,
                 'descripcion' => $faker->realText($faker->numberBetween(200,255)),
                 'imagen' => $faker->imageUrl($width = 640, $height = 480),
-                'elaboracion' => $faker->realText($faker->numberBetween(500,1000)),
+                'elaboracion' => 'Paso 1: '.$faker->realText($faker->numberBetween(100,200)).'<br /><br />'.'Paso 2: '.$faker->realText($faker->numberBetween(150,200)).'<br /><br />'.'Paso 3: '.$faker->realText($faker->numberBetween(50,100)).'<br /><br />'.'Paso 4: '.$faker->realText($faker->numberBetween(25,50)).'<br /><br />',
                 'ingredientes' => 'ingrediente'.$i.' '.$faker->numberBetween(100, 750).'ml',
                 //  >> Aleatorio entre un rango de números dado
                 ////'user_id' => random_int(1, 9),

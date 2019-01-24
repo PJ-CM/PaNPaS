@@ -77,6 +77,8 @@ class RecetaController extends Controller
 		
 		$receta->elaboracion=nl2br($receta->elaboracion);
 
+		
+
 		$receta->ingredientes = $data['ingredientes'];
 		$receta->imagen = $data['imagen'];
 		$receta->user_id = Auth::user()->id;

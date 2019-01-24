@@ -102,9 +102,9 @@
     <div class="col-md-7 vertical-line" style="background-color: lightblue; padding: 30px;">
       <h2 class="frijole"> Preparación </h2>
       
-        <div style="text-align: justify;"> {{$receta->elaboracion}} </div>
+        <div style="text-align: justify;"> {!!$receta->elaboracion!!} </div>
       
-    <img src="{{$receta->imagen}}" class="img-receta">
+    <!--<img src="{{$receta->imagen}}" class="img-receta"> -->
     </div>
 </div>
 <!-- FIN RECETA -->
@@ -124,7 +124,7 @@
                 <div class="row justify-content-center">
                     <div class="col-md-10">
                         <div class="card">
-                            <div class="card-header"><h1 class="frijole">Comentarios</h1></div>
+                            <div class="card-header" id="comentarios"><h1 class="frijole">Comentarios</h1></div>
 
                             <div class="card-body">
                                 
