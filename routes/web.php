@@ -19,7 +19,7 @@ Auth::routes();
 Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos'); //guarda los datos del formulario de la landing page en la DDBB
 
 //Panel donde se muestra la Receta
-Route::get ('/receta/{id}', 'RecetaController@mostrar')->name('receta');
+Route::get ('/receta/{id}/{toast?}', 'RecetaController@mostrar')->name('receta');
 Route::post ('/insertarComentario', 'RecetaController@insertarComentario');
 
 //Panel de Usuarios

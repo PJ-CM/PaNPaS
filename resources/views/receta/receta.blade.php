@@ -14,7 +14,36 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- JavaScript -->
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/alertify.min.css"/>
+<!-- Default theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/default.min.css"/>
+<!-- Semantic UI theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/semantic.min.css"/>
+<!-- Bootstrap theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/bootstrap.min.css"/>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		alertify.set('notifier','position', 'top-right');
+			@if (isset($toast) != null)
+				@if ($toast == 'recetaInsertada')
+					alertify.notify('Comentario Insertado', 'success');
+					@else
+					alertify.notify('Campo Vacío', 'error');
+				@endif
+			@endif
+		});
+</script>
+
         <title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
+
 
 
 		<style type="text/css">
@@ -73,7 +102,7 @@
     <div class="col-md-7 vertical-line" style="background-color: lightblue; padding: 30px;">
       <h2 class="frijole"> Preparación </h2>
       
-        <p>{{$receta->elaboracion}}</p>
+        <div style="text-align: justify;"> {{$receta->elaboracion}} </div>
       
     <img src="{{$receta->imagen}}" class="img-receta">
     </div>
@@ -114,10 +143,10 @@
 													<!-- Contenedor del Comentario -->
 													<div class="comment-box">
 														<div class="comment-head">
-															<h6 class="comment-name @if ($comentario->user_id == $receta->user_id) by-author @endif"><a href="http://creaticode.com/blog">{{$comentario->user->username}}</a></h6>
+															<h6 class="comment-name @if ($comentario->user_id == $receta->user_id) by-author @endif"><a href="/{{$comentario->user->username}}">{{$comentario->user->username}}</a></h6>
 															<span> hace {{ intval(($time - $comentario->time) / 60) }} minutos</span>
-															<i class="fa fa-reply"></i>
-															<i class="fa fa-heart"></i>
+															{{--<i class="fa fa-reply"></i>
+															<i class="fa fa-heart"></i>--}}
 														</div>
 														<div class="comment-content">
 															{{$comentario->mensaje}}
@@ -130,7 +159,9 @@
 										<div class="insertar-comentario-container">
 											<form action="/insertarComentario" method="post">
 												<input type="hidden" name="id" value="{{$receta->id}}">
-												<textarea name="mensaje"></textarea><input type="submit" name="enviarComentario">
+												<textarea name="mensaje"></textarea>
+
+												<input type="submit" name="enviarComentario" class="btn btn-primary">
 											</form>
 											
 										</div>

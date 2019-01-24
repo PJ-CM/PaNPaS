@@ -25,7 +25,7 @@
 			$(document).ready(function(){
 					@if (isset($toast) != null)
 						alertify.set('notifier','position', 'top-right');
-						alertify.notify('<a href="http://www.google.es">Receta</a> Insertada', 'success');
+						alertify.notify('Receta Insertada', 'success');
 					@endif
 				});
 		</script>
@@ -137,26 +137,25 @@
 
             <form action="/insertarReceta" method="post" enctype="multipart/form-data">
 	            <p class="col-lg-12">
-	                <label>Título</label>   			<input type="text" name="titulo" class="w3-input" required="">
+	                <label><strong>Título</strong></label>   			
+	                <input type="text" name="titulo" class="col-lg-12 w3-input" required="">
 	            </p>
 	            <p class="col-lg-12">
-	                <label>Descripción</label>     		<input type="text" name="descripcion" class="w3-input" required="">
+	                <label><strong>Descripción</strong></label>     		
+	                <textarea name="descripcion" class="col-lg-12 w3-input" required=""></textarea>
 	            </p>
 	            <p class="col-lg-12">
-	             <label>Imagen</label>               	<input type="text" name="imagen" class="w3-input" value="https://lorempixel.com/640/480/?14725" required="">
+	             	<label><strong>Imagen</strong></label>               	
+	             	<input type="text" name="imagen" class="col-lg-12 w3-input" value="https://lorempixel.com/640/480/?14725" required="">
 	            </p>
-	            {{-- <p class="col-lg-12" id="elaboracion">
-	                <label>Elaboración:  </label><span style="font-size: 15px" id="añadirCampoElaboracion" class="btn btn-primary">+</span>
+				<p class="col-lg-12">
+	                <label><strong>Ingredientes</strong></label>     		
+	                <textarea name="ingredientes" class="col-lg-12 w3-input" required=""></textarea>
 	            </p>
-	           	<p class="col-lg-12" id="ingrediente">
-	                <label>Ingredientes:</label>      <span style="font-size: 15px" id="añadirCampoIngrediente" class="btn btn-primary">+</span> 
-	            </p>
-	        	--}}
-				<label>Elaboración:  </label>
-	        		<textarea name="elaboracion" class="col-lg-12"></textarea>
-
-	        	<label>Ingredientes:  </label>
-	        		<textarea name="ingredientes" class="col-lg-12" placeholder=" Ingrediente1 500ml, Ingrediente2 250gr, Ingrediente3 100ml..."></textarea>
+	            <p class="col-lg-12">
+	                <label><strong>Elaboración</strong></label>     		
+	                <textarea name="elaboracion" class="col-lg-12 w3-input" required=""></textarea>
+	            </p>	            
 
 	            <input type="submit" name="sub_avatar", value="Actualizar" class="btn btn-primary right">
         	</form>

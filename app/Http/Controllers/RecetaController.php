@@ -11,7 +11,7 @@ use Auth;
 class RecetaController extends Controller
 {
     
-	public function mostrar($titulo) {
+	public function mostrar($titulo, $estado=null) {
 		
 
 		$receta = new Receta();
@@ -28,7 +28,7 @@ class RecetaController extends Controller
 			}
 		}
 
-		return view ('receta/receta', ['receta'=>$receta, 'time'=>time(), 'ingredientes'=> $ingredientes]);
+		return view ('receta/receta', ['receta'=>$receta, 'time'=>time(), 'ingredientes'=> $ingredientes, 'toast'=>$estado]);
 	}
 
 	public function getRecetasRanking() {
@@ -46,15 +46,23 @@ class RecetaController extends Controller
 		$receta = new Receta();
 		$receta = $receta->find($id);
 		$com = new Comentario();
+		
+		if ($_POST['mensaje'] != ""){
+			$com->mensaje = $_POST['mensaje'];
+			$com->user_id = Auth::user()->id;
+			$com->receta_id = $id;
+			$com->time = time();
 
-		$com->mensaje = $_POST['mensaje'];
-		$com->user_id = Auth::user()->id;
-		$com->receta_id = $id;
-		$com->time = time();
+			$com->save();
 
-		$com->save();
+			return redirect('receta/'.$receta->titulo.'/recetaInsertada'); //receta insertada
+		} else {
+			return redirect('receta/'.$receta->titulo.'/inputVacio'); //receta no insertada por input vacío
+		}
+		
 
-		return redirect('receta/'.$receta->titulo);
+
+		
 	}
 
 	public function insertarReceta(Request $request) {
