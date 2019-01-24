@@ -26,27 +26,15 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        //Reglas para campos obligatorios
+        //Reglas para campos obligatorios/opcionales (nullable)
         $rules = [
-            //'username'  => 'required|string|max:69|unique:users',
-            'username' => 'required|string|max:255|unique:users,username,' . $request->id,
-            //'email'     => 'required|string|email|max:100|unique:users',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $request->id,
-            'password'  => ['required', 'string', 'min:6', 'confirmed'],
+            'username'  => 'required|string|max:69|unique:users,username,' . $this->id,
+            'email'     => 'required|string|email|max:100|unique:users,email,' . $this->id,
+            'password'  => 'nullable|string|min:6|confirmed',
             'perfil_id' => 'required',
+            'name' => 'nullable|regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s-_]+$/|max:50',
+            'lastname' => 'nullable|regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s-_]+$/|max:74',
         ];
-
-        //Reglas para campos opcionales que se aplicarán si son suministrados
-        if($this->get('name')) {
-            $rules = array_merge($rules, [
-                'name' => 'string|max:50',
-            ]);
-        }
-        if($this->get('lastname')) {
-            $rules = array_merge($rules, [
-                'lastname' => 'string|max:74',
-            ]);
-        }
 
         return $rules;
     }
@@ -63,9 +51,11 @@ class UserUpdateRequest extends FormRequest
             'username.string' => 'El NOMBRE de USUARIO de ser de tipo string',
             'username.max'  => 'El NOMBRE de USUARIO con un Máx. de :max caracteres',
             'username.unique'  => 'El NOMBRE de USUARIO ya está registrado',
-            'name.string' => 'El NOMBRE de ser de tipo string',
+            'name.string' => 'El NOMBRE debe ser de tipo string',
+            'name.regex' => 'El NOMBRE debe ser de formato string',
             'name.max'  => 'El NOMBRE con un Máx. de :max caracteres',
-            'lastname.string' => 'El APELLIDO de ser de tipo string',
+            'lastname.string' => 'El APELLIDO debe ser de tipo string',
+            'lastname.regex' => 'El APELLIDO debe ser de formato string',
             'lastname.max'  => 'El APELLIDO con un Máx. de :max caracteres',
             'email.required' => 'El EMAIL es obligatorio',
             'email.string' => 'El EMAIL de ser de tipo string',

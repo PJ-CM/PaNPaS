@@ -45,6 +45,8 @@
                         </div>
                         <div class="info">
                             <a href="#" class="d-block">Administrador</a>
+                            <!-- ROUTER-LINK al Perfil del autenticado -->
+                            <!-- ROUTER-LINK {{-- Auth::user()->name --}} -->
                         </div>
                     </div>
 

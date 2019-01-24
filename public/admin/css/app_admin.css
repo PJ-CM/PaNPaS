@@ -13275,8 +13275,7 @@ abbr[data-original-title] {
           text-decoration: underline dotted;
   cursor: help;
   border-bottom: 0;
-  -webkit-text-decoration-skip-ink: none;
-          text-decoration-skip-ink: none;
+  text-decoration-skip-ink: none;
 }
 
 address {
@@ -29355,21 +29354,21 @@ a.text-warning-trash:focus {
   color: #d39e00;
 }
 
-#regInsModal .modal-footer > div {
+#regInsEditModal .modal-footer > div {
   display: flex;
   width: 50%;
 }
 
-#regInsModal .modal-footer > div:first-child > small {
+#regInsEditModal .modal-footer > div:first-child > small {
   margin-top: 1px;
   padding: 3px 5px 5px;
 }
 
-#regInsModal .modal-footer > div:nth-child(2) {
+#regInsEditModal .modal-footer > div:nth-child(2) {
   justify-content: flex-end;
 }
 
-#regInsModal .modal-footer > div:nth-child(2) > :last-child {
+#regInsEditModal .modal-footer > div:nth-child(2) > button[type=submit] {
   margin-left: 5px;
 }
 

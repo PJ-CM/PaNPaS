@@ -2108,6 +2108,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //librería para tratar los errores capturados en el servidor
  // '../../libs/errors.js';
 
@@ -2219,14 +2239,13 @@ __webpack_require__.r(__webpack_exports__);
     /**
      * Actualizando registro
     */
-    updateUser: function updateUser(id) {
+    updateUser: function updateUser() {
       var _this3 = this;
 
-      console.log('Actualizando registro... [' + id + ']');
-      var url = '/api/users/' + id;
+      console.log('Actualizando registro... [' + this.objUser.id + ']');
+      var url = '/api/users/' + this.objUser.id;
       axios.put(url, this.objUser).then(function (response) {
         //SI TODO OK
-        ////document.location = '/';
         //reseteando panel
         _this3.restartPanel(); //Lanzando notificación satisfactoria
 
@@ -2391,8 +2410,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     //console.log('Component mounted.')
-    //para cargar el listado de usuarios
-    this.getUsers();
+    //para cargar el listado de usuarios al llegar al componente
+    this.getUsers(); //para volverlo a cargar en cada intervalo de X tiempo
+    //aunque esta forma de recarga va en contra del rendimiento
+    ////setInterval(() => this.getUsers(), 3000);
   },
   //datos devueltos por el componente:
   data: function data() {
@@ -40543,7 +40564,7 @@ var render = function() {
               on: {
                 submit: function($event) {
                   $event.preventDefault()
-                  _vm.insMode ? _vm.storeUser() : _vm.updateUser(_vm.objUser.id)
+                  _vm.insMode ? _vm.storeUser() : _vm.updateUser()
                 }
               }
             },
@@ -40793,125 +40814,215 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.insMode,
-                        expression: "insMode"
-                      }
-                    ],
-                    staticClass: "form-row"
-                  },
-                  [
-                    _c("div", { staticClass: "col-md-6 mb-3" }, [
-                      _c("label", { attrs: { for: "pass_id" } }, [
-                        _vm._v("Contraseña*")
+                _vm.insMode
+                  ? _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "col-md-6 mb-3" }, [
+                        _c("label", { attrs: { for: "pass_id" } }, [
+                          _vm._v("Contraseña*")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group" }, [
+                          _vm._m(1),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.objUser.password,
+                                expression: "objUser.password"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: [
+                              { "is-invalid": _vm.errors.has("password") },
+                              {
+                                borde_redondeo_lateral_dcho: _vm.errors.has(
+                                  "password"
+                                )
+                              }
+                            ],
+                            attrs: {
+                              type: "password",
+                              name: "password",
+                              id: "pass_id",
+                              placeholder: "Contraseña",
+                              "aria-describedby": "inputGroupPass",
+                              required: ""
+                            },
+                            domProps: { value: _vm.objUser.password },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.objUser,
+                                  "password",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.has("password")
+                            ? _c(
+                                "span",
+                                {
+                                  staticClass: "block text-sm text-danger mt-2"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.get("password")))]
+                              )
+                            : _vm._e()
+                        ])
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "input-group" }, [
-                        _vm._m(1),
+                      _c("div", { staticClass: "col-md-6 mb-3" }, [
+                        _c("label", { attrs: { for: "pass_confirm_id" } }, [
+                          _vm._v("Confirmar contraseña*")
+                        ]),
                         _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.objUser.password,
-                              expression: "objUser.password"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          class: [
-                            { "is-invalid": _vm.errors.has("password") },
-                            {
-                              borde_redondeo_lateral_dcho: _vm.errors.has(
-                                "password"
-                              )
-                            }
-                          ],
-                          attrs: {
-                            type: "password",
-                            name: "password",
-                            id: "pass_id",
-                            placeholder: "Contraseña",
-                            "aria-describedby": "inputGroupPass",
-                            required: ""
-                          },
-                          domProps: { value: _vm.objUser.password },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                        _c("div", { staticClass: "input-group" }, [
+                          _vm._m(2),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.objUser.password_confirmation,
+                                expression: "objUser.password_confirmation"
                               }
-                              _vm.$set(
-                                _vm.objUser,
-                                "password",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _vm.errors.has("password")
-                          ? _c(
-                              "span",
-                              { staticClass: "block text-sm text-danger mt-2" },
-                              [_vm._v(_vm._s(_vm.errors.get("password")))]
-                            )
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-6 mb-3" }, [
-                      _c("label", { attrs: { for: "pass_confirm_id" } }, [
-                        _vm._v("Confirmar contraseña*")
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "input-group" }, [
-                        _vm._m(2),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.objUser.password_confirmation,
-                              expression: "objUser.password_confirmation"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "password",
-                            name: "password_confirmation",
-                            id: "pass_confirm_id",
-                            placeholder: "Confirmar contraseña",
-                            "aria-describedby": "inputGroupPassConf",
-                            required: ""
-                          },
-                          domProps: {
-                            value: _vm.objUser.password_confirmation
-                          },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "password",
+                              name: "password_confirmation",
+                              id: "pass_confirm_id",
+                              placeholder: "Confirmar contraseña",
+                              "aria-describedby": "inputGroupPassConf",
+                              required: ""
+                            },
+                            domProps: {
+                              value: _vm.objUser.password_confirmation
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.objUser,
+                                  "password_confirmation",
+                                  $event.target.value
+                                )
                               }
-                              _vm.$set(
-                                _vm.objUser,
-                                "password_confirmation",
-                                $event.target.value
-                              )
                             }
-                          }
-                        })
+                          })
+                        ])
                       ])
                     ])
-                  ]
-                ),
+                  : _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "col-md-6 mb-3" }, [
+                        _vm._m(3),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group" }, [
+                          _vm._m(4),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.objUser.password,
+                                expression: "objUser.password"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: [
+                              { "is-invalid": _vm.errors.has("password") },
+                              {
+                                borde_redondeo_lateral_dcho: _vm.errors.has(
+                                  "password"
+                                )
+                              }
+                            ],
+                            attrs: {
+                              type: "password",
+                              name: "password",
+                              id: "pass_id",
+                              placeholder: "Contraseña",
+                              "aria-describedby": "inputGroupPass"
+                            },
+                            domProps: { value: _vm.objUser.password },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.objUser,
+                                  "password",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.has("password")
+                            ? _c(
+                                "span",
+                                {
+                                  staticClass: "block text-sm text-danger mt-2"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.get("password")))]
+                              )
+                            : _vm._e()
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-6 mb-3" }, [
+                        _vm._m(5),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group" }, [
+                          _vm._m(6),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.objUser.password_confirmation,
+                                expression: "objUser.password_confirmation"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "password",
+                              name: "password_confirmation",
+                              id: "pass_confirm_id",
+                              placeholder: "Confirmar contraseña",
+                              "aria-describedby": "inputGroupPassConf"
+                            },
+                            domProps: {
+                              value: _vm.objUser.password_confirmation
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.objUser,
+                                  "password_confirmation",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ])
+                    ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-row" }, [
                   _c("div", { staticClass: "col-md-4 mb-3" }, [
@@ -40984,30 +41095,9 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "modal-footer" }, [
-                _vm._m(3),
+                _vm._m(7),
                 _vm._v(" "),
                 _c("div", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.objUser.id,
-                        expression: "objUser.id"
-                      }
-                    ],
-                    attrs: { type: "hidden", name: "id" },
-                    domProps: { value: _vm.objUser.id },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.objUser, "id", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
                   _c(
                     "button",
                     {
@@ -41083,6 +41173,51 @@ var staticRenderFns = [
         { staticClass: "input-group-text", attrs: { id: "inputGroupPass" } },
         [_vm._v("•")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c(
+        "span",
+        {
+          staticClass: "input-group-text",
+          attrs: { id: "inputGroupPassConf" }
+        },
+        [_vm._v("•")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "pass_id" } }, [
+      _vm._v("Contraseña "),
+      _c("small", [_vm._v("(solo para modificarla)")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c(
+        "span",
+        { staticClass: "input-group-text", attrs: { id: "inputGroupPass" } },
+        [_vm._v("•")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "pass_confirm_id" } }, [
+      _vm._v("Confirmar "),
+      _c("small", [_vm._v("(si especificada nueva)")])
     ])
   },
   function() {
@@ -44172,8 +44307,8 @@ if (inBrowser && window.Vue) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
- * Vue.js v2.5.22
- * (c) 2014-2019 Evan You
+ * Vue.js v2.5.21
+ * (c) 2014-2018 Evan You
  * Released under the MIT License.
  */
 
@@ -44802,7 +44937,7 @@ if (true) {
       ? vm.options
       : vm._isVue
         ? vm.$options || vm.constructor.options
-        : vm;
+        : vm || {};
     var name = options.name || options._componentTag;
     var file = options.__file;
     if (!name && file) {
@@ -44897,9 +45032,9 @@ Dep.prototype.notify = function notify () {
   }
 };
 
-// The current target watcher being evaluated.
-// This is globally unique because only one watcher
-// can be evaluated at a time.
+// the current target watcher being evaluated.
+// this is globally unique because there could be only one
+// watcher being evaluated at any time.
 Dep.target = null;
 var targetStack = [];
 
@@ -45427,26 +45562,13 @@ function mergeHook (
   parentVal,
   childVal
 ) {
-  var res = childVal
+  return childVal
     ? parentVal
       ? parentVal.concat(childVal)
       : Array.isArray(childVal)
         ? childVal
         : [childVal]
-    : parentVal;
-  return res
-    ? dedupeHooks(res)
-    : res
-}
-
-function dedupeHooks (hooks) {
-  var res = [];
-  for (var i = 0; i < hooks.length; i++) {
-    if (res.indexOf(hooks[i]) === -1) {
-      res.push(hooks[i]);
-    }
-  }
-  return res
+    : parentVal
 }
 
 LIFECYCLE_HOOKS.forEach(function (hook) {
@@ -45682,7 +45804,7 @@ function mergeOptions (
   normalizeProps(child, vm);
   normalizeInject(child, vm);
   normalizeDirectives(child);
-
+  
   // Apply extends and mixins on the child options,
   // but only if it is a raw options object that isn't
   // the result of another mergeOptions call.
@@ -46615,8 +46737,6 @@ function resolveAsyncComponent (
       // (async resolves are shimmed as synchronous during SSR)
       if (!sync) {
         forceRender(true);
-      } else {
-        contexts.length = 0;
       }
     });
 
@@ -46784,8 +46904,8 @@ function eventsMixin (Vue) {
     }
     // array of events
     if (Array.isArray(event)) {
-      for (var i$1 = 0, l = event.length; i$1 < l; i$1++) {
-        vm.$off(event[i$1], fn);
+      for (var i = 0, l = event.length; i < l; i++) {
+        vm.$off(event[i], fn);
       }
       return vm
     }
@@ -46798,14 +46918,16 @@ function eventsMixin (Vue) {
       vm._events[event] = null;
       return vm
     }
-    // specific handler
-    var cb;
-    var i = cbs.length;
-    while (i--) {
-      cb = cbs[i];
-      if (cb === fn || cb.fn === fn) {
-        cbs.splice(i, 1);
-        break
+    if (fn) {
+      // specific handler
+      var cb;
+      var i$1 = cbs.length;
+      while (i$1--) {
+        cb = cbs[i$1];
+        if (cb === fn || cb.fn === fn) {
+          cbs.splice(i$1, 1);
+          break
+        }
       }
     }
     return vm
@@ -48966,14 +49088,34 @@ function resolveConstructorOptions (Ctor) {
 function resolveModifiedOptions (Ctor) {
   var modified;
   var latest = Ctor.options;
+  var extended = Ctor.extendOptions;
   var sealed = Ctor.sealedOptions;
   for (var key in latest) {
     if (latest[key] !== sealed[key]) {
       if (!modified) { modified = {}; }
-      modified[key] = latest[key];
+      modified[key] = dedupe(latest[key], extended[key], sealed[key]);
     }
   }
   return modified
+}
+
+function dedupe (latest, extended, sealed) {
+  // compare latest and sealed to ensure lifecycle hooks won't be duplicated
+  // between merges
+  if (Array.isArray(latest)) {
+    var res = [];
+    sealed = Array.isArray(sealed) ? sealed : [sealed];
+    extended = Array.isArray(extended) ? extended : [extended];
+    for (var i = 0; i < latest.length; i++) {
+      // push original options and not sealed options to exclude duplicated options
+      if (extended.indexOf(latest[i]) >= 0 || sealed.indexOf(latest[i]) < 0) {
+        res.push(latest[i]);
+      }
+    }
+    return res
+  } else {
+    return latest
+  }
 }
 
 function Vue (options) {
@@ -49344,7 +49486,7 @@ Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
 
-Vue.version = '2.5.22';
+Vue.version = '2.5.21';
 
 /*  */
 
@@ -55984,7 +56126,7 @@ function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /var/www/html/panpas-restructurado/resources/js/app_admin.js */"./resources/js/app_admin.js");
+module.exports = __webpack_require__(/*! D:\inetpubapache-www\__laravel-homestead-proyectos\panpas-restructurado-git\resources\js\app_admin.js */"./resources/js/app_admin.js");
 
 
 /***/ })

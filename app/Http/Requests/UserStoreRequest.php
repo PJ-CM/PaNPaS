@@ -26,25 +26,53 @@ class UserStoreRequest extends FormRequest
      */
     public function rules()
     {
-        //Reglas para campos obligatorios
+        /*//Reglas para campos obligatorios
         $rules = [
             'username'  => 'required|string|max:69|unique:users',
             'email'     => 'required|string|email|max:100|unique:users',
-            'password'  => ['required', 'string', 'min:6', 'confirmed'],
+            //Regla en formato de ARRAY
+            ////'password'  => 'required', 'string', 'min:6', 'confirmed',
+            //Regla en formato con PIPE
+            'password'  => 'required|string|min:6|confirmed',
             'perfil_id' => 'required',
         ];
 
         //Reglas para campos opcionales que se aplicarán si son suministrados
+        // ===================================================================================
+        //:: FORMA 1d2 ::
+        // --------------------------------------
         if($this->get('name')) {
             $rules = array_merge($rules, [
-                'name' => 'string|max:50',
+                ////'name' => 'string|max:50',
+                //Con la regla STRING llegan a pasar las cadenas con núms también
+                //Por ello, se pasa la regla REGEX que, por medio de la expresión
+                //especificada, SOLAMENTE, admite letras (A-Za-z), espacios(\s) y guiones (-_)
+                //Para admitir también letras con tilde, se debe añadir esto a la expresión:
+                //  áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑ
+                'name' => 'regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s-_]+$/|max:50',
             ]);
         }
         if($this->get('lastname')) {
             $rules = array_merge($rules, [
-                'lastname' => 'string|max:74',
+                ////'lastname' => 'string|max:74',
+                'lastname' => 'regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s-_]+$/|max:74',
             ]);
-        }
+        }*/
+        //---------------------------------------------------------------------------
+        //:: FORMA 2d2 ::
+        // --------------------------------------
+        //Ver las reglas con NULLABLE que considera el nulo como valor válido.
+        //Y, si se especifica algo, se considerarán las demás reglas a aplicar.
+
+        //Reglas para campos obligatorios/opcionales (nullable)
+        $rules = [
+            'username'  => 'required|string|max:69|unique:users',
+            'email'     => 'required|string|email|max:100|unique:users',
+            'password'  => 'required|string|min:6|confirmed',
+            'perfil_id' => 'required',
+            'name' => 'nullable|regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s-_]+$/|max:50',
+            'lastname' => 'nullable|regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s-_]+$/|max:74',
+        ];
 
         return $rules;
     }
@@ -61,9 +89,11 @@ class UserStoreRequest extends FormRequest
             'username.string' => 'El NOMBRE de USUARIO de ser de tipo string',
             'username.max'  => 'El NOMBRE de USUARIO con un Máx. de :max caracteres',
             'username.unique'  => 'El NOMBRE de USUARIO ya está registrado',
-            'name.string' => 'El NOMBRE de ser de tipo string',
+            'name.string' => 'El NOMBRE debe ser de tipo string',
+            'name.regex' => 'El NOMBRE debe ser de formato string',
             'name.max'  => 'El NOMBRE con un Máx. de :max caracteres',
-            'lastname.string' => 'El APELLIDO de ser de tipo string',
+            'lastname.string' => 'El APELLIDO debe ser de tipo string',
+            'lastname.regex' => 'El APELLIDO debe ser de formato string',
             'lastname.max'  => 'El APELLIDO con un Máx. de :max caracteres',
             'email.required' => 'El EMAIL es obligatorio',
             'email.string' => 'El EMAIL de ser de tipo string',
