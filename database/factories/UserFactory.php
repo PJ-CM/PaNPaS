@@ -20,7 +20,7 @@ $factory->define(App\User::class, function (Faker $faker) {
         $username = $faker->unique()->userName;
     }
 
-
+    $randomDate = $faker->dateTimeBetween($startDate = '-5 years', $endDate = 'now');
 
     return [
         'username' => $username,
@@ -28,10 +28,13 @@ $factory->define(App\User::class, function (Faker $faker) {
         'lastname' => $faker->lastname,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
+        'email_verified_at' => $randomDate,
         //Contraseña aleatoria para cada uno
         ////'password' => Hash::make(str_random(10)),
         //Contraseña igual para todos
         'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
         'avatar' => $faker->imageUrl($width = 640, $height = 480),
+        'created_at' => $randomDate,
+        'updated_at' => $randomDate,
     ];
 });

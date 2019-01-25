@@ -15,7 +15,7 @@
                             @endphp
                             <br>@{{ $route.path }}<br>--}}
                             <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link active">
+                                <a href="#" class="nav-link active" title="Desplegar/replegar secciones">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>
                                         Gestión de datos
@@ -24,7 +24,7 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <router-link to="/admin/users" class="nav-link">
+                                        <router-link to="/admin/users" class="nav-link" title="Ir a Usuarios">
                                             <i class="fas fa-users nav-icon"></i>
                                             <p>Usuarios</p>
                                         </router-link>

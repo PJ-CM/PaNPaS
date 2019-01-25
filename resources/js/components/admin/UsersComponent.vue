@@ -87,7 +87,9 @@
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a><a v-else href="javascript: void(0);" @click.prevent="restoreDeleteUser(user.id)" class="text-warning-trash" :title="'Restaurar / Borrar registro [' + user.id + ']'">
                                                             <i class="fas fa-sync-alt"></i>
-                                                        </a>
+                                                        </a> <router-link :to="{ name: 'user_profile', params: {id: user.id} }" class="text-success" :title="'Perfil completo [' + user.id + ']'">
+                                                            <i class="fas fa-user-circle"></i>
+                                                        </router-link>
                                                     </td>
                                                 </tr>
                                             </tbody>
