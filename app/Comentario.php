@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comentario extends Model
 {
-      	protected $table = 'comentarios';
-   		protected $primarykey = 'id';
+    protected $table = 'comentarios';
+    protected $primarykey = 'id';
 
     public function users(){
     	return $this->belongsToMany('App\User');
     }
 
-     public function user(){
+    public function user(){
     	return $this->belongsTo('App\User');
     }
 

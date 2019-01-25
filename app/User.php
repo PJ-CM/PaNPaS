@@ -18,7 +18,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $primarykey = "username";
     protected $table = "users";
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -67,9 +66,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function follows(){
         return $this->belongsToMany('App\User', 'user_user', 'follower', 'followed');
     }
-
-
-
-
 
 }

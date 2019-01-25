@@ -84,25 +84,26 @@
                         <h3 class="section-subheading text-muted">Visualiza las 3 recetas más destacadas de entre un total de {{$totalRecetas}}</h3>
                     </div>
                 </div>
+
                 <div class="row">
 
                 @foreach($recetas as $receta)
 
                     {{-- Parte del Ranking --}}
                     <div class="col-md-4 col-sm-6 ranking-item">
-                        <a class="ranking-link" data-toggle="modal" href="#rankingModal{{ $receta->titulo }}">
+                        <a class="ranking-link" data-toggle="modal" href="#rankingModal{{ $receta->id }}">
                             <div class="ranking-hover">
                                 <div class="ranking-hover-content">
                                     <i class="fas fa-plus fa-3x"></i>
                                 </div>
                             </div>
-                            <img class="img-fluid" src="{{$receta->imagen}}" alt="{{$receta}}">
+                            <img class="img-fluid" src="{{ $receta->imagen }}" alt="{{ $receta->titulo }}">
                         </a>
                         <div class="ranking-caption">
-                            <h4>{{$receta->titulo}}</h4>
-                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
+                            <h4>{{ $receta->titulo }}</h4>
+                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{ $receta->user->username }}</a></p>
                             <h5 class="stars-votos">
-                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> {{$receta->votos}}
+                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> {{ $receta->votos }}
                             </h5>
                         </div>
                     </div>
@@ -408,47 +409,45 @@
 
         {{-- Contacto --}}
         <section id="contact">
-            <form method="post" action="/enviarDatosContacto">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 text-center">
-                            <h2 class="section-heading text-uppercase">¿Te interesa?</h2>
-                            <h3 class="section-subheading text-white">Contacta con nosotros para resolver todas tus dudas</h3>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <form id="contactForm" name="sentMessage" novalidate="novalidate">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input class="form-control" name="name" id="name" type="text" placeholder="Tu Nombre *" required="required" data-validation-required-message="Por favor, teclea tu nombre.">
-                                            <p class="help-block text-danger"></p>
-                                        </div>
-                                        <div class="form-group">
-                                            <input class="form-control" name="email" id="email" type="email" placeholder="Tu Email *" required="required" data-validation-required-message="Por favor, teclea tu correo electrónico." data-validation-validemail-message="No es un EMAIL válido">
-                                            <p class="help-block text-danger"></p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <textarea class="form-control" name="message" id="message" placeholder="Tu Mensaje *" required="required" data-validation-required-message="Por favor, teclea tu mensaje."></textarea>
-                                            <p class="help-block text-danger"></p>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                    <div class="col-lg-12 text-center">
-                                        <div id="success"></div>
-                                        <!--<button id="sendMessageButton" class="btn btn-primary btn-xl text-uppercase" title="Enviar formulario de consulta" type="submit">Enviar</button>-->
-                                        <input type="submit" name="submit" class="btn btn-primary btn-xl text-uppercase">
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h2 class="section-heading text-uppercase">¿Te interesa?</h2>
+                        <h3 class="section-subheading text-white">Contacta con nosotros para resolver todas tus dudas</h3>
                     </div>
                 </div>
-            </form>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form id="contactForm" name="sentMessage" novalidate="novalidate">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input class="form-control" name="nombre" id="nombre" type="text" placeholder="Tu Nombre *" required="required" data-validation-required-message="Por favor, teclea tu nombre.">
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="form-control" name="correo" id="correo" type="email" placeholder="Tu Email *" required="required" data-validation-required-message="Por favor, teclea tu correo electrónico." data-validation-validemail-message="No es un EMAIL válido">
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="mensaje" id="mensaje" placeholder="Tu Mensaje *" required="required" data-validation-required-message="Por favor, teclea tu mensaje."></textarea>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12 text-center">
+                                    <div id="success"></div>
+                                    <!--<button id="sendMessageButton" class="btn btn-primary btn-xl text-uppercase" title="Enviar formulario de consulta" type="submit">Enviar</button>-->
+                                    <input id="sendMessageButton" type="submit" name="submit" class="btn btn-primary btn-xl text-uppercase">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </section>
 @endsection
 

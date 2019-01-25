@@ -17,7 +17,8 @@ Route::get('/', 'RecetaController@getRecetasRanking')->name('index');
 Auth::routes(['verify' => true]);
 
 //Landing Page
-Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos'); //guarda los datos del formulario de la landing page en la DDBB
+//Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos');
+Route::post('/enviarDatosContacto', 'ContactoController@store'); //guarda los datos del formulario de la landing page en la DDBB
 
 //Panel donde se muestra la Receta
 Route::get ('/receta/{id}/{toast?}', 'RecetaController@mostrar')->name('receta');
@@ -71,9 +72,9 @@ Route::get('/follow/{id}', 'FollowController@follow')
 
 //FAVORITOS SYSTEN routes
 Route::get('/fav/{id}', 'RecetaController@insertarFavoritos')
-    ->name('fav_insertarFavoritos'); 
+    ->name('fav_insertarFavoritos');
 Route::get('/unfav/{id}', 'RecetaController@eliminarFavoritos')
-    ->name('fav_eliminarFavoritos'); 
+    ->name('fav_eliminarFavoritos');
 
 
 //Panel Admin

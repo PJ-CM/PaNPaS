@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Receta extends Model
 {
-        protected $table = 'recetas';
-   		protected $primarykey = 'id';
+    protected $table = 'recetas';
+    protected $primarykey = 'id';
 
    	public function user(){
         return $this->belongsTo('App\User');

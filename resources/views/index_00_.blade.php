@@ -86,28 +86,28 @@
                 </div>
                 <div class="row">
 
-                @foreach($recetas as $receta)
+                    @foreach($recetas as $receta)
 
-                    {{-- Parte del Ranking --}}
-                    <div class="col-md-4 col-sm-6 ranking-item">
-                        <a class="ranking-link" data-toggle="modal" href="#rankingModal{{ $receta->titulo }}">
-                            <div class="ranking-hover">
-                                <div class="ranking-hover-content">
-                                    <i class="fas fa-plus fa-3x"></i>
+                        {{-- Parte del Ranking --}}
+                        <div class="col-md-4 col-sm-6 ranking-item">
+                            <a class="ranking-link" data-toggle="modal" href="#rankingModal{{ $receta->titulo }}">
+                                <div class="ranking-hover">
+                                    <div class="ranking-hover-content">
+                                        <i class="fas fa-plus fa-3x"></i>
+                                    </div>
                                 </div>
+                                <img class="img-fluid" src="{{$receta->imagen}}" alt="{{$receta}}">
+                            </a>
+                            <div class="ranking-caption">
+                                <h4>{{$receta->titulo}}</h4>
+                                <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
+                                <h5 class="stars-votos">
+                                    <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> {{$receta->votos}}
+                                </h5>
                             </div>
-                            <img class="img-fluid" src="{{$receta->imagen}}" alt="{{$receta}}">
-                        </a>
-                        <div class="ranking-caption">
-                            <h4>{{$receta->titulo}}</h4>
-                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a></p>
-                            <h5 class="stars-votos">
-                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> {{$receta->votos}}
-                            </h5>
                         </div>
-                    </div>
 
-                @endforeach
+                    @endforeach
 
                 </div>
             </div>
