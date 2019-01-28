@@ -74,20 +74,19 @@
             </div>
         </section>
 
-
         {{-- Ranking Grid --}}
         <section class="bg-light" id="ranking">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 text-center">
                         <h2 class="section-heading text-uppercase">Ranking</h2>
-                        <h3 class="section-subheading text-muted">Visualiza las 3 recetas más destacadas de entre un total de {{$totalRecetas}}</h3>
+                        <h3 class="section-subheading text-muted">Visualiza las 3 recetas más destacadas de entre un total de {{ $totalRecetas }}</h3>
                     </div>
                 </div>
 
                 <div class="row">
 
-                @foreach($recetas as $receta)
+                @foreach($recetas_podium as $receta)
 
                     {{-- Parte del Ranking --}}
                     <div class="col-md-4 col-sm-6 ranking-item">
@@ -113,127 +112,6 @@
                 </div>
             </div>
         </section>
-
-@php /*
-
-        {{-- Ranking Grid --}} <!-- RANKING ORIGINAL -->
-        <section class="bg-light" id="ranking">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <h2 class="section-heading text-uppercase">Ranking</h2>
-                        <h3 class="section-subheading text-muted">Visualiza las recetas más destacadas</h3>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 col-sm-6 ranking-item">
-                        <a class="ranking-link" data-toggle="modal" href="#rankingModal1">
-                            <div class="ranking-hover">
-                                <div class="ranking-hover-content">
-                                    <i class="fas fa-plus fa-3x"></i>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="images/recetas/bollos-suizos.jpg" alt="Bollos Suizos">
-                        </a>
-                        <div class="ranking-caption">
-                            <h4>Bollos Suizos</h4>
-                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario3</a></p>
-                            <h5 class="stars-votos">
-                                <i class="fas fa-star fa-lg star-gold" title="Estrella de Oro"></i> 5
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 ranking-item">
-                        <a class="ranking-link" data-toggle="modal" href="#rankingModal2">
-                            <div class="ranking-hover">
-                                <div class="ranking-hover-content">
-                                    <i class="fas fa-plus fa-3x"></i>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="images/recetas/magdalenas.jpg" alt="Magdalenas">
-                        </a>
-                        <div class="ranking-caption">
-                            <h4>Magdalenas</h4>
-                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario1</a></p>
-                            <h5 class="stars-votos">
-                                <i class="fas fa-star fa-lg star-silver" title="Estrella de Plata"></i> 3
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 ranking-item">
-                        <a class="ranking-link" data-toggle="modal" href="#rankingModal3">
-                            <div class="ranking-hover">
-                                <div class="ranking-hover-content">
-                                    <i class="fas fa-plus fa-3x"></i>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="images/recetas/pan.jpg" alt="Pan">
-                        </a>
-                        <div class="ranking-caption">
-                            <h4>Pan</h4>
-                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario3</a></p>
-                            <h5 class="stars-votos">
-                                <i class="fas fa-star fa-lg star-silver" title="Estrella de Plata"></i> 3
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 ranking-item">
-                        <a class="ranking-link" data-toggle="modal" href="#rankingModal4">
-                            <div class="ranking-hover">
-                                <div class="ranking-hover-content">
-                                    <i class="fas fa-plus fa-3x"></i>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="images/recetas/pan-de-semillas.jpg" alt="Pan de semillas">
-                        </a>
-                        <div class="ranking-caption">
-                            <h4>Pan de semillas</h4>
-                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario1</a></p>
-                            <h5 class="stars-votos">
-                                <i class="fas fa-star fa-lg star-bronze" title="Estrella de Bronce"></i> 1
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 ranking-item">
-                        <a class="ranking-link" data-toggle="modal" href="#rankingModal5">
-                            <div class="ranking-hover">
-                                <div class="ranking-hover-content">
-                                    <i class="fas fa-plus fa-3x"></i>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="images/recetas/panecillos.jpg" alt="Panecillos">
-                        </a>
-                        <div class="ranking-caption">
-                            <h4>Panecillos</h4>
-                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario2</a></p>
-                            <h5 class="stars-votos">
-                                <i class="fas fa-star fa-lg star-bronze" title="Estrella de Bronce"></i> 1
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 ranking-item">
-                        <a class="ranking-link" data-toggle="modal" href="#rankingModal6">
-                            <div class="ranking-hover">
-                                <div class="ranking-hover-content">
-                                    <i class="fas fa-plus fa-3x"></i>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="images/recetas/pastas.jpg" alt="Pastas">
-                        </a>
-                        <div class="ranking-caption">
-                            <h4>Pastas</h4>
-                            <p class="text-muted">por <a href="#" title="Ver perfil de este usuario o listado de recetas" class="link-marco">usuario2</a></p>
-                            <h5 class="stars-votos">
-                                <i class="fas fa-star fa-lg star-bronze" title="Estrella de Bronce"></i> 1
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        */
-    @endphp
-
 
         {{-- Clientes --}}
         <section id="clients">
@@ -421,27 +299,27 @@
                         <form id="contactForm" name="sentMessage" novalidate="novalidate">
                             @csrf
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input class="form-control" name="nombre" id="nombre" type="text" placeholder="Tu Nombre *" required="required" data-validation-required-message="Por favor, teclea tu nombre.">
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <input class="form-control" name="correo" id="correo" type="email" placeholder="Tu Email *" required="required" data-validation-required-message="Por favor, teclea tu correo electrónico." data-validation-validemail-message="No es un EMAIL válido">
-                                        <p class="help-block text-danger"></p>
-                                    </div>
+                                <div class="col-md-6 embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="https://www.google.com/maps/d/embed?mid=1mSGKOLVLNclxGX6ffIREoq3XqfF2gNPa" width="640" height="400"></iframe>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <textarea class="form-control" name="mensaje" id="mensaje" placeholder="Tu Mensaje *" required="required" data-validation-required-message="Por favor, teclea tu mensaje."></textarea>
+                                        <input class="form-control" name="nombre" id="nombre" type="text" placeholder="Tu Nombre *" data-validation-required-message="Por favor, teclea tu nombre." required>
                                         <p class="help-block text-danger"></p>
                                     </div>
-                                </div>
-                                <div class="clearfix"></div>
-                                <div class="col-lg-12 text-center">
-                                    <div id="success"></div>
-                                    <!--<button id="sendMessageButton" class="btn btn-primary btn-xl text-uppercase" title="Enviar formulario de consulta" type="submit">Enviar</button>-->
-                                    <input id="sendMessageButton" type="submit" name="submit" class="btn btn-primary btn-xl text-uppercase">
+                                    <div class="form-group">
+                                        <input class="form-control" name="correo" id="correo" type="email" placeholder="Tu Email *" data-validation-required-message="Por favor, teclea tu correo electrónico." data-validation-validemail-message="No es un EMAIL válido" required>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="mensaje" id="mensaje" placeholder="Tu Mensaje *" data-validation-required-message="Por favor, teclea tu mensaje." required></textarea>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="col-lg-12 text-center">
+                                        <div id="success"></div>
+                                        <button id="sendMessageButton" class="btn btn-primary btn-xl text-uppercase" title="Enviar formulario de consulta" type="submit">Enviar</button>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -453,76 +331,65 @@
 
 {{-- ============================================================================ --}}
 
+@section('footer_scripts_content')
+        {{-- Ranking Modals :: ini --}}
+        @foreach ($recetas_podium as $receta)
 
+        {{-- Modal X --}}
+        <div class="ranking-modal modal fade" id="rankingModal{{ $receta->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="close-modal" data-dismiss="modal">
+                        <div class="lr">
+                            <div class="rl"></div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto">
+                                <div class="modal-body">
+                                    {{-- Detalles de la receta --}}
+                                    <h2 class="text-uppercase">{{ $receta->titulo }}</h2>
+                                    <p class="item-intro text-muted">
+                                        por
+                                        @if (Auth::user() != null)
+                                            <a href="/{{ $receta->user->username }}" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{ $receta->user->username }}</a>
+                                        @else
+                                            <span>{{ $receta->user->username }}</span>
+                                        @endif
+                                    </p>
+                                    <img class="img-fluid d-block mx-auto" src="{{ $receta->imagen }}" alt="{{ $receta->titulo }}">
+                                    <p>{{ $receta->descripcion }}</p>
 
+                                    <table class="mx-auto mb-5">
+                                        <tr>
+                                            <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
+                                            <td style="width: 50%;" class="text-left px-2"> {{ $receta->created_at->format('d-m-Y') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right px-2">Categoría:</td>
+                                            <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Pastelería</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right px-2">Votos:</td>
+                                            <td class="text-left px-2">{{ $receta->votos }}</td>
+                                        </tr>
+                                    </table>
 
-@foreach ($recetas as $receta)
-     {{-- Modal X --}}
-                            <div class="ranking-modal modal fade" id="rankingModal{{$receta->titulo}}" tabindex="-1" role="dialog" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="close-modal" data-dismiss="modal">
-                                            <div class="lr">
-                                                <div class="rl"></div>
-                                            </div>
-                                        </div>
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-lg-8 mx-auto">
-                                                    <div class="modal-body">
-                                                        <!-- Project Details Go Here -->
-                                                        <h2 class="text-uppercase">{{$receta->titulo}}</h2>
-                                                        <p class="item-intro text-muted">por
-                                                            @if (Auth::user()!= null)
-                                                                <a href="/{{$receta->user->username}}" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{$receta->user->username}}</a>
-                                                                @else
-                                                                    <span>{{$receta->user->username}}</span>
-                                                            @endif</p>
-                                                        <img class="img-fluid d-block mx-auto" src="{{$receta->imagen}}" alt="{{$receta->titulo}}">
-                                                        <p>{{($receta->descripcion)}}</p>
-
-                                                        <table class="mx-auto mb-5">
-                                                            <tr>
-                                                                <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                                                <td style="width: 50%;" class="text-left px-2"> {{$receta->created_at->format("d-m-Y")}}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-right px-2">Categoría:</td>
-                                                                <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Pastelería</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-right px-2">Votos:</td>
-                                                                <td class="text-left px-2">{{ $receta->votos }}</td>
-                                                            </tr>
-                                                        </table>
-
-                                                        <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
-                                                            <i class="fas fa-times" title="Icono de Cerrar"></i>
-                                                            Cerrar</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
+                                        <i class="fas fa-times" title="Icono de Cerrar"></i>
+                                        Cerrar
+                                    </button>
                                 </div>
                             </div>
-@endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-
-
-
-
-
-
-
-
-
-
-
-{{-- ============================================================================ --}}
-
-@section('footer_scripts_content')
-        {{-- Ranking Modals --}}
+        @endforeach
+        {{-- Ranking Modals :: fin --}}
 
         {{-- Login / Registro Modals --}}
         @include('auth.modals.login_modal')
@@ -532,9 +399,9 @@
         <script src="{{ asset('js/app.js') }}"></script>
 
         {{-- Otros --}}
-        <script src="js/jqBootstrapValidation.js"></script>
-        <script src="js/contact_me.js"></script>
-        <script src="js/agency.js"></script>
+        <script src="{{ asset('js/jqBootstrapValidation.js') }}"></script>
+        <script src="{{ asset('js/contact_me.js') }}"></script>
+        <script src="{{ asset('js/agency.js') }}"></script>
 
         {{-- Mostrando Modal Login/Registro si hubiera errores --}}
         @if (count($errors) > 0)

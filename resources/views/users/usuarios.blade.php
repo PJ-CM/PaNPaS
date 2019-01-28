@@ -23,7 +23,7 @@
 	                    <div class="col-md-12">
 	                        <div class="card">
 	                            <div class="card-header">
-	                            <h1>Lista de Usuarios 
+	                            <h1>Lista de Usuarios
 	                            	<form action="/buscarUsuario" method="post" class="right">
 										<input type="text" name="buscador" class="btn btn-dark" placeholder="buscador...">
 										<input type="submit" name="buscadorSubmit" class="btn btn-dark">
@@ -38,7 +38,7 @@
 										    <a class="dropdown-item" href="/usuarios/username/asc">Nombre [ASC]</a>
 										    <a class="dropdown-item" href="/usuarios/username/desc">Nombre [DESC]</a>
 										</div> --}}
-										
+
 									</div>
 
 	                        </div>
@@ -67,8 +67,8 @@
 										                            <h4 title="{{$user->username}}"><a href="/{{$user->username}}">{{$user->username}}</a></h4>
 
 										                            <h5 class="stars-votos" style="">
-										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$user->username}} está siguiendo a  {{count ($user->follows)}} usuarios" style="color: green;"></i > {{ count($user->follows) }}  
-										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$user->username}} está siguiendo a  {{count ($user->follows)}} usuarios" style="color: green;"></i > {{ count($user->follows) }}
+										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										                                <i class="fas fa-lg fas fa-sign-in-alt" title="{{$user->username}} tiene {{count($user->followers)}} seguidores" style="color: blue;"></i > {{ count($user->followers) }}
 										                            </h5>
 										                        </div>
@@ -87,8 +87,8 @@
 										                            <h4 title="{{$user->username}}"><a href="/{{$user->username}}">{{$user->username}}</a></h4>
 
 										                            <h5 class="stars-votos" style="">
-										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$user->username}} está siguiendo a  {{count ($user->follows)}} usuarios"></i > {{ count($user->follows) }}  
-										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$user->username}} está siguiendo a  {{count ($user->follows)}} usuarios"></i > {{ count($user->follows) }}
+										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										                                <i class="fas fa-lg fas fa-sign-in-alt" title="{{$user->username}} tiene {{count($user->followers)}} seguidores"></i > {{ count($user->followers) }}
 										                            </h5>
 										                        </div>
@@ -105,16 +105,16 @@
 	            </div>
 	        </section>
 
-		
+
 @endsection
 
 {{-- ============================================================================ --}}
 {{-- ============================================================================ --}}
 
 @section('footer_scripts_content')
-		{{-- jQuery, Bootstrap, jQuery Easing --}}
-		<script src="{{ asset('js/app.js') }}"></script>
+        {{-- jQuery, Bootstrap, jQuery Easing --}}
+        <script src="{{ asset('js/app.js') }}"></script>
 
-		{{-- Otros --}}
-		<script src="js/agency.js"></script>
+        {{-- Otros --}}
+        <script src="{{ asset('js/agency.js') }}"></script>
 @endsection

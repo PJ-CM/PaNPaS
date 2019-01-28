@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'RecetaController@getRecetasRanking')->name('index');
+Route::get('/', 'IndexController@getRecetasRanking')->name('index');
 
 //Con Verificación por Email
 Auth::routes(['verify' => true]);

@@ -21,6 +21,7 @@
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     </head>
     <body id="page-top">
+        <div id="app">
 
         @yield('content')
 
@@ -75,6 +76,7 @@
             </div>
         </footer>
 
+        </div>
         @yield('footer_scripts_content')
     </body>
 </html>

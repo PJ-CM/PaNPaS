@@ -36,10 +36,10 @@
                                 <a class="dropdown-item" href="{{route('user_perfil', Auth::user()->username)}}">Perfil</a>
                                 <a class="dropdown-item" href="{{route('user_panel_logout')}}" title="Cerrar Sesión">   Logout</a>
                             </div>
-                            
+
                         </li>
 
-                         
+
                     </ul>
                 </div>
             </div>

@@ -27,7 +27,7 @@
                                     </div>
                                 @endif
 
-                                Bienvenido a tu escritorio 
+                                Bienvenido a tu escritorio
                                 <a href="/api/usuarios">Usuarios</a>
                             </div>
                         </div>
@@ -45,5 +45,5 @@
         <script src="{{ asset('js/app.js') }}"></script>
 
         {{-- Otros --}}
-        <script src="js/agency.js"></script>
+        <script src="{{ asset('js/agency.js') }}"></script>
 @endsection

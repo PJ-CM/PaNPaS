@@ -12,120 +12,96 @@ use Redirect;
 
 class RecetaController extends Controller
 {
-    
-	public function mostrar($titulo, $estado=null) {
-		
 
-		$receta = new Receta();
+    public function mostrar($titulo, $estado=null) {
+        $receta = new Receta();
 
-		$receta = $receta->where('titulo', $titulo)->get();
-		$receta = $receta[0];
+        $receta = $receta->where('titulo', $titulo)->get();
+        $receta = $receta[0];
 
-		$ingredientes = preg_split('/,/', $receta->ingredientes);
-		
-		for ($i=0; $i < count($ingredientes); $i++) { 
-			$ingredientes[$i] = preg_split("/\s/", $ingredientes[$i]);
-			if ($ingredientes[$i][0] == ""){
-				 array_splice($ingredientes[$i], 0, 1);
-			}
-		}
+        $ingredientes = preg_split('/,/', $receta->ingredientes);
 
-		return view ('receta/receta', ['receta'=>$receta, 'time'=>time(), 'ingredientes'=> $ingredientes, 'toast'=>$estado]);
-	}
+        for ($i=0; $i < count($ingredientes); $i++) {
+            $ingredientes[$i] = preg_split("/\s/", $ingredientes[$i]);
+            if ($ingredientes[$i][0] == ""){
+                    array_splice($ingredientes[$i], 0, 1);
+            }
+        }
 
-	public function getRecetasRanking() {
+        return view ('receta/receta', ['receta'=>$receta, 'time'=>time(), 'ingredientes'=> $ingredientes, 'toast'=>$estado]);
+    }
 
-		$recetas = new Receta;
-		$recetas = Receta::orderBy('votos', 'DESC')->take(3)->get();
+    public function insertarComentario(Request $request) {
+        $id = $_POST['id'];
+        $receta = new Receta();
+        $receta = $receta->find($id);
+        $com = new Comentario();
 
+        if ($_POST['mensaje'] != ""){
+            $com->mensaje = $_POST['mensaje'];
+            $com->user_id = Auth::user()->id;
+            $com->receta_id = $id;
+            $com->time = time();
 
-		return view('index', ['recetas'=>$recetas, 'totalRecetas'=>count(Receta::get())]);
-	}
+            $com->save();
 
-	public function insertarComentario(Request $request) {
+            return redirect('receta/'.$receta->titulo.'/recetaInsertada'); //receta insertada
 
-		$id = $_POST['id'];
-		$receta = new Receta();
-		$receta = $receta->find($id);
-		$com = new Comentario();
-		
-		if ($_POST['mensaje'] != ""){
-			$com->mensaje = $_POST['mensaje'];
-			$com->user_id = Auth::user()->id;
-			$com->receta_id = $id;
-			$com->time = time();
+        } else {
+            return redirect('receta/'.$receta->titulo.'/inputVacio'); //receta no insertada por input vacío
+        }
+    }
 
-			$com->save();
+    public function insertarReceta(Request $request) {
+        $data = $request->all();
 
-			return redirect('receta/'.$receta->titulo.'/recetaInsertada'); //receta insertada
-		} else {
-			return redirect('receta/'.$receta->titulo.'/inputVacio'); //receta no insertada por input vacío
-		}
-		
+        $receta = new Receta();
+        $receta->titulo = $data['titulo'];
+        $receta->descripcion = $data['descripcion'];
+        $receta->elaboracion = $data['elaboracion'];
 
 
-		
-	}
+        $receta->elaboracion=nl2br($receta->elaboracion);
 
-	public function insertarReceta(Request $request) {
+        $receta->ingredientes = $data['ingredientes'];
+        $receta->imagen = $data['imagen'];
+        $receta->user_id = Auth::user()->id;
+        $receta->save();
 
-		$data = $request->all();
+        return redirect('/recetas/RecetaInsertada');
+    }
 
-		$receta = new Receta();
-		$receta->titulo = $data['titulo'];
-		$receta->descripcion = $data['descripcion'];
-		$receta->elaboracion = $data['elaboracion'];
+    public function insertarFavoritos($id){
+        //insertar registro en base de datos
+        DB::table('receta_user')->insert([
+            'user_id' => Auth::user()->id,
+            'receta_id' => $id
+        ]);
 
-		
-		$receta->elaboracion=nl2br($receta->elaboracion);
+        //actualizar votos de la receta
+        $receta = new Receta;
+        $receta = $receta->where('id', $id)->first();
 
-		
+        $receta->votos += 1;
 
-		$receta->ingredientes = $data['ingredientes'];
-		$receta->imagen = $data['imagen'];
-		$receta->user_id = Auth::user()->id;
-		
-		$receta->save();
+        $receta->save();
 
-		return redirect('/recetas/RecetaInsertada');
+        return Redirect::back();
+    }
 
-	}
+    public function eliminarFavoritos($id){
+        //eliminar registro en base de datos
+        DB::table('receta_user')->where('user_id', Auth::user()->id)->where('receta_id', $id)->delete();
 
-	public function insertarFavoritos($id){
+        //actualizar votos de la receta
+        $receta = new Receta;
+        $receta = $receta->where('id', $id)->first();
 
-		//insertar registro en base de datos
-		DB::table('receta_user')->insert([
-			'user_id' => Auth::user()->id,
-			'receta_id' => $id
-		]);
+        $receta->votos -= 1;
 
-		//actualizar votos de la receta
-		$receta = new Receta;
-		$receta = $receta->where('id', $id)->first();
+        $receta->save();
 
-		$receta->votos += 1;
-
-		$receta->save();
-
-		return Redirect::back();
-	}
-
-	public function eliminarFavoritos($id){
-
-		//eliminar registro en base de datos
-		DB::table('receta_user')->where('user_id', Auth::user()->id)->where('receta_id', $id)->delete();
-
-		//actualizar votos de la receta
-		$receta = new Receta;
-		$receta = $receta->where('id', $id)->first();
-
-		$receta->votos -= 1;
-
-		$receta->save();
-
-		return Redirect::back();
-	}
-
-	
+        return Redirect::back();
+    }
 
 }

@@ -299,9 +299,6 @@
                         <form id="contactForm" name="sentMessage" novalidate="novalidate">
                             @csrf
                             <div class="row">
-                                <div class="col-md-6 embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item" src="https://www.google.com/maps/d/embed?mid=1mSGKOLVLNclxGX6ffIREoq3XqfF2gNPa" width="640" height="400"></iframe>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <input class="form-control" name="nombre" id="nombre" type="text" placeholder="Tu Nombre *" data-validation-required-message="Por favor, teclea tu nombre." required>
@@ -311,15 +308,17 @@
                                         <input class="form-control" name="correo" id="correo" type="email" placeholder="Tu Email *" data-validation-required-message="Por favor, teclea tu correo electrónico." data-validation-validemail-message="No es un EMAIL válido" required>
                                         <p class="help-block text-danger"></p>
                                     </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <textarea class="form-control" name="mensaje" id="mensaje" placeholder="Tu Mensaje *" data-validation-required-message="Por favor, teclea tu mensaje." required></textarea>
                                         <p class="help-block text-danger"></p>
                                     </div>
-                                    <div class="clearfix"></div>
-                                    <div class="col-lg-12 text-center">
-                                        <div id="success"></div>
-                                        <button id="sendMessageButton" class="btn btn-primary btn-xl text-uppercase" title="Enviar formulario de consulta" type="submit">Enviar</button>
-                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12 text-center">
+                                    <div id="success"></div>
+                                    <button id="sendMessageButton" class="btn btn-primary btn-xl text-uppercase" title="Enviar formulario de consulta" type="submit">Enviar</button>
                                 </div>
                             </div>
                         </form>

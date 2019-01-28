@@ -29,10 +29,10 @@ $(function() {
                 url: '/enviarDatosContacto',
                 type: 'POST',
                 data: {
-                    name: name,
+                    nombre: name,
                     ////phone: phone,
-                    email: email,
-                    message: message
+                    correo: email,
+                    mensaje: message
                 },
                 cache: false,
 
