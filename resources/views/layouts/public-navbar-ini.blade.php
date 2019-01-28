@@ -38,7 +38,7 @@
                         @else 
 
                          <li class="nav-item p-3">
-                            <a class="btn btn-primary text-uppercase js-scroll-trigger" href="/users" title="Inicio"><i class="fas fa-sign-in-alt"></i> {{Auth::user()->username}}</a>
+                            <a class="btn btn-primary text-uppercase js-scroll-trigger" href="/users" title="Inicio"><i class="fas fa-sign-in-alt"></i> {{ Auth::user()->username }}</a>
                         </li>
 
                         @endif

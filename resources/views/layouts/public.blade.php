@@ -77,6 +77,7 @@
         </footer>
 
         </div>
+        <!-- /div #app -->
         @yield('footer_scripts_content')
     </body>
 </html>
