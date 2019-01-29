@@ -17,8 +17,8 @@ Route::get('/', 'IndexController@getRecetasRanking')->name('index');
 Auth::routes(['verify' => true]);
 
 //Landing Page
-//Route::post('/enviarDatosContacto', 'ContactoController@guardarDatos');
-Route::post('/enviarDatosContacto', 'ContactoController@store'); //guarda los datos del formulario de la landing page en la DDBB
+//  >> guarda los datos del formulario de la landing page en la DDBB
+Route::post('/enviarDatosContacto', 'ContactoController@store');
 
 //Panel donde se muestra la Receta
 Route::get ('/receta/{id}/{toast?}', 'RecetaController@mostrar')->name('receta');

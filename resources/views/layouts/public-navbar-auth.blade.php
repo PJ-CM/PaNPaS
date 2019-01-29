@@ -37,7 +37,7 @@
                         <li class="nav-item p-3 dropdown">
                             <a class="btn btn-primary text-uppercase dropdown-toggle text-white" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Tu Cuenta"><img id="avatar-ico" src="{{ Auth::user()->avatar }}" class="fa fa-user"> {{ Auth::user()->username }}</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="{{ route('user_perfil', Auth::user()->username) }}">Perfil</a>
+                                <a class="dropdown-item" href="{{ route('user_perfil', Auth::user()->username) }}" title="Acceder al Perfil">Perfil</a>
                                 <a class="dropdown-item" href="{{ route('user_panel_logout') }}" title="Cerrar Sesión">Logout</a>
                             </div>
                         </li>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 
 class VerificationController extends Controller
@@ -25,7 +26,24 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    //Por defecto
+    ////protected $redirectTo = '/home';
+    //ACTUALMENTE
+    public function redirectTo() {
+        // Check user role
+        switch (Auth::user()->perfil_id) {
+            case 1:
+                    return '/admin/dashboard';
+                break;
+            case 2:
+                    $url = '/users/'.Auth::user()->username;
+                    return $url;
+                break;
+            default:
+                    return '/';
+                break;
+        }
+    }
 
     /**
      * Create a new controller instance.

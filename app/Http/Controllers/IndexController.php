@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
-    //
-
+    /**
+     * Obteniendo Top3 de Recetas para mostrar en el index
+     */
     public function getRecetasRanking() {
         $recetas_podium = Receta::orderBy('votos', 'DESC')->take(3)->get();
 

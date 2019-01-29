@@ -41,7 +41,6 @@
                                         <button class="btn btn-info" type="submit" name="buscadorSubmit">Buscar</button>
                                     </form>
                                 </div>
-                                {{--<div class="p-2 bg-warning"><button class="btn btn-info mt-2" type="submit">Nuevo</button></div>--}}
                             </div>
                         </div>
                     </div>
@@ -49,8 +48,9 @@
 
                 @if (isset($busqueda))
                 <div class="row">
-                    <div class="col-12 mb-2">
-                        <h2>Resultado de la búsqueda... "{{ $busqueda }}"</h2>
+                    <div class="col-12 d-flex justify-content-between mb-2 align-middle">
+                        <h2 class="p-2">Resultado de la búsqueda... "{{ $busqueda }}"</h2>
+                        <div id="filtro-elim" class="p-2"><a href="{{ route('user_usuarios') }}" class="btn btn-info" title="Eliminar filtro">&times;</a></div>
                     </div>
                 </div>
                 @endif
@@ -58,7 +58,6 @@
                 <div class="row">
 
                 @foreach($users as $user)
-                {{-- usuarios a los que se sigue --}}
 
                     @if (Auth::user()->follows->contains('username', $user->username))
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">
@@ -75,7 +74,7 @@
                                 <a href="/{{ $user->username }}" class="link-marco" title="Acceder al perfil de {{ $user->username }}">{{ $user->username }}</a>
                             </h4>
                             <h5 class="stars-votos">
-                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{ $user->username }} está siguiendo a  {{ count ($user->follows) }} usuarios" style="color: green;"></i > {{ count($user->follows) }}
+                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{ $user->username }} está siguiendo a {{ count ($user->follows) }} usuarios" style="color: green;"></i > {{ count($user->follows) }}
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <i class="fas fa-lg fas fa-sign-in-alt" title="{{ $user->username }} tiene {{ count($user->followers) }} seguidores" style="color: blue;"></i > {{ count($user->followers) }}
                             </h5>

@@ -12,8 +12,18 @@ use Redirect;
 
 class RecetaController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //  >> Desactivarlo mientras se desarrolla
+        $this->middleware(['auth', 'verified']);
+    }
 
-    public function mostrar($titulo, $estado=null) {
+    public function mostrar($titulo, $estado = null) {
         $receta = new Receta();
 
         $receta = $receta->where('titulo', $titulo)->get();
@@ -23,12 +33,17 @@ class RecetaController extends Controller
 
         for ($i=0; $i < count($ingredientes); $i++) {
             $ingredientes[$i] = preg_split("/\s/", $ingredientes[$i]);
-            if ($ingredientes[$i][0] == ""){
-                    array_splice($ingredientes[$i], 0, 1);
+            if ($ingredientes[$i][0] == "") {
+                array_splice($ingredientes[$i], 0, 1);
             }
         }
 
-        return view ('receta/receta', ['receta'=>$receta, 'time'=>time(), 'ingredientes'=> $ingredientes, 'toast'=>$estado]);
+        return view ('receta/receta', [
+            'receta' => $receta,
+            'time' => time(),
+            'ingredientes' => $ingredientes,
+            'toast'=>$estado
+        ]);
     }
 
     public function insertarComentario(Request $request) {
@@ -37,7 +52,7 @@ class RecetaController extends Controller
         $receta = $receta->find($id);
         $com = new Comentario();
 
-        if ($_POST['mensaje'] != ""){
+        if ($_POST['mensaje'] != "") {
             $com->mensaje = $_POST['mensaje'];
             $com->user_id = Auth::user()->id;
             $com->receta_id = $id;
@@ -61,7 +76,7 @@ class RecetaController extends Controller
         $receta->elaboracion = $data['elaboracion'];
 
 
-        $receta->elaboracion=nl2br($receta->elaboracion);
+        $receta->elaboracion = nl2br($receta->elaboracion);
 
         $receta->ingredientes = $data['ingredientes'];
         $receta->imagen = $data['imagen'];
@@ -71,7 +86,7 @@ class RecetaController extends Controller
         return redirect('/recetas/RecetaInsertada');
     }
 
-    public function insertarFavoritos($id){
+    public function insertarFavoritos($id) {
         //insertar registro en base de datos
         DB::table('receta_user')->insert([
             'user_id' => Auth::user()->id,
@@ -89,7 +104,7 @@ class RecetaController extends Controller
         return Redirect::back();
     }
 
-    public function eliminarFavoritos($id){
+    public function eliminarFavoritos($id) {
         //eliminar registro en base de datos
         DB::table('receta_user')->where('user_id', Auth::user()->id)->where('receta_id', $id)->delete();
 

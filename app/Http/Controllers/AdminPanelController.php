@@ -11,10 +11,11 @@ class AdminPanelController extends Controller
      *
      * @return void
      */
-    ////public function __construct()
-    ////{
-    ////    $this->middleware('auth');
-    ////}
+    public function __construct()
+    {
+        //  >> Desactivarlo mientras se desarrolla
+        $this->middleware(['auth', 'verified']);
+    }
 
     public function index()
     {

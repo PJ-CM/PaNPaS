@@ -66,8 +66,9 @@
 
                 @if (isset($busqueda))
                 <div class="row">
-                    <div class="col-12 mb-2">
-                        <h2>Resultado de la búsqueda... "{{ $busqueda }}"</h2>
+                    <div class="col-12 d-flex justify-content-between mb-2 align-middle">
+                        <h2 class="p-2">Resultado de la búsqueda... "{{ $busqueda }}"</h2>
+                        <div id="filtro-elim" class="p-2"><a href="{{ route('user_recetas') }}" class="btn btn-info" title="Eliminar filtro">&times;</a></div>
                     </div>
                 </div>
                 @endif

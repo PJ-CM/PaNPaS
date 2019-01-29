@@ -12,22 +12,6 @@ class ContactoController extends Controller
 {
     protected $valores_tipo = 'contacto';
 
-    public function guardarDatos(){
-    	$nombre = $_POST['name'];
-    	$correo = $_POST['email'];
-    	$mensaje = $_POST['message'];
-
-    	$contacto = new Contacto;
-
-    	$contacto->nombre = $nombre;
-    	$contacto->correo = $correo;
-    	$contacto->mensaje = $mensaje;
-
-    	$contacto->save();
-
-    	return redirect('/');
-    }
-
     /**
      * Store a newly created resource in storage.
      *

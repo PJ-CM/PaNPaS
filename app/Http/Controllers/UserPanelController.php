@@ -15,16 +15,17 @@ class UserPanelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //  >> Desactivarlo mientras se desarrolla
+        $this->middleware(['auth', 'verified']);
     }
 
     public function index($username = null)
     {
-        if (Auth::user()->perfil_id != 1){
+        if (Auth::user()->perfil_id != 1) {
             return view('users.dashboard');
-        } else
+        } else {
             return redirect('admin/dashboard');
-
+        }
     }
 
     public function logout(){
@@ -32,38 +33,40 @@ class UserPanelController extends Controller
         return redirect('/');
     }
 
-    public function listaRecetas($toast=null){
+    public function listaRecetas($toast=null) {
         $recetas = new Receta;
         $recetas = $recetas->orderBy('created_at', 'desc')->get();
 
-        return view('users.recetas', ['recetas'=>$recetas, 'toast'=>$toast]);
+        return view('users.recetas', [
+            'recetas' => $recetas,
+            'toast' => $toast,
+        ]);
     }
 
-    public function perfil($username){
+    public function perfil($username) {
         $user = new User();
         $var = $user->where('username', $username)->get();
         $user = $var[0];
 
-        if ($user->id == Auth::user()->id){
-            return view('users.perfilPrivado', ['user'=>$user]);
-        } else
-            return view('users.perfilPublico', ['user'=>$user]);
-
+        if ($user->id == Auth::user()->id) {
+            return view('users.perfilPrivado', [ 'user' => $user ]);
+        } else {
+            return view('users.perfilPublico', [ 'user' => $user ]);
+        }
     }
 
-    public function seguidos(){
+    public function seguidos() {
         $user = new User();
         $user = $user->find(Auth::user()->id);
         $follows = $user->follows;
-        return view('users.seguidos', ['follows'=>$follows]);
+        return view('users.seguidos', [ 'follows' => $follows ]);
     }
 
-    public function seguidores(){
+    public function seguidores() {
         $user = new User();
         $user = $user->find(Auth::user()->id);
 
-
-        return view('users.seguidores', ['user'=>$user]);
+        return view('users.seguidores', [ 'user' => $user ]);
     }
 
     public function usuarios($columna = 'username', $orden = 'asc'){
@@ -74,10 +77,14 @@ class UserPanelController extends Controller
                     ->where('perfil_id', $perfil_id_usuario)
                     ->get();
 
-        return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
+        return view('users.usuarios', [
+            'users' => $users,
+            'columna' => $columna,
+            'orden' => $orden,
+        ]);
     }
 
-    public function buscarUsuario($columna = 'username', $orden = 'asc'){
+    public function buscarUsuario($columna = 'username', $orden = 'asc') {
 
         $buscar = $_POST['buscador'];
 
@@ -89,27 +96,45 @@ class UserPanelController extends Controller
                     ->where('username', 'LIKE', "%{$buscar}%")
                     ->get();
 
-
-        if ($buscar == ""){
-            return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden]);
-        }else {
-            return view('users.usuarios', ['users'=>$users, 'columna' => $columna, 'orden' => $orden, 'busqueda'=>$buscar]);
+        if ($buscar == "") {
+            return view('users.usuarios', [
+                'users' => $users,
+                'columna' => $columna,
+                'orden' => $orden,
+            ]);
+        } else {
+            return view('users.usuarios', [
+                'users' => $users,
+                'columna' => $columna,
+                'orden' => $orden,
+                'busqueda' => $buscar
+            ]);
         }
 
     }
 
-    public function buscarReceta($columna = 'titulo', $orden = 'asc'){
+    public function buscarReceta($columna = 'titulo', $orden = 'asc') {
 
-            $buscar = $_POST['buscador'];
+        $buscar = $_POST['buscador'];
 
-            $recetas = Receta::orderBy($columna, $orden)
-                        ->where('titulo', 'LIKE', "%{$buscar}%")
-                        ->get();
-            if ($buscar == ""){
-                return view('users.recetas', ['recetas'=>$recetas, 'columna' => $columna, 'orden' => $orden]);
-            }else {
-                return view('users.recetas', ['recetas'=>$recetas, 'columna' => $columna, 'orden' => $orden, 'busqueda'=>$buscar]);
-            }
+        $recetas = Receta::orderBy($columna, $orden)
+                    ->where('titulo', 'LIKE', "%{$buscar}%")
+                    ->get();
+
+        if ($buscar == ""){
+            return view('users.recetas', [
+                'recetas' => $recetas,
+                'columna' => $columna,
+                'orden' => $orden,
+            ]);
+        } else {
+            return view('users.recetas', [
+                'recetas' => $recetas,
+                'columna' => $columna,
+                'orden' => $orden,
+                'busqueda'=>$buscar
+            ]);
+        }
     }
 
 }
