@@ -69,10 +69,12 @@ $fa-font-path: '../webfonts';
     --color-prim: #fed136;
     --color-sec: #143235;
     --color-ter: #364a4c;
+    --color-cuater: #17a2b8;
     --color-prim-modal: rgba(254, 211, 54, .75);
     --color-prim-modal-50: rgba(254, 211, 54, .5);
     --color-prim-modal-90-caption: rgba(253, 206, 52, .9);
     --color-sec-modal: rgb(20, 50, 53, .75);
+    --color-cuater-modal-50: rgba(23, 163, 184, 0.5);
     --color-light: #fff;
     --color-dark: #212529;
     --color-medium: #ced4da;
@@ -86,15 +88,16 @@ $fa-font-path: '../webfonts';
     --bg-color-ter: #fed;
     //--bg-color-modal: rgba(0, 0, 0, .5); //NEGRO con opacidad al 50%
     --bg-color-modal: rgb(20, 50, 53, .5);
+    --bg-color-prim-web: var(--color-prim);
 
     --text-color-prim: var(--color-medium-dark);
     --text-color-sec: var(--color-light);
 
     --link-color: var(--color-prim);
     --link-hover-color: #fec503;
+    --link-hover-color-cuater: #02889c;
     --link-marco: #608184;/**/
 }
-
 
 /* ********** Reset Styles ********** */
 
@@ -154,21 +157,21 @@ img::selection, img::-moz-selection {
     background-color: var(--bg-color-sec) !important;
 }
 
-#loginModal .modal-dialog, #registerModal .modal-dialog {
+#loginModal .modal-dialog, #registerModal .modal-dialog, #recetaInsModal .modal-dialog {
     border: solid 0.0625rem var(--bg-color-prim);
     border-radius: .35rem;
 }
-#loginModal .modal-content, #registerModal .modal-content {
+#loginModal .modal-content, #registerModal .modal-content, #recetaInsModal .modal-content {
     background-color: var(--color-ter);
 }
-#loginModal .modal-header, #registerModal .modal-header {
+#loginModal .modal-header, #registerModal .modal-header, #recetaInsModal .modal-header {
     background-color: var(--color-sec);
     color: var(--color-light);
 }
-#loginModal .modal-header span, #registerModal .modal-header span {
+#loginModal .modal-header span, #registerModal .modal-header span, #recetaInsModal .modal-header span {
     color: var(--color-light);
 }
-#loginModal .modal-body, #registerModal .modal-body {
+#loginModal .modal-body, #registerModal .modal-body, #recetaInsModal .modal-body {
     background-color: #a7a7a7;
     padding-top: 1.75rem;
 }
@@ -287,6 +290,11 @@ y una sombra*/
 
 
 /* ********** Estilos Propios ********** */
+
+#mainNav img#avatar-ico { width: 20px; height: 20px; }
+
+#mainNav span.badge { vertical-align: super; }
+#mainNav span.badge-info { background-color: var(--color-cuater); }
 
 .link-marco {
     font-weight: bold;
@@ -592,7 +600,42 @@ section#contact ::-moz-placeholder, section#contact :-ms-input-placeholder {
 
 //sombra para los mensajes de error del correo de contacto
 section#contact p.help-block ul li {
-    text-shadow: 0px 1px 0px #ccc;
+    text-shadow: 0 .0625rem 0 #ccc;//.0625rem >> 1px
+}
+
+#secc-cabecera {
+    background-color: var(--bg-color-prim-web);
+    border-color: var(--color-prim);
+}
+#secc-cabecera h1 {//.0625rem >> 1px | .125rem >> 2px
+    text-shadow: .0625rem .125rem .125rem var(--color-medium-dark);
+}
+
+#secc-cabecera .form-control {
+    border: .1875rem solid var(--color-medium);//3px
+    border-radius: .3125rem;//5px
+}
+#secc-cabecera .form-control:focus {
+    border-color: var(--color-cuater);
+    box-shadow: 0 0 0 0.2rem var(--color-cuater-modal);
+}
+
+#secc-cabecera .btn-info {
+    color: var(--color-light);
+    background-color: var(--color-cuater);
+    border-color: var(--color-cuater);
+}
+#secc-cabecera .btn-info:active, #secc-cabecera .btn-info:focus, #secc-cabecera .btn-info:hover {
+    background-color: var(--link-hover-color-cuater) !important;
+    border-color: var(--link-hover-color-cuater) !important;
+    color: var(--color-light);
+}
+#secc-cabecera .btn-info:active, #secc-cabecera .btn-info:focus {
+    -webkit-box-shadow: 0 0 0 0.2rem var(--color-cuater-modal-50) !important;
+    box-shadow: 0 0 0 0.2rem var(--color-cuater-modal-50) !important;
+}
+#secc-cabecera .btn-info:active, #secc-cabecera .btn-info:hover {
+    text-shadow: 0 0 .125rem var(--color-dark);
 }
 
 footer {

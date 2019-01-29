@@ -12,6 +12,21 @@
 
 		@include('layouts.public-navbar-auth')
 
+        {{-- Header --}}
+        <header class="masthead" style="
+            --bg-url: url(../images/header-followers.jpg);
+            --bg-attach: fixed;
+            --bg-size: cover;
+            --bg-x: center;
+            --bg-y: center;
+        ">
+            <div>
+                <h2>{{ config('app.name', 'PaNPaS') }}</h2>
+                <span>Accede a todo lo referido</span>
+                <span>a los usuarios que te siguen</span>
+            </div>
+        </header>
+
 		 {{-- Panel --}}
         <section id="user_panel">
             <div class="container">
@@ -21,7 +36,7 @@
                             <div class="card-header">Seguidores</div>
 
                             <div class="card-body">
-                              
+
                             	{{-- Seguidores Grid --}}
 							        <section class="bg-light" id="ranking">
 							            <div class="container">
@@ -42,8 +57,8 @@
 										                            <h4 title="{{$usuario->username}}"><a href="/{{$usuario->username}}">{{$usuario->username}}</a></h4>
 
 										                            <h5 class="stars-votos" style="">
-										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$usuario->username}} está siguiendo a  {{count ($usuario->follows)}} usuarios" style="color: green;"></i > {{ count($usuario->follows) }}  
-										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$usuario->username}} está siguiendo a  {{count ($usuario->follows)}} usuarios" style="color: green;"></i > {{ count($usuario->follows) }}
+										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										                                <i class="fas fa-lg fas fa-sign-in-alt" title="{{$usuario->username}} tiene {{count($usuario->followers)}} seguidores" style="color: blue;"></i > {{ count($usuario->followers) }}
 										                            </h5>
 										                        </div>
@@ -62,16 +77,16 @@
 										                            <h4 title="{{$usuario->username}}"><a href="/{{$usuario->username}}">{{$usuario->username}}</a></h4>
 
 										                            <h5 class="stars-votos" style="">
-										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$usuario->username}} está siguiendo a  {{count ($usuario->follows)}} usuarios"></i > {{ count($usuario->follows) }}  
-										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$usuario->username}} está siguiendo a  {{count ($usuario->follows)}} usuarios"></i > {{ count($usuario->follows) }}
+										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										                                <i class="fas fa-lg fas fa-sign-in-alt" title="{{$user->username}} tiene {{count($user->followers)}} seguidores"></i > {{ count($usuario->followers) }}
 										                            </h5>
 										                        </div>
 									                    	</div>
 
 									                    	@endif
-									                    
-							   
+
+
 							                    @endforeach
 							                </div>
 							            </div>
@@ -84,7 +99,7 @@
             </div>
         </section>
 
-		
+
 
 @endsection
 

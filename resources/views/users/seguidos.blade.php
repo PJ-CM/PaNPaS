@@ -12,6 +12,21 @@
 
 		@include('layouts.public-navbar-auth')
 
+        {{-- Header --}}
+        <header class="masthead" style="
+            --bg-url: url(../images/header-followed.jpg);
+            --bg-attach: fixed;
+            --bg-size: cover;
+            --bg-x: center;
+            --bg-y: center;
+        ">
+            <div>
+                <h2>{{ config('app.name', 'PaNPaS') }}</h2>
+                <span>Estate atento, entérate de todo lo</span>
+                <span>que hagan los usuarios que sigues</span>
+            </div>
+        </header>
+
 		{{-- Panel --}}
         <section id="user_panel">
             <div class="container">
@@ -40,13 +55,13 @@
 								                        <div class="ranking-caption">
 								                            <h4><a href="/{{$usuario->username}}">{{$usuario->username}}</a></h4>
 								                            <h5 class="stars-votos" style="">
-										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$usuario->username}} está siguiendo a  {{count ($usuario->follows)}} usuarios" style="color: green;"></i > {{ count($usuario->follows) }}  
-										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+										                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{$usuario->username}} está siguiendo a  {{count ($usuario->follows)}} usuarios" style="color: green;"></i > {{ count($usuario->follows) }}
+										                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										                                <i class="fas fa-lg fas fa-sign-in-alt" title="{{$usuario->username}} tiene {{count($usuario->followers)}} seguidores" style="color: blue;"></i > {{ count($usuario->followers) }}
 										                    </h5>
 								                        </div>
 							                    	</div>
-							   
+
 							                    @endforeach
 							                </div>
 							            </div>
@@ -58,7 +73,7 @@
             </div>
         </section>
 
-		
+
 
 @endsection
 
