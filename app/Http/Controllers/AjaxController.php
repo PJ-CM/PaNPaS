@@ -13,4 +13,16 @@ class AjaxController extends Controller
 
         return count($users);
     }
+
+    public function getUsuarios(){
+    	return User::all();
+    }
+
+    public function getUsuarioFollows($username){
+    	
+    	$user = new User();
+    	$user = $user->find($username);
+    	return $user;
+    	return $user->follows();
+    }
 }

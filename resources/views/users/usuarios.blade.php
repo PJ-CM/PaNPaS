@@ -5,7 +5,36 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/app.css') }}">
 
+
+
         <title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                updateUsuarios();
+            });
+
+
+            function updateUsuarios(){
+                
+                $.ajax({
+ 
+                    type:"POST",
+                    url:"/ajax/getUsuarios",
+                    dataType:"json",
+                    success: function(users){
+                        console.log(users[2]);
+                    }
+                })
+             }   
+
+            
+
+
+        </script>
+
+
 @endsection
 
 @section('content')
@@ -55,7 +84,7 @@
                 </div>
                 @endif
 
-                <div class="row">
+                <div class="row" id="ListaUsuario">
 
                 @foreach($users as $user)
 

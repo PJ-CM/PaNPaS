@@ -100,6 +100,8 @@ Route::get('/home', 'HomeController@index')
 
 //AJAX
 Route::post ('/ajax/usuarios', 'AjaxController@updateUsers');
+Route::post ('/ajax/getUsuarios', 'AjaxController@getUsuarios');
+Route::post ('/ajax/getUsuarioFollows/{id}', 'AjaxController@getUsuarioFollows');
 
 
 // [API]recoger datos

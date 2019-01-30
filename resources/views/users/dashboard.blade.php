@@ -6,6 +6,16 @@
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/app.css') }}">
 
         <title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
+
+        <style type="text/css">
+            .avatar{
+                width: 60px;
+                height: 60px;
+                float: left;
+            }
+        </style>
+
+
 @endsection
 
 @section('content')
@@ -17,18 +27,42 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-                        <div class="card">
+                        <div class="card"  id="secc-cabecera">
                             <div class="card-header">Dashboard</div>
 
                             <div class="card-body">
-                                @if (session('status'))
-                                    <div class="alert alert-success" role="alert">
-                                        {{ session('status') }}
-                                    </div>
-                                @endif
 
-                                Bienvenido a tu escritorio
-                                <a href="/api/usuarios">Usuarios</a>
+                                {{-- comentarios de sus recetas --}}
+                                <ul>
+                                    @foreach (Auth::user()->recetas as $receta)                                    
+                                        @foreach ($receta->comentarios as $comentario)
+                                        <br>
+                                            @if ($comentario->time > (time() - 1000))
+                                               <li>
+                                                <div class="comment-main-level">
+                                                    <!-- Avatar -->
+                                                    <div class="comment-avatar"><img src="{{ $comentario->user->avatar }}" alt="" class="avatar"></div>
+                                                    <!-- Contenedor del Comentario -->
+                                                    <div class="comment-box">
+                                                        <div class="comment-head">
+                                                            <h6 class="comment-name @if ($comentario->user_id == $receta->user_id) by-author @endif"><a href="/{{$comentario->user->username}}">{{$comentario->user->username}}</a></h6>
+                                                            <span> hace {{ intval((time() - $comentario->time) / 60) }} minutos</span>
+                                                            <a href="/receta/{{$receta->titulo}}"><div class="right btn btn-secondary">Ir a Receta</div></a>
+
+                                                            {{--<i class="fa fa-reply"></i>
+                                                            <i class="fa fa-heart"></i>--}}
+                                                        </div>
+                                                        <div class="comment-content">
+                                                            {{$comentario->mensaje}}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            @endif
+
+                                        @endforeach
+                                    @endforeach
+                                </ul>
+                                
                             </div>
                         </div>
                     </div>
