@@ -20,6 +20,16 @@ class Authenticate extends Middleware
             //  >> por defecto
             ////return route('login');
             //  >> indicando que se redirija a una determinada vista
+            ////return route('index');
+            //---------------------------------------------------------------
+            //  >> indicando que se redirija a una determinada vista
+            //  y mostrando el MODAL de Login al intentar acceder a zona restringida
+            //  sin previo inicio sesión
+            ////return route('index', [
+            ////    'intento_acceso_restringido' => 1,
+            ////    'modal' => 'loginModal',
+            ////]);
+            session(['noAuth' => 'loginModal']);
             return route('index');
         }
     }

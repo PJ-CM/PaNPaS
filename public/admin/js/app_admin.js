@@ -2841,6 +2841,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     //console.log('Component mounted.')
@@ -2943,6 +2954,21 @@ __webpack_require__.r(__webpack_exports__);
           });
       });*/
 
+      /*
+          ¡¡ATENCIÓN!!
+          Se ha observado que, debido a tratarse de una ventana de confirmación,
+          la misma acción asignada al CancelButton está asociada al CloseButton
+          y a la de clicar fuera de la ventana para que ésta se cierre.
+          Es decir, si al CancelButton se le asigna la acción de [Eliminar],
+          de igual forma, al cerrar la ventana de confirmación, se aplicará esa
+          acción y se eliminará, igualmente, el registro.
+           Esto vale también para el caso de "Restaurar / Eliminar"
+           Hasta otro momento en el que se encuentre otra solución, se toma la
+          decisión de intercambiar las acciones, es decir:
+              >> ConfirmButton    => [Eliminar]
+              >> CancelButton     => [A papelera / Restaurar]
+      */
+
       /* BORRADO CON CONFIRMACIÓN */
 
       /**/
@@ -2953,12 +2979,15 @@ __webpack_require__.r(__webpack_exports__);
         type: 'question',
         showCloseButton: true,
         showCancelButton: true,
-        confirmButtonColor: '#f6993f',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'A papelera',
-        cancelButtonText: 'Eliminar'
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#f6993f',
+        confirmButtonText: 'Eliminar',
+        cancelButtonText: 'A papelera'
       }).then(function (result) {
         if (result.value) {
+          //Borrado definitivo del registro
+          _this2.deleteTotalUser(id);
+        } else {
           /**/
           console.log('Se efectuará un Soft Delete...'); //URL hacia la ruta de borrado temporal de registro
 
@@ -2983,9 +3012,6 @@ __webpack_require__.r(__webpack_exports__);
               title: 'ERROR al querer mandar a la papelera el registro con ID [' + id + ']'
             });
           });
-        } else {
-          //Borrado definitivo del registro
-          _this2.deleteTotalUser(id);
         }
       });
     },
@@ -3000,17 +3026,20 @@ __webpack_require__.r(__webpack_exports__);
 
       /**/
       Swal.fire({
-        title: 'Restaurar o Eliminar',
+        title: 'Eliminar o Restaurar',
         text: 'El ELIMINAR no es reversible',
         type: 'question',
         showCloseButton: true,
         showCancelButton: true,
-        confirmButtonColor: '#3490dc',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Restaurar',
-        cancelButtonText: 'Eliminar'
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3490dc',
+        confirmButtonText: 'Eliminar',
+        cancelButtonText: 'Restaurar'
       }).then(function (result) {
         if (result.value) {
+          //Borrado definitivo del registro
+          _this3.deleteTotalUser(id);
+        } else {
           /**/
           //URL hacia la ruta de restaurar de la papelera el registro
           var url = '/api/users/restore-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
@@ -3034,9 +3063,6 @@ __webpack_require__.r(__webpack_exports__);
               title: 'ERROR al querer restaurar de la papelera el registro con ID [' + id + ']'
             });
           });
-        } else {
-          //Borrado definitivo del registro
-          _this3.deleteTotalUser(id);
         }
       });
     },
@@ -42634,41 +42660,53 @@ var render = function() {
           _c("div", { staticClass: "row" }, [
             _c("section", { staticClass: "col-lg-12" }, [
               _c("div", { staticClass: "card" }, [
-                _c("div", { staticClass: "card-header d-flex p-0" }, [
-                  _c("h3", { staticClass: "card-title p-3" }, [
-                    _c("i", {
-                      staticClass: "fas fa-users mr-1",
-                      attrs: { title: "Icono de usuarios" }
-                    }),
-                    _vm._v(" "),
-                    _vm._v("\n                                        ["),
-                    _c("strong", [_vm._v(_vm._s(_vm.users.length))]),
-                    _vm._v(
-                      " disponible(s)]\n                                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("ul", { staticClass: "nav ml-auto p-2" }, [
-                    _c("li", { staticClass: "nav-item" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "nav-link btn btn-primary txt_blanco",
-                          attrs: { type: "button", title: "Insertar registro" },
-                          on: { click: _vm.regInsModal }
-                        },
-                        [
-                          _c("i", { staticClass: "fa fa-user-plus" }),
-                          _vm._v(" Nuevo")
-                        ]
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "card-header d-flex justify-content-between align-middle p-0"
+                  },
+                  [
+                    _c("h3", { staticClass: "card-title p-3" }, [
+                      _c("i", {
+                        staticClass: "fas fa-users mr-1",
+                        attrs: { title: "Icono de usuarios" }
+                      }),
+                      _vm._v(" "),
+                      _vm._v("\n                                        ["),
+                      _c("strong", [_vm._v(_vm._s(_vm.users.length))]),
+                      _vm._v(
+                        " disponible(s)]\n                                        "
                       )
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c("ul", { staticClass: "nav ml-auto p-2" }, [
+                      _c("li", { staticClass: "nav-item" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "nav-link btn btn-primary txt_blanco",
+                            attrs: {
+                              type: "button",
+                              title: "Insertar registro"
+                            },
+                            on: { click: _vm.regInsModal }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-user-plus" }),
+                            _vm._v(" Nuevo")
+                          ]
+                        )
+                      ])
                     ])
-                  ])
-                ]),
+                  ]
+                ),
                 _vm._v(" "),
                 _c("div", { staticClass: "card-body table-responsive p-0" }, [
                   _c("table", { staticClass: "table table-hover" }, [
-                    _vm._m(1),
+                    _vm._m(2),
                     _vm._v(" "),
                     _c(
                       "tbody",
@@ -42762,6 +42800,25 @@ var render = function() {
                               { staticClass: "text-center" },
                               [
                                 _c(
+                                  "router-link",
+                                  {
+                                    staticClass: "text-success",
+                                    attrs: {
+                                      to: {
+                                        name: "user_profile",
+                                        params: { id: user.id }
+                                      },
+                                      title: "Perfil completo [" + user.id + "]"
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fas fa-user-circle"
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
                                   "a",
                                   {
                                     staticClass: "text-primary",
@@ -42826,26 +42883,7 @@ var render = function() {
                                           staticClass: "fas fa-sync-alt"
                                         })
                                       ]
-                                    ),
-                                _vm._v(" "),
-                                _c(
-                                  "router-link",
-                                  {
-                                    staticClass: "text-success",
-                                    attrs: {
-                                      to: {
-                                        name: "user_profile",
-                                        params: { id: user.id }
-                                      },
-                                      title: "Perfil completo [" + user.id + "]"
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fas fa-user-circle"
-                                    })
-                                  ]
-                                )
+                                    )
                               ],
                               1
                             )
@@ -42874,6 +42912,36 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-sm-6" }, [
       _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Usuarios")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("form", { staticClass: "form-inline ml-5" }, [
+      _c("div", { staticClass: "input-group input-group-sm" }, [
+        _c("input", {
+          staticClass: "form-control form-control-navbar",
+          attrs: {
+            type: "search",
+            placeholder: "Término...",
+            "aria-label": "Search"
+          }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "input-group-append" }, [
+          _c(
+            "button",
+            { staticClass: "btn btn-navbar", attrs: { type: "submit" } },
+            [
+              _c("i", {
+                staticClass: "fa fa-search",
+                attrs: { title: "Buscar" }
+              })
+            ]
+          )
+        ])
+      ])
     ])
   },
   function() {

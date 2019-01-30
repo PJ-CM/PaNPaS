@@ -410,4 +410,10 @@
             $("#{{ old('modal') }}").modal('show');
         </script>
         @endif
+        {{-- Mostrando Modal Login por intento de acceso sin autenticarse --}}
+        @if (session('noAuth'))
+        <script type="text/javascript">
+            $("#{{ session('noAuth') }}").modal('show');
+        </script>
+        @endif
 @endsection

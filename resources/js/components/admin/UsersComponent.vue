@@ -27,7 +27,7 @@
                         <div class="row">
                             <section class="col-lg-12">
                                 <div class="card">
-                                    <div class="card-header d-flex p-0">
+                                    <div class="card-header d-flex justify-content-between align-middle p-0">
                                         <h3 class="card-title p-3">
                                             <i class="fas fa-users mr-1" title="Icono de usuarios"></i>
                                             <!-- >> SIN Paginación-->
@@ -35,11 +35,22 @@
                                             <!-- >> CON Paginación
                                             Usuarios [<strong>{{ $valores->total() }}</strong> disponible(s)]-->
                                         </h3>
+
+                                        <form class="form-inline ml-5">
+                                            <div class="input-group input-group-sm">
+                                                <input type="search" placeholder="Término..." aria-label="Search" class="form-control form-control-navbar">
+                                                <div class="input-group-append">
+                                                    <button type="submit" class="btn btn-navbar">
+                                                        <i class="fa fa-search" title="Buscar"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
                                         <!--De este UL, se ha eliminado el CLASS de nav-pills para que el color
                                         del texto del botón salga en blanco por defecto-->
                                         <ul class="nav ml-auto p-2">
                                             <li class="nav-item">
-                                                <!--<button class="nav-link btn btn-primary txt_blanco" type="button" title="Insertar registro" data-toggle="modal" data-target="#regInsEditModal"><i class="fa fa-user-plus"></i> Nuevo</button>-->
                                                 <button class="nav-link btn btn-primary txt_blanco" type="button" title="Insertar registro" @click="regInsModal"><i class="fa fa-user-plus"></i> Nuevo</button>
                                             </li>
                                         </ul>
@@ -81,15 +92,15 @@
                                                     <td>{{ user.perfil.nombre }}</td>
                                                     <td><small :title="user.created_at">{{ user.created_at }}</small></td>
                                                     <td class="text-center">
-                                                        <a href="javascript: void(0);" @click="regEditModal(user)" class="text-primary" :title="'Editar registro [' + user.id + ']'">
+                                                        <router-link :to="{ name: 'user_profile', params: {id: user.id} }" class="text-success" :title="'Perfil completo [' + user.id + ']'">
+                                                            <i class="fas fa-user-circle"></i>
+                                                        </router-link> <a href="javascript: void(0);" @click="regEditModal(user)" class="text-primary" :title="'Editar registro [' + user.id + ']'">
                                                             <i class="fas fa-edit"></i>
                                                         </a> <a v-if="user.deleted_at == null" href="javascript: void(0);" @click.prevent="trashDeleteUser(user.id)" class="text-danger" :title="'A papelera / Borrar registro [' + user.id + ']'">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a><a v-else href="javascript: void(0);" @click.prevent="restoreDeleteUser(user.id)" class="text-warning-trash" :title="'Restaurar / Borrar registro [' + user.id + ']'">
                                                             <i class="fas fa-sync-alt"></i>
-                                                        </a> <router-link :to="{ name: 'user_profile', params: {id: user.id} }" class="text-success" :title="'Perfil completo [' + user.id + ']'">
-                                                            <i class="fas fa-user-circle"></i>
-                                                        </router-link>
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -220,6 +231,23 @@
                     });
                 });*/
 
+                /*
+                    ¡¡ATENCIÓN!!
+                    Se ha observado que, debido a tratarse de una ventana de confirmación,
+                    la misma acción asignada al CancelButton está asociada al CloseButton
+                    y a la de clicar fuera de la ventana para que ésta se cierre.
+                    Es decir, si al CancelButton se le asigna la acción de [Eliminar],
+                    de igual forma, al cerrar la ventana de confirmación, se aplicará esa
+                    acción y se eliminará, igualmente, el registro.
+
+                    Esto vale también para el caso de "Restaurar / Eliminar"
+
+                    Hasta otro momento en el que se encuentre otra solución, se toma la
+                    decisión de intercambiar las acciones, es decir:
+                        >> ConfirmButton    => [Eliminar]
+                        >> CancelButton     => [A papelera / Restaurar]
+                */
+
                 /* BORRADO CON CONFIRMACIÓN */
                 /**/
                 Swal.fire({
@@ -229,13 +257,18 @@
                     type: 'question',
                     showCloseButton: true,
                     showCancelButton: true,
-                    confirmButtonColor: '#f6993f',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'A papelera',
-                    cancelButtonText: 'Eliminar'
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#f6993f',
+                    confirmButtonText: 'Eliminar',
+                    cancelButtonText: 'A papelera',
                 }).then((result) => {
 
                     if (result.value) {
+
+                        //Borrado definitivo del registro
+                        this.deleteTotalUser(id);
+
+                    } else {
 
                         /**/
                         console.log('Se efectuará un Soft Delete...');
@@ -266,11 +299,6 @@
                             });
                         });
 
-                    } else {
-
-                        //Borrado definitivo del registro
-                        this.deleteTotalUser(id);
-
                     }
                 })
             },
@@ -282,18 +310,23 @@
                 /* BORRADO CON CONFIRMACIÓN */
                 /**/
                 Swal.fire({
-                    title: 'Restaurar o Eliminar',
+                    title: 'Eliminar o Restaurar',
                     text: 'El ELIMINAR no es reversible',
                     type: 'question',
                     showCloseButton: true,
                     showCancelButton: true,
-                    confirmButtonColor: '#3490dc',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Restaurar',
-                    cancelButtonText: 'Eliminar'
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3490dc',
+                    confirmButtonText: 'Eliminar',
+                    cancelButtonText: 'Restaurar',
                 }).then((result) => {
 
                     if (result.value) {
+
+                        //Borrado definitivo del registro
+                        this.deleteTotalUser(id);
+
+                    } else {
 
                         /**/
                         //URL hacia la ruta de restaurar de la papelera el registro
@@ -322,11 +355,6 @@
                                 title: 'ERROR al querer restaurar de la papelera el registro con ID [' + id + ']'
                             });
                         });
-
-                    } else {
-
-                        //Borrado definitivo del registro
-                        this.deleteTotalUser(id);
 
                     }
                 })

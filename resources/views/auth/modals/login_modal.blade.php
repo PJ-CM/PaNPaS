@@ -10,6 +10,16 @@
                     <form id="f_login" action="{{ route('login') }}" method="post">
                         @csrf
                     <div class="modal-body">
+
+                        {{-- Cuando se intente acceder a zona restringida
+                            sin iniciar sesión --}}
+                        @if (session('noAuth'))
+                        <div class="text-justify text-danger">
+                            <span class="is-invalid" role="alert">
+                                <strong>{{ __('Es obligatorio iniciar sesión para acceder a zona restringida.') }}</strong>
+                            </span>
+                        </div>
+                        @endif
                         <div class="form-group">
                             <div class="col-md-8 offset-md-2">
                                 <input id="email-log" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" placeholder="{{ __('Email *') }}" required autofocus>
