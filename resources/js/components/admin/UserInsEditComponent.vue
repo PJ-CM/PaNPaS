@@ -140,7 +140,7 @@
         mounted() {
             console.log('Component mounted.');
 
-            //Recibiendo evento(s) si emitido(s) (en este caso, desde el componente Padre)
+            //Recibiendo evento(s) si emitido(s) (en este caso, desde su componente Padre)
             BusEvent.$on('insModeChangeEvent', (status) => {
                 this.insModeChange(status);
             });

@@ -133,6 +133,11 @@
             //para volverlo a cargar en cada intervalo de X tiempo
             //aunque esta forma de recarga va en contra del rendimiento
             ////setInterval(() => this.getUsers(), 3000);
+
+            //Lanzando notificación de borrado emitida por UserProfEditComponent
+            BusEvent.$on('notifDelUserEvent', (userDelID) => {
+                this.notifDelUser(userDelID);
+            });
         },
 
         //datos devueltos por el componente:
@@ -233,19 +238,20 @@
 
                 /*
                     ¡¡ATENCIÓN!!
-                    Se ha observado que, debido a tratarse de una ventana de confirmación,
-                    la misma acción asignada al CancelButton está asociada al CloseButton
-                    y a la de clicar fuera de la ventana para que ésta se cierre.
-                    Es decir, si al CancelButton se le asigna la acción de [Eliminar],
-                    de igual forma, al cerrar la ventana de confirmación, se aplicará esa
-                    acción y se eliminará, igualmente, el registro.
-
-                    Esto vale también para el caso de "Restaurar / Eliminar"
-
-                    Hasta otro momento en el que se encuentre otra solución, se toma la
-                    decisión de intercambiar las acciones, es decir:
-                        >> ConfirmButton    => [Eliminar]
-                        >> CancelButton     => [A papelera / Restaurar]
+                    Es preciso capturar el elemento pulsado, si se quiere asociar alguna
+                    acción al CancelButton diferente de la predeterminada de cerrar la
+                    ventana.
+                    Si no es así, y se considera todo lo que no sea ConfirmButton, en el
+                    mismo ELSE, entonces, todo ello se vinculará a lo que se asocie al
+                    CancelButton.
+                    De asociar la acción de eliminar registro a todo el ELSE, incluso,
+                    cancelando la acción, pulsando en el icono de cerrar, pulsando en ESC
+                    o fuera de la ventana, el registro terminará siendo eliminado aunque
+                    no sea la acción que se eligió.
+                    Para evitar esto, se captura uno de los posibles eventos de dissMissals
+                    de esta librería.
+                    En estos casos, se emplea la captura de pulsar el CancelButton:
+                        result.dismiss === Swal.DismissReason.cancel
                 */
 
                 /* BORRADO CON CONFIRMACIÓN */
@@ -257,18 +263,14 @@
                     type: 'question',
                     showCloseButton: true,
                     showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#f6993f',
-                    confirmButtonText: 'Eliminar',
-                    cancelButtonText: 'A papelera',
+                    confirmButtonColor: '#f6993f',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'A papelera',
+                    cancelButtonText: 'Eliminar',
                 }).then((result) => {
 
+                    //Pulsando el botón equivalente a CONFIRMAR la acción
                     if (result.value) {
-
-                        //Borrado definitivo del registro
-                        this.deleteTotalUser(id);
-
-                    } else {
 
                         /**/
                         console.log('Se efectuará un Soft Delete...');
@@ -299,6 +301,15 @@
                             });
                         });
 
+                    //Pulsando el botón equivalente a CANCELAR la acción
+                    } else if( result.dismiss === Swal.DismissReason.cancel ) {
+
+                        //Borrado definitivo del registro
+                        this.deleteTotalUser(id);
+
+                    //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+                    } else {
+                        console.log('Acción cancelada');
                     }
                 })
             },
@@ -315,18 +326,14 @@
                     type: 'question',
                     showCloseButton: true,
                     showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3490dc',
-                    confirmButtonText: 'Eliminar',
-                    cancelButtonText: 'Restaurar',
+                    confirmButtonColor: '#3490dc',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Restaurar',
+                    cancelButtonText: 'Eliminar',
                 }).then((result) => {
 
+                    //Pulsando el botón equivalente a CONFIRMAR la acción
                     if (result.value) {
-
-                        //Borrado definitivo del registro
-                        this.deleteTotalUser(id);
-
-                    } else {
 
                         /**/
                         //URL hacia la ruta de restaurar de la papelera el registro
@@ -356,6 +363,15 @@
                             });
                         });
 
+                    //Pulsando el botón equivalente a CANCELAR la acción
+                    } else if( result.dismiss === Swal.DismissReason.cancel ) {
+
+                        //Borrado definitivo del registro
+                        this.deleteTotalUser(id);
+
+                    //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+                    } else {
+                        console.log('Acción cancelada');
                     }
                 })
             },
@@ -393,6 +409,18 @@
                 });
 
             },
+
+            /**
+             * Notificando borrado definitivo desde la ficha de perfil completo
+            */
+            notifDelUser(id) {
+                //Lanzando notificación satisfactoria
+                Swal.fire(
+                    '¡Borrado!',
+                    'El registro con ID [' + id + '] fue eliminado correctamente.',
+                    'success'
+                )
+            }
 
         },
     }

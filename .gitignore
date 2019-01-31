@@ -2,6 +2,8 @@
 /__docs
 #Archivos de prueba
 /resources/js/components/admin/*_00_*
+/resources/views/*_00_*
+/resources/views/*_previo_*
 /resources/views/admin/*_00_*
 /resources/views/layouts/admin/*_00_*
 
