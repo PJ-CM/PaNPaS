@@ -111,3 +111,63 @@ a.text-warning-trash:hover, a.text-warning-trash:focus {
 .borde_redondeo_lateral_dcho {
     border-radius: 0 5px 5px 0 !important;
 }
+
+//Para alineación de icono reloj en línea de tiempo
+.timeline > li > .far {
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    line-height: 30px;
+    position: absolute;
+    background: #adb5bd;
+    border-radius: 50%;
+    text-align: center;
+    left: 18px;
+    top: 0;
+}
+
+//Usuario::Perfil.Completo-Li.Tot.Followers
+#top-msgs-contact { border-bottom: black 0.05rem solid; }
+#top-followers { border-top: black 0.095rem solid; }
+
+//Usuario::Perfil.Completo-Últimos
+//<DIV> Color.Borde
+#activity .callout-info {
+    border-left-color: #007bff;
+}
+//Estilos <A>
+#activity .callout-info a.tit_receta {
+    color: #3490dc;
+    text-decoration: none;
+    background-color: transparent;
+}
+#activity .callout-info a.tit_receta:hover {
+    color: #1d68a7;
+    text-decoration: underline;
+}
+
+//Estilos <i>+
+
+#activity .callout-info a.tit_receta_plus {
+    color: #ccc;
+    text-decoration: none;
+    background-color: transparent;
+}
+#activity .callout-info a.tit_receta_plus:hover {
+    color: #1d68a7;
+}
+
+.btn-papelera-restaurar {
+    background-color: #f6993f;
+    border-color: #f6993f;
+    color: white;
+}
+.btn-papelera-restaurar:active, .btn-papelera-restaurar:focus, .btn-papelera-restaurar:hover {
+    background-color: #d88635;
+    border-color: #d88635;
+    color: white;
+}
+.btn-papelera-restaurar:active, .btn-papelera-restaurar:focus {
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(246, 155, 65, 0.5) !important;
+    box-shadow: 0 0 0 0.2rem rgba(246, 155, 65, 0.5) !important;
+}

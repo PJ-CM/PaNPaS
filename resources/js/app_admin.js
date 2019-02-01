@@ -43,9 +43,9 @@ let patron = '/admin';
 // ----------------------------------------------------
 //Forma 2d2 :. en un solo paso
 let routes = [
-    { path: patron + '/dashboard', component: require('./components' + patron + '/DashboardComponent.vue').default },
-    { path: patron + '/users', component: require('./components' + patron + '/UsersComponent.vue').default },
-    //{ path: patron + '/profile', component: require('./components' + patron + '/ProfileComponent.vue').default },
+    { path: patron + '/dashboard', name: 'dashboard', component: require('./components' + patron + '/DashboardComponent.vue').default },
+    { path: patron + '/users', name: 'users_list', component: require('./components' + patron + '/UsersComponent.vue').default },
+    //{ path: patron + '/profile', name: 'profile', component: require('./components' + patron + '/ProfileComponent.vue').default },
     //Ruta dinámica pasándole un parámetro ID
     { path: patron + '/users/:id', name: 'user_profile', component: require('./components' + patron + '/UserProfileComponent.vue').default },
 ]
@@ -73,6 +73,9 @@ const router = new VueRouter({
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('user-ins-edit-component', require('./components' + patron + '/UserInsEditComponent.vue').default);
+Vue.component('user-prof-tots-component', require('./components' + patron + '/UserProfTotsComponent.vue').default);
+Vue.component('user-prof-activ-component', require('./components' + patron + '/UserProfActivComponent.vue').default);
+Vue.component('user-prof-edit-component', require('./components' + patron + '/UserProfEditComponent.vue').default);
 
 //Instancia de Vue para emplear como Bus de eventos
 //para la emisión/recepción de los mismos de forma global

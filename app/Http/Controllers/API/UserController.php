@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\User;
+use App\Receta;
+use App\Contacto;
+use App\Comentario;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -48,6 +51,9 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * $termino => opcional, para filtrar resultados
+     *          => buscando por nombre, apellido, username, email
+     *
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -63,6 +69,26 @@ class UserController extends Controller
         //  >>CON Soft Delete activado
         //      -> incluyendo los registros en papelera
         return User::withTrashed()->with('perfil:id,nombre')->orderBy('id', 'desc')->get();
+    }
+
+    /**
+     * Filtrar resultados del listado por el término enviado
+     *
+     * $termino => buscando por nombre, apellido, username, email
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function search(Request $request)
+    {
+        $termino = $request->term;
+        return User::withTrashed()
+                ->with('perfil:id,nombre')
+                ->where('name', 'LIKE', "%{$termino}%")
+                ->orWhere('lastname', 'LIKE', "%{$termino}%")
+                ->orWhere('username', 'LIKE', "%{$termino}%")
+                ->orWhere('email', 'LIKE', "%{$termino}%")
+                ->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -106,7 +132,71 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return User::withTrashed()->findOrFail($id);
+    }
+
+    /**
+     * Devolviendo datos de resumen del registro consultado
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function profileDataResume($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+
+        $_arr_detalle = [];
+
+        $_arr_detalle['name'] = $user->name;
+        $_arr_detalle['lastname'] = $user->lastname;
+        $_arr_detalle['username'] = $user->username;
+        $_arr_detalle['avatar'] = $user->avatar;
+
+        $user_recetas               = Receta::where('user_id', $id)->get();
+        $user_comentarios_count     = Comentario::where(['user_id' => $id])->count();
+        $user_mens_contacto_count   = Contacto::where(['correo' => $user->email])->count();
+        $user_seguidores_count      = count($user->followers);
+        $user_seguidos_count        = count($user->follows);
+
+        $_arr_detalle['user_recetas_tot'] = count($user_recetas);
+        $_arr_detalle['user_comentarios_tot'] = $user_comentarios_count;
+        $_arr_detalle['user_mens_contacto_tot'] = $user_mens_contacto_count;
+        $_arr_detalle['user_seguidores_tot'] = $user_seguidores_count;
+        $_arr_detalle['user_seguidos_tot'] = $user_seguidos_count;
+
+        return $_arr_detalle;
+    }
+
+    /**
+     * Devolviendo actividad del registro consultado
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function profileActivity($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+
+        $_arr_detalle = [];
+
+        $ultim_recetas = Receta::where('user_id', $id)
+                            ->orderBy('id', 'DESC')
+                            ->take(3)->get();
+
+        $ultim_comentarios = Comentario::where('user_id', $id)
+                            ->with('receta:id,titulo')
+                            ->orderBy('id', 'DESC')
+                            ->take(3)->get();
+
+        $ultim_mens_contacto = Contacto::where('correo', $user->email)
+                            ->orderBy('id', 'DESC')
+                            ->take(3)->get();
+
+        $_arr_detalle['ultim_recetas'] = $ultim_recetas;
+        $_arr_detalle['ultim_comentarios'] = $ultim_comentarios;
+        $_arr_detalle['ultim_mens_contacto'] = $ultim_mens_contacto;
+
+        return $_arr_detalle;
     }
 
     /**
@@ -125,6 +215,8 @@ class UserController extends Controller
         ////    return $errors;
         ////}
         ////User::findOrFail($id)->update($request->all());
+        //////Estando activado el Soft Delete
+        ////User::withTrashed()->findOrFail($id)->update($request->all());
 
         ////$this->validate($request, [
         ////    //'username'  => 'required|string|max:69|unique:users',
@@ -146,16 +238,18 @@ class UserController extends Controller
         //Validando petición
         $request->validate($reglas);
 
-        $user = User::findOrFail($id)->update($request->all());
+        //$user = User::findOrFail($id)->update($request->all());
+        //Estando activado el Soft Delete
+        $user = User::withTrashed()->findOrFail($id)->update($request->all());
 
         return ['message' => 'Actualizando el registro con ID => [' . $id . ']'];
     }*/
     //Forma más corta empleando el FormRequest
     public function update(UserUpdateRequest $request, $id) {
-        $user = User::findOrFail($id)->update($request->all());
         //Lo mismo que en el STORE, siempre que se tenga que tratar el PASSWORD,
         //se empleará el SAVE en vez del UPDATE
-        $user = User::findOrFail($id);
+        //  >> Estando activado el Soft Delete para este Modelo
+        $user = User::withTrashed()->findOrFail($id);
         $user->username = $request->username;
         $user->name = $request->name;
         $user->lastname = $request->lastname;
@@ -173,7 +267,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *      >> Teniendo Soft Delete activado
-     *          -> el DELETE() pasa mandar el registro
+     *          -> el DELETE() pasa a mandar el registro
      *          a la papelera
      *
      * @param  int  $id
@@ -202,6 +296,8 @@ class UserController extends Controller
     /**
      * Forcing remove the specified resource.
      *      >> Teniendo Soft Delete activado
+     *          -> es necesario forzar el DELETE()
+     *          para eliminar el registro totalmente
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -227,6 +323,8 @@ class UserController extends Controller
     /**
      * Restore form trash the specified resource.
      *      >> Teniendo Soft Delete activado
+     *          -> se restaura el registro desactivado
+     *          por encontrarse en la papelera
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

@@ -149,7 +149,8 @@ abbr[data-original-title] {
           text-decoration: underline dotted;
   cursor: help;
   border-bottom: 0;
-  text-decoration-skip-ink: none;
+  -webkit-text-decoration-skip-ink: none;
+          text-decoration-skip-ink: none;
 }
 
 address {
@@ -17746,8 +17747,8 @@ y una sombra*/
 /* ********** Estilos Propios ********** */
 
 #mainNav img#avatar-ico {
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 #mainNav span.badge {
@@ -17925,8 +17926,8 @@ section h3.section-subheading {
 }
 
 .ranking-item img {
-  width: 400px;
-  height: 300px;
+  width: 24.5rem;
+  height: 18.75rem;
 }
 
 .ranking-modal {
@@ -18135,8 +18136,8 @@ section#contact p.help-block ul li {
 }
 
 #filtro-elim .btn-info {
-  padding: 0 5px;
-  margin: 5px;
+  padding: 0 0.3125rem;
+  margin: 0.3125rem;
   color: var(--color-light);
 }
 
