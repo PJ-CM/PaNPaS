@@ -8,7 +8,8 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="m-0 text-dark">Perfil de {{ $route.params.id }}</h1>
+                                <!-- PARÁMETRO PASADO por ROUTER-LINK {{ $route.params.id }} -->
+                                <h1 class="m-0 text-dark">Perfil de usuario</h1>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
@@ -44,7 +45,7 @@
                                     <div class="card-header p-2">
                                         <ul class="nav nav-pills">
                                             <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Actividad</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab" @click="regEdit(user_id)">Editar Perfil</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Editar Perfil</a></li>
                                         </ul>
                                     </div><!-- /.card-header -->
 
@@ -82,6 +83,8 @@
             console.log('Component mounted.');
             //llamar a almacenar el parámetro recibido
             this.getParam();
+            //carga de datos en los paneles
+            this.cargaPaneles();
         },
 
         //datos devueltos por el componente:
@@ -102,16 +105,18 @@
             },
 
             /**
-             * Abriendo ventana modal para editar registro
+             * Petición de Carga:
+             *  >> en panel datos resumen
+             *  >> en panel de actividad
+             *  >> en panel de edición
             */
-            regEdit(reg) {
-                console.log('Abriendo TAB para editar registro [' + reg + '].');
+           cargaPaneles() {
+                console.log('Carga de datos resumen del registro [' + this.user_id + '].');
 
-                //Emitiendo evento global para cargar, en el componente hijo,
-                //la ventana de edición
-                //  >> con el ID pasado
-                BusEvent.$emit('fillFormProfEvent', reg);
-            },
+                BusEvent.$emit('fillProfDataResumEvent', this.user_id);
+                BusEvent.$emit('fillProfActivEvent', this.user_id);
+                BusEvent.$emit('fillProfEditFormEvent', this.user_id);
+           },
 
         },
     }

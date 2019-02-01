@@ -135,8 +135,8 @@
             ////setInterval(() => this.getUsers(), 3000);
 
             //Lanzando notificación de borrado emitida por UserProfEditComponent
-            BusEvent.$on('notifDelUserEvent', (userDelID) => {
-                this.notifDelUser(userDelID);
+            BusEvent.$on('notifDelRegEvent', (userDelID) => {
+                this.notifDelReg(userDelID);
             });
         },
 
@@ -302,7 +302,7 @@
                         });
 
                     //Pulsando el botón equivalente a CANCELAR la acción
-                    } else if( result.dismiss === Swal.DismissReason.cancel ) {
+                    } else if ( result.dismiss === Swal.DismissReason.cancel ) {
 
                         //Borrado definitivo del registro
                         this.deleteTotalUser(id);
@@ -364,7 +364,7 @@
                         });
 
                     //Pulsando el botón equivalente a CANCELAR la acción
-                    } else if( result.dismiss === Swal.DismissReason.cancel ) {
+                    } else if ( result.dismiss === Swal.DismissReason.cancel ) {
 
                         //Borrado definitivo del registro
                         this.deleteTotalUser(id);
@@ -413,7 +413,7 @@
             /**
              * Notificando borrado definitivo desde la ficha de perfil completo
             */
-            notifDelUser(id) {
+            notifDelReg(id) {
                 //Lanzando notificación satisfactoria
                 Swal.fire(
                     '¡Borrado!',

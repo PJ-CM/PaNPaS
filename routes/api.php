@@ -24,9 +24,17 @@ Route::apiResources([
     'users' => 'API\UserController',
 ]);
 // -------------------------------------------------------------------------------
-//Con el Soft Delete activado, esta ruta es para forzar el borrado definitivo
+//Con el Soft Delete activado, esta ruta es:
+//  >> para forzar el borrado definitivo
 Route::get('/users/force-delete/{id}', 'API\UserController@forceDelete')
     ->name('user.force-delete');
 //  >> para restaurar usuario en papelera
 Route::get('/users/restore-delete/{id}', 'API\UserController@restoreDelete')
     ->name('user.restore-delete');
+// -------------------------------------------------------------------------------
+//Carga de datos resumen en perfil completo de usuario
+Route::get('/users/prof-data-resum/{id}', 'API\UserController@profileDataResume')
+->name('user.prof-data-resum');
+//Carga de actividad en perfil completo de usuario
+Route::get('/users/prof-activity/{id}', 'API\UserController@profileActivity')
+->name('user.prof-activity');

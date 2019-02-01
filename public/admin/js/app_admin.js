@@ -2519,9 +2519,145 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    console.log('Component mounted.');
+    var _this = this;
+
+    console.log('Component mounted.'); //Recibiendo evento(s) si emitido(s) (en este caso, desde su componente Padre)
+
+    BusEvent.$on('fillProfActivEvent', function (regID) {
+      _this.fillActivReg(regID);
+    });
+  },
+  //datos devueltos por el componente:
+  data: function data() {
+    return {
+      //variable para almacenar los datos del registro a almacenar
+      objActivReg: {}
+    };
+  },
+  methods: {
+    /**
+     * Cargando datos de resumen
+    */
+    fillActivReg: function fillActivReg(regID) {
+      var _this2 = this;
+
+      console.log('Cargando datos de actividad del registro [' + regID + ']'); //Haciendo la petición de datos
+
+      var url = '/api/users/prof-activity/' + regID;
+      axios.get(url).then(function (response) {
+        //SI TODO OK
+        console.log('Top Últimas recetas:' + response.data);
+        _this2.objActivReg = response.data;
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+      /*
+      
+      this.objActivReg =  {
+          "ultim_recetas": [
+              {
+                  "id": 23,
+                  "titulo": "titulo22",
+                  "descripcion": "I shall only look up in spite of all her fancy, that: they never executes nobody, you know. Come on!' So they got their tails in their mouths. So they began solemnly dancing round and swam slowly.",
+                  "imagen": "https:\/\/lorempixel.com\/640\/480\/?29389",
+                  "elaboracion": "Paso 1: Alice would not allow without knowing how old it was, and, as the other.' As soon as there was a long argument with the time,' she said.<br \/><br \/>Paso 2: Mock Turtle drew a long breath, and till the Pigeon had finished. 'As if it thought that it might happen any minute, 'and then,' thought Alice, 'to speak to this mouse? Everything.<br \/><br \/>Paso 3: Eaglet. 'I don't know of any one; so, when the Rabbit was no longer.<br \/><br \/>Paso 4: Alice, 'because I'm not particular as to the.<br \/><br \/>",
+                  "ingredientes": "ingrediente22 395ml",
+                  "votos": 0,
+                  "user_id": 25,
+                  "created_at": "2012-10-18 00:00:00",
+                  "updated_at": null
+              },
+              {
+                  "id": 7,
+                  "titulo": "titulo6",
+                  "descripcion": "It sounded an excellent plan, no doubt, and very soon finished off the cake. * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 'What a number of bathing machines in the sea.",
+                  "imagen": "https:\/\/lorempixel.com\/640\/480\/?12365",
+                  "elaboracion": "Paso 1: However, on the whole pack of cards!' At this moment the King, and the moon, and memory, and muchness--you know you say things are \"much of a bottle. They all sat down and.<br \/><br \/>Paso 2: CHAPTER IV. The Rabbit started violently, dropped the white kid gloves, and was going to shrink any further: she felt sure it would be quite absurd for.<br \/><br \/>Paso 3: CURTSEYING as you're falling through the door, staring stupidly up.<br \/><br \/>Paso 4: Father William,' the young.<br \/><br \/>","ingredientes":"ingrediente6 472ml",
+                  "votos": 0,
+                  "user_id": 25,
+                  "created_at": "2005-09-03 00:00:00",
+                  "updated_at": null
+              }
+          ],
+      
+          "ultim_comentarios":[
+              {
+                  "id": 15,
+                  "padre": null,
+                  "mensaje": "For, you see, Miss, we're.",
+                  "user_id": 25,
+                  "receta_id": 23,
+                  "time": 1548804659,
+                  "leido": 0,
+                  "created_at": "2000-05-21 06:34:54",
+                  "updated_at": "2000-05-21 06:34:54",
+                  "receta": null
+              }
+          ],
+      
+          "ultim_mens_contacto": []
+      };
+      
+      
+      */
+    }
   }
 });
 
@@ -2652,8 +2788,8 @@ __webpack_require__.r(__webpack_exports__);
 
     console.log('Component mounted.'); //Recibiendo evento(s) si emitido(s) (en este caso, desde su componente Padre)
 
-    BusEvent.$on('fillFormProfEvent', function (userID) {
-      _this.fillEditUser(userID);
+    BusEvent.$on('fillProfEditFormEvent', function (regID) {
+      _this.fillEditFormReg(regID);
     });
   },
   //datos devueltos por el componente:
@@ -2662,56 +2798,60 @@ __webpack_require__.r(__webpack_exports__);
       //variable que guarda el archivo seleccionado
       avatarSelecc: null,
       //variable para almacenar los datos del registro a almacenar
-      objUser: {
-        'name': '',
-        'lastname': '',
-        'username': '',
-        'email': '',
-        'password': '',
-        'password_confirmation': '',
-        'perfil_id': '',
-        'avatar': '',
-        'deleted_at': '',
-        'created_at': '',
-        'updated_at': '',
-        'last_access_at': '',
-        //para la edición
-        'id': ''
-      },
+      objReg: {},
       //posibles errores
-      errors: new _libs_errors__WEBPACK_IMPORTED_MODULE_0__["Errors"]()
+      errors: new _libs_errors__WEBPACK_IMPORTED_MODULE_0__["Errors"](),
+      //opciones de texto para las acciones de Trash/Restore registro
+      trashRestoreOpc: {
+        'trash': {
+          'notifConfirmTit': 'A la papelera',
+          'notifConfirmText': '¿Desactivar este registro temporalmente?',
+          'notifConfirmType': 'question',
+          'confirmButtonColor': '#6c757d',
+          'cancelButtonColor': '#f6993f',
+          'confirmButtonText': 'Cancelar',
+          'cancelButtonText': 'A papelera',
+          'urlBase': '/api/users/',
+          'notifOkTit': '¡A la papelera!',
+          'notifOkMsgFin': ' fue mandado a la papelera correctamente.',
+          'notifOkType': 'success',
+          'notifErrorTitIni': 'ERROR al querer mandar a la papelera ',
+          'notifErrorType': 'warning'
+        },
+        'restore': {
+          'notifConfirmTit': 'Restaurar',
+          'notifConfirmText': '¿Restaurar este registro desactivado temporalmente?',
+          'notifConfirmType': 'question',
+          'confirmButtonColor': '#6c757d',
+          'cancelButtonColor': '#f6993f',
+          'confirmButtonText': 'Cancelar',
+          'cancelButtonText': 'Restaurar',
+          'urlBase': '/api/users/restore-delete/',
+          'notifOkTit': '¡Activado!',
+          'notifOkMsgFin': ' fue restaurado de la papelera correctamente.',
+          'notifOkType': 'success',
+          'notifErrorTitIni': 'ERROR al querer restaurar de la papelera ',
+          'notifErrorType': 'warning'
+        }
+      }
     };
   },
   methods: {
     /**
      * Mostrando registro para editar
     */
-    fillEditUser: function fillEditUser(userID) {
+    fillEditFormReg: function fillEditFormReg(regID) {
       var _this2 = this;
 
-      //cargando datos del registro correspondiente
-      this.objUser.id = userID; //URL hacia la ruta de obtener datos del registro
-
-      var url = '/api/users/' + userID; //Empleado el método DELETE de Axios, el cliente AJAX,
+      //Cargando datos del registro correspondiente
+      //URL hacia la ruta de obtener datos del registro
+      var url = '/api/users/' + regID; //Empleado el método DELETE de Axios, el cliente AJAX,
       //que es el método referido a la ruta llamada
 
       axios.get(url).then(function (response) {
         //SI TODO OK
-        //rellenando la variable de datos para la edición
-        ////this.objUser = {
-        ////    'name': user.name,
-        ////    'lastname': user.lastname,
-        ////    'username': user.username,
-        ////    'email': user.email,
-        ////    'password': user.password,
-        ////    //'password_confirmation': '',
-        ////    'perfil_id': user.perfil_id,
-        ////    //'avatar': '',
-        ////    //para la edición
-        ////    'id': user.id,
-        ////};
         console.log(response.data);
-        _this2.objUser = response.data;
+        _this2.objReg = response.data;
       }).catch(function (error) {
         //SI HAY ALGÚN ERROR
         console.log(error.response.data.errors);
@@ -2721,16 +2861,20 @@ __webpack_require__.r(__webpack_exports__);
     /**
      * Actualizando registro
     */
-    updateUser: function updateUser() {
+    updateReg: function updateReg() {
       var _this3 = this;
 
-      console.log('Actualizando registro... [' + this.objUser.id + ']');
-      var url = '/api/users/' + this.objUser.id;
-      axios.put(url, this.objUser).then(function (response) {
+      console.log('Actualizando registro... [' + this.objReg.id + ']');
+      var url = '/api/users/' + this.objReg.id;
+      axios.put(url, this.objReg).then(function (response) {
         //SI TODO OK
         //vaciando los posibles errores que se produjeron
-        _this3.errors.clear(); //Lanzando notificación satisfactoria
+        _this3.errors.clear(); //Emitiendo evento global para recargar
+        //en el  panel izquierdo de datos resumen
+        //  >> con el ID pasado
 
+
+        BusEvent.$emit('fillProfDataResumEvent', _this3.objReg.id); //Lanzando notificación satisfactoria
 
         toast({
           type: 'success',
@@ -2745,24 +2889,133 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /**
-     * Mandando registro a la papelera
+     * Según la acción recibida:
+     *  >> Mandando registro a la papelera
+     *  >> Restaurando registro
     */
-    trashUser: function trashUser() {},
+    trashRestoreReg: function trashRestoreReg(accion) {
+      var _this4 = this;
 
-    /**
-     * Restaurando registro
-    */
-    restoreUser: function restoreUser() {},
+      /* BORRADO-TEMPORAL/RESTAURANDO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: this.trashRestoreOpc[accion].notifConfirmTit,
+        text: this.trashRestoreOpc[accion].notifConfirmText,
+        type: this.trashRestoreOpc[accion].notifConfirmType,
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: this.trashRestoreOpc[accion].confirmButtonColor,
+        cancelButtonColor: this.trashRestoreOpc[accion].cancelButtonColor,
+        confirmButtonText: this.trashRestoreOpc[accion].confirmButtonText,
+        cancelButtonText: this.trashRestoreOpc[accion].cancelButtonText
+      }).then(function (result) {
+        //Pulsando el botón equivalente a CONFIRMAR la acción
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          /**/
+          console.log('Se efectuará un Soft Delete...'); //URL hacia la ruta de borrado temporal de registro
+
+          var url = _this4.trashRestoreOpc[accion].urlBase + _this4.objReg.id; //Según la acción a aplicar:
+          //Empleado el método DELETE/GET de Axios, el cliente AJAX,
+          //que es el método referido a la ruta llamada
+
+          if (accion == 'trash') {
+            axios.delete(url).then(function (response) {
+              //SI TODO OK
+              //tras borrado temporal, si todo OK,
+              //se recarga la ficha y se notifica la acción
+              _this4.fillEditFormReg(_this4.objReg.id);
+
+              var server_msg_del = response.data.message;
+              console.log(server_msg_del); //Lanzando notificación satisfactoria
+
+              Swal.fire(_this4.trashRestoreOpc[accion].notifOkTit, 'El registro con ID [' + _this4.objReg.id + ']' + _this4.trashRestoreOpc[accion].notifOkMsgFin, _this4.trashRestoreOpc[accion].notifOkType);
+            }).catch(function (error) {
+              //SI HAY ALGÚN ERROR
+              //Lanzando notificación errónea
+              toast({
+                type: _this4.trashRestoreOpc[accion].notifErrorType,
+                title: _this4.trashRestoreOpc[accion].notifErrorTitIni + 'el registro con ID [' + _this4.objReg.id + ']'
+              });
+            });
+          } //trash
+          else if (accion == 'restore') {
+              axios.get(url).then(function (response) {
+                //SI TODO OK
+                //tras borrado temporal, si todo OK,
+                //se recarga la ficha y se notifica la acción
+                _this4.fillEditFormReg(_this4.objReg.id);
+
+                var server_msg_del = response.data.message;
+                console.log(server_msg_del); //Lanzando notificación satisfactoria
+
+                Swal.fire(_this4.trashRestoreOpc[accion].notifOkTit, 'El registro con ID [' + _this4.objReg.id + ']' + _this4.trashRestoreOpc[accion].notifOkMsgFin, _this4.trashRestoreOpc[accion].notifOkType);
+              }).catch(function (error) {
+                //SI HAY ALGÚN ERROR
+                //Lanzando notificación errónea
+                toast({
+                  type: _this4.trashRestoreOpc[accion].notifErrorType,
+                  title: _this4.trashRestoreOpc[accion].notifErrorTitIni + 'el registro con ID [' + _this4.objReg.id + ']'
+                });
+              });
+            } //restore
+          //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+
+        } else {
+          console.log('Acción cancelada');
+        }
+      });
+    },
 
     /**
      * Eliminando registro
     */
-    deleteUser: function deleteUser() {
-      //Emitiendo evento global para cargar notificación de borrado total
-      //en el componente de listado
-      //  >> con el ID pasado
-      BusEvent.$emit('notifDelUserEvent', this.objUser.id);
-      this.$router.push('/admin/users');
+    deleteReg: function deleteReg() {
+      var _this5 = this;
+
+      /* BORRADO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: 'Eliminar',
+        text: 'El ELIMINAR no es reversible',
+        type: 'question',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#6c757d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Cancelar',
+        cancelButtonText: 'Eliminar'
+      }).then(function (result) {
+        //Pulsando el botón equivalente a CONFIRMAR la acción
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          //Borrado definitivo del registro
+          //URL hacia la ruta de borrado definitivo de registro
+          var url = '/api/users/force-delete/' + _this5.objReg.id; //Empleado el método GET de Axios, el cliente AJAX,
+          //que es el método referido a la ruta llamada
+
+          axios.get(url).then(function (response) {
+            //SI TODO OK
+            //Emitiendo evento global para cargar notificación de borrado total
+            //en el componente de listado
+            //  >> con el ID pasado
+            //Y volviendo al listado
+            BusEvent.$emit('notifDelRegEvent', _this5.objReg.id);
+
+            _this5.$router.push('/admin/users');
+          }).catch(function (error) {
+            //SI HAY ALGÚN ERROR
+            console.log(error.response.data.errors); //Lanzando notificación errónea
+
+            toast({
+              type: 'warning',
+              title: 'ERROR al querer eliminar totalmente el registro con ID [' + _this5.objReg.id + ']'
+            });
+          }); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+        } else {
+          console.log('Acción cancelada');
+        }
+      });
     }
   }
 });
@@ -2812,7 +3065,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    console.log('Component mounted.');
+    var _this = this;
+
+    console.log('Component mounted.'); //Recibiendo evento(s) si emitido(s) (en este caso, desde su componente Padre)
+
+    BusEvent.$on('fillProfDataResumEvent', function (regID) {
+      _this.fillDataResumReg(regID);
+    });
+  },
+  //datos devueltos por el componente:
+  data: function data() {
+    return {
+      //variable para almacenar los datos del registro a almacenar
+      objDataResReg: {}
+    };
+  },
+  methods: {
+    /**
+     * Cargando datos de resumen
+    */
+    fillDataResumReg: function fillDataResumReg(regID) {
+      var _this2 = this;
+
+      console.log('Cargando datos resumen del registro [' + regID + ']'); //Haciendo la petición de datos
+
+      var url = '/api/users/prof-data-resum/' + regID;
+      axios.get(url).then(function (response) {
+        //SI TODO OK
+        console.log(response.data);
+        _this2.objDataResReg = response.data;
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+    }
   }
 });
 
@@ -2905,11 +3191,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.'); //llamar a almacenar el parámetro recibido
 
-    this.getParam();
+    this.getParam(); //carga de datos en los paneles
+
+    this.cargaPaneles();
   },
   //datos devueltos por el componente:
   data: function data() {
@@ -2928,14 +3217,16 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /**
-     * Abriendo ventana modal para editar registro
+     * Petición de Carga:
+     *  >> en panel datos resumen
+     *  >> en panel de actividad
+     *  >> en panel de edición
     */
-    regEdit: function regEdit(reg) {
-      console.log('Abriendo TAB para editar registro [' + reg + '].'); //Emitiendo evento global para cargar, en el componente hijo,
-      //la ventana de edición
-      //  >> con el ID pasado
-
-      BusEvent.$emit('fillFormProfEvent', reg);
+    cargaPaneles: function cargaPaneles() {
+      console.log('Carga de datos resumen del registro [' + this.user_id + '].');
+      BusEvent.$emit('fillProfDataResumEvent', this.user_id);
+      BusEvent.$emit('fillProfActivEvent', this.user_id);
+      BusEvent.$emit('fillProfEditFormEvent', this.user_id);
     }
   }
 });
@@ -3087,8 +3378,8 @@ __webpack_require__.r(__webpack_exports__);
     ////setInterval(() => this.getUsers(), 3000);
     //Lanzando notificación de borrado emitida por UserProfEditComponent
 
-    BusEvent.$on('notifDelUserEvent', function (userDelID) {
-      _this.notifDelUser(userDelID);
+    BusEvent.$on('notifDelRegEvent', function (userDelID) {
+      _this.notifDelReg(userDelID);
     });
   },
   //datos devueltos por el componente:
@@ -3342,7 +3633,7 @@ __webpack_require__.r(__webpack_exports__);
     /**
      * Notificando borrado definitivo desde la ficha de perfil completo
     */
-    notifDelUser: function notifDelUser(id) {
+    notifDelReg: function notifDelReg(id) {
       //Lanzando notificación satisfactoria
       Swal.fire('¡Borrado!', 'El registro con ID [' + id + '] fue eliminado correctamente.', 'success');
     }
@@ -41977,631 +42268,766 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "active tab-pane", attrs: { id: "activity" } },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "table",
+        [
+          _vm._m(1),
+          _vm._v(" "),
+          _vm._m(2),
+          _vm._v(" "),
+          _vm._l(_vm.objActivReg.ultim_recetas, function(receta, index) {
+            return _c("tr", { key: index }, [
+              _c("td", [_vm._v(_vm._s(receta.id))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(receta.titulo))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(receta.created_at))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(receta.descripcion))])
+            ])
+          })
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c(
+        "table",
+        [
+          _vm._m(3),
+          _vm._v(" "),
+          _vm._m(4),
+          _vm._v(" "),
+          _vm._l(_vm.objActivReg.ultim_comentarios, function(coment, index) {
+            return _c("tr", { key: index }, [
+              _c("td", [_vm._v(_vm._s(coment.id))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(coment.receta_id))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(coment.created_at))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(coment.mensaje))])
+            ])
+          })
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c(
+        "table",
+        [
+          _vm._m(5),
+          _vm._v(" "),
+          _vm._m(6),
+          _vm._v(" "),
+          _vm._l(_vm.objActivReg.ultim_mens_contacto, function(contact, index) {
+            return _c("tr", { key: index }, [
+              _c("td", [_vm._v(_vm._s(contact.id))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(contact.correo))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(contact.mensaje))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(contact.created_at))])
+            ])
+          })
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _vm._m(7),
+      _vm._v(" "),
+      _c("hr", { staticClass: "separador" }),
+      _vm._v(" "),
+      _vm._m(8),
+      _vm._v(" "),
+      _vm._m(9),
+      _vm._v(" "),
+      _c("hr", { staticClass: "separador" }),
+      _vm._v(" "),
+      _vm._m(10),
+      _vm._v(" "),
+      _vm._m(11)
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "active tab-pane", attrs: { id: "activity" } },
-      [
-        _c("h4", [
-          _c("i", { staticClass: "fas fa-book-open" }),
-          _vm._v(" Últimas Recetas")
+    return _c("h4", [
+      _c("i", { staticClass: "fas fa-book-open" }),
+      _vm._v(" Últimas Recetas")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { attrs: { colspan: "4" } }, [_vm._v("Ultim-Recetas")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [_vm._v("ID")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Título")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Publicada")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Descripcion")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { attrs: { colspan: "4" } }, [_vm._v("Ultim-Comentarios")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [_vm._v("ID")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Receta_ID")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Publicado")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Texto")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { attrs: { colspan: "4" } }, [_vm._v("Ultim-Mens-Contacto")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [_vm._v("ID")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Correo")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Mensaje")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Fecha")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { attrs: { id: "accordion-ult-rec" } }, [
+      _c("div", { staticClass: "callout callout-info user-block" }, [
+        _c("img", {
+          staticClass: "img-circle img-bordered-sm",
+          attrs: {
+            src: "https://lorempixel.com/640/480/?16609",
+            alt: "Foto de la receta"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "float-right text-sm tit_receta_plus",
+            attrs: { href: "#reg-ult-rec-1", "data-toggle": "collapse" }
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-plus fa-1x",
+              attrs: { title: "Desplegar/Replegar contenido" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "username" }, [
+          _c(
+            "a",
+            {
+              staticClass: "tit_receta",
+              attrs: {
+                href: "#",
+                target: "_blank",
+                title: "Acceder al detalle"
+              }
+            },
+            [_vm._v("Título de la Receta")]
+          )
         ]),
         _vm._v(" "),
-        _c("div", { attrs: { id: "accordion-ult-rec" } }, [
-          _c("div", { staticClass: "callout callout-info user-block" }, [
-            _c("img", {
-              staticClass: "img-circle img-bordered-sm",
-              attrs: {
-                src: "https://lorempixel.com/640/480/?16609",
-                alt: "Foto de la receta"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "float-right text-sm tit_receta_plus",
-                attrs: { href: "#reg-ult-rec-1", "data-toggle": "collapse" }
-              },
-              [
-                _c("i", {
-                  staticClass: "fas fa-plus fa-1x",
-                  attrs: { title: "Desplegar/Replegar contenido" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "username" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "tit_receta",
-                  attrs: {
-                    href: "#",
-                    target: "_blank",
-                    title: "Acceder al detalle"
-                  }
-                },
-                [_vm._v("Título de la Receta")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("span", { staticClass: "description" }, [
-              _vm._v("Publicada - 7:30 PM today")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse show",
-                attrs: {
-                  id: "reg-ult-rec-1",
-                  "data-parent": "#accordion-ult-rec"
-                }
-              },
-              [
-                _c("p", [
-                  _vm._v(
-                    "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _c("span", { staticClass: "text-sm" }, [
-                    _c("i", { staticClass: "fas fa-star mr-1" }),
-                    _vm._v(" Votos (15)\n                    ")
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "float-right text-sm" }, [
-                    _c("i", { staticClass: "fas fa-comments mr-1" }),
-                    _vm._v(" Commentarios (5)\n                    ")
-                  ])
-                ])
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "callout callout-info user-block" }, [
-            _c("img", {
-              staticClass: "img-circle img-bordered-sm",
-              attrs: {
-                src: "https://lorempixel.com/640/480/?16609",
-                alt: "Foto de la receta"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "float-right text-sm tit_receta_plus",
-                attrs: { href: "#reg-ult-rec-2", "data-toggle": "collapse" }
-              },
-              [
-                _c("i", {
-                  staticClass: "fas fa-plus fa-1x",
-                  attrs: { title: "Desplegar/Replegar contenido" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "username" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "tit_receta",
-                  attrs: {
-                    href: "#",
-                    target: "_blank",
-                    title: "Acceder al detalle"
-                  }
-                },
-                [_vm._v("Título de la Receta")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("span", { staticClass: "description" }, [
-              _vm._v("Publicada - 7:30 PM today")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse",
-                attrs: {
-                  id: "reg-ult-rec-2",
-                  "data-parent": "#accordion-ult-rec"
-                }
-              },
-              [
-                _c("p", [
-                  _vm._v(
-                    "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _c("span", { staticClass: "text-sm" }, [
-                    _c("i", { staticClass: "fas fa-star mr-1" }),
-                    _vm._v(" Votos (15)\n                    ")
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "float-right text-sm" }, [
-                    _c("i", { staticClass: "fas fa-comments mr-1" }),
-                    _vm._v(" Commentarios (5)\n                    ")
-                  ])
-                ])
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "callout callout-info user-block" }, [
-            _c("img", {
-              staticClass: "img-circle img-bordered-sm",
-              attrs: {
-                src: "https://lorempixel.com/640/480/?16609",
-                alt: "Foto de la receta"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "float-right text-sm tit_receta_plus",
-                attrs: { href: "#reg-ult-rec-3", "data-toggle": "collapse" }
-              },
-              [
-                _c("i", {
-                  staticClass: "fas fa-plus fa-1x",
-                  attrs: { title: "Desplegar/Replegar contenido" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "username" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "tit_receta",
-                  attrs: {
-                    href: "#",
-                    target: "_blank",
-                    title: "Acceder al detalle"
-                  }
-                },
-                [_vm._v("Título de la Receta")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("span", { staticClass: "description" }, [
-              _vm._v("Publicada - 7:30 PM today")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse",
-                attrs: {
-                  id: "reg-ult-rec-3",
-                  "data-parent": "#accordion-ult-rec"
-                }
-              },
-              [
-                _c("p", [
-                  _vm._v(
-                    "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _c("span", { staticClass: "text-sm" }, [
-                    _c("i", { staticClass: "fas fa-star mr-1" }),
-                    _vm._v(" Votos (15)\n                    ")
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "float-right text-sm" }, [
-                    _c("i", { staticClass: "fas fa-comments mr-1" }),
-                    _vm._v(" Commentarios (5)\n                    ")
-                  ])
-                ])
-              ]
-            )
-          ])
+        _c("span", { staticClass: "description" }, [
+          _vm._v("Publicada - 7:30 PM today")
         ]),
         _vm._v(" "),
-        _c("hr", { staticClass: "separador" }),
+        _c(
+          "div",
+          {
+            staticClass: "collapse show",
+            attrs: { id: "reg-ult-rec-1", "data-parent": "#accordion-ult-rec" }
+          },
+          [
+            _c("p", [
+              _vm._v(
+                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _c("span", { staticClass: "text-sm" }, [
+                _c("i", { staticClass: "fas fa-star mr-1" }),
+                _vm._v(" Votos (15)\n                    ")
+              ]),
+              _vm._v(" "),
+              _c("span", { staticClass: "float-right text-sm" }, [
+                _c("i", { staticClass: "fas fa-comments mr-1" }),
+                _vm._v(" Commentarios (5)\n                    ")
+              ])
+            ])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "callout callout-info user-block" }, [
+        _c("img", {
+          staticClass: "img-circle img-bordered-sm",
+          attrs: {
+            src: "https://lorempixel.com/640/480/?16609",
+            alt: "Foto de la receta"
+          }
+        }),
         _vm._v(" "),
-        _c("h4", [
-          _c("i", { staticClass: "fas fa-comments" }),
-          _vm._v(" Últimos Comentarios")
+        _c(
+          "a",
+          {
+            staticClass: "float-right text-sm tit_receta_plus",
+            attrs: { href: "#reg-ult-rec-2", "data-toggle": "collapse" }
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-plus fa-1x",
+              attrs: { title: "Desplegar/Replegar contenido" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "username" }, [
+          _c(
+            "a",
+            {
+              staticClass: "tit_receta",
+              attrs: {
+                href: "#",
+                target: "_blank",
+                title: "Acceder al detalle"
+              }
+            },
+            [_vm._v("Título de la Receta")]
+          )
         ]),
         _vm._v(" "),
-        _c("div", { attrs: { id: "accordion-ult-com" } }, [
-          _c("div", { staticClass: "callout callout-info user-block" }, [
-            _c("img", {
-              staticClass: "img-circle img-bordered-sm",
-              attrs: {
-                src: "https://lorempixel.com/640/480/?16609",
-                alt: "Foto de la receta"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "float-right text-sm tit_receta_plus",
-                attrs: { href: "#reg-ult-com-1", "data-toggle": "collapse" }
-              },
-              [
-                _c("i", {
-                  staticClass: "fas fa-plus fa-1x",
-                  attrs: { title: "Desplegar/Replegar contenido" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "username" }, [
-              _vm._v("\n                en "),
-              _c(
-                "a",
-                {
-                  staticClass: "tit_receta",
-                  attrs: {
-                    href: "#",
-                    target: "_blank",
-                    title: "Acceder al detalle"
-                  }
-                },
-                [_vm._v("Título de la Receta")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("span", { staticClass: "description" }, [
-              _vm._v("Publicado - 7:30 PM today")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse show",
-                attrs: {
-                  id: "reg-ult-com-1",
-                  "data-parent": "#accordion-ult-com"
-                }
-              },
-              [
-                _c("p", [
-                  _vm._v(
-                    "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-                  )
-                ])
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "callout callout-info user-block" }, [
-            _c("img", {
-              staticClass: "img-circle img-bordered-sm",
-              attrs: {
-                src: "https://lorempixel.com/640/480/?16609",
-                alt: "Foto de la receta"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "float-right text-sm tit_receta_plus",
-                attrs: { href: "#reg-ult-com-2", "data-toggle": "collapse" }
-              },
-              [
-                _c("i", {
-                  staticClass: "fas fa-plus fa-1x",
-                  attrs: { title: "Desplegar/Replegar contenido" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "username" }, [
-              _vm._v("\n                en "),
-              _c(
-                "a",
-                {
-                  staticClass: "tit_receta",
-                  attrs: {
-                    href: "#",
-                    target: "_blank",
-                    title: "Acceder al detalle"
-                  }
-                },
-                [_vm._v("Título de la Receta")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("span", { staticClass: "description" }, [
-              _vm._v("Publicado - 7:30 PM today")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse",
-                attrs: {
-                  id: "reg-ult-com-2",
-                  "data-parent": "#accordion-ult-com"
-                }
-              },
-              [
-                _c("p", [
-                  _vm._v(
-                    "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-                  )
-                ])
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "callout callout-info user-block" }, [
-            _c("img", {
-              staticClass: "img-circle img-bordered-sm",
-              attrs: {
-                src: "https://lorempixel.com/640/480/?16609",
-                alt: "Foto de la receta"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "float-right text-sm tit_receta_plus",
-                attrs: { href: "#reg-ult-com-3", "data-toggle": "collapse" }
-              },
-              [
-                _c("i", {
-                  staticClass: "fas fa-plus fa-1x",
-                  attrs: { title: "Desplegar/Replegar contenido" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "username" }, [
-              _vm._v("\n                en "),
-              _c(
-                "a",
-                {
-                  staticClass: "tit_receta",
-                  attrs: {
-                    href: "#",
-                    target: "_blank",
-                    title: "Acceder al detalle"
-                  }
-                },
-                [_vm._v("Título de la Receta")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("span", { staticClass: "description" }, [
-              _vm._v("Publicado - 7:30 PM today")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse",
-                attrs: {
-                  id: "reg-ult-com-3",
-                  "data-parent": "#accordion-ult-com"
-                }
-              },
-              [
-                _c("p", [
-                  _vm._v(
-                    "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-                  )
-                ])
-              ]
-            )
-          ])
+        _c("span", { staticClass: "description" }, [
+          _vm._v("Publicada - 7:30 PM today")
         ]),
         _vm._v(" "),
-        _c("hr", { staticClass: "separador" }),
+        _c(
+          "div",
+          {
+            staticClass: "collapse",
+            attrs: { id: "reg-ult-rec-2", "data-parent": "#accordion-ult-rec" }
+          },
+          [
+            _c("p", [
+              _vm._v(
+                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _c("span", { staticClass: "text-sm" }, [
+                _c("i", { staticClass: "fas fa-star mr-1" }),
+                _vm._v(" Votos (15)\n                    ")
+              ]),
+              _vm._v(" "),
+              _c("span", { staticClass: "float-right text-sm" }, [
+                _c("i", { staticClass: "fas fa-comments mr-1" }),
+                _vm._v(" Commentarios (5)\n                    ")
+              ])
+            ])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "callout callout-info user-block" }, [
+        _c("img", {
+          staticClass: "img-circle img-bordered-sm",
+          attrs: {
+            src: "https://lorempixel.com/640/480/?16609",
+            alt: "Foto de la receta"
+          }
+        }),
         _vm._v(" "),
-        _c("h4", [
-          _c("i", { staticClass: "fas fa-envelope" }),
-          _vm._v(" Últimos Mens. Contacto")
+        _c(
+          "a",
+          {
+            staticClass: "float-right text-sm tit_receta_plus",
+            attrs: { href: "#reg-ult-rec-3", "data-toggle": "collapse" }
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-plus fa-1x",
+              attrs: { title: "Desplegar/Replegar contenido" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "username" }, [
+          _c(
+            "a",
+            {
+              staticClass: "tit_receta",
+              attrs: {
+                href: "#",
+                target: "_blank",
+                title: "Acceder al detalle"
+              }
+            },
+            [_vm._v("Título de la Receta")]
+          )
         ]),
         _vm._v(" "),
-        _c("div", { attrs: { id: "accordion-ult-con" } }, [
-          _c("div", { staticClass: "callout callout-info user-block" }, [
-            _c("img", {
-              staticClass: "img-circle img-bordered-sm",
-              attrs: {
-                src: "https://lorempixel.com/640/480/?16609",
-                alt: "Foto de la receta"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "float-right text-sm tit_receta_plus",
-                attrs: { href: "#reg-ult-con-1", "data-toggle": "collapse" }
-              },
-              [
-                _c("i", {
-                  staticClass: "fas fa-plus fa-1x",
-                  attrs: { title: "Desplegar/Replegar contenido" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "username" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "tit_receta",
-                  attrs: {
-                    href: "#",
-                    target: "_blank",
-                    title: "Acceder al detalle"
-                  }
-                },
-                [_vm._v("Nombre o Asunto")]
+        _c("span", { staticClass: "description" }, [
+          _vm._v("Publicada - 7:30 PM today")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "collapse",
+            attrs: { id: "reg-ult-rec-3", "data-parent": "#accordion-ult-rec" }
+          },
+          [
+            _c("p", [
+              _vm._v(
+                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
               )
             ]),
             _vm._v(" "),
-            _c("span", { staticClass: "description" }, [
-              _vm._v("Publicado - 7:30 PM today")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse show",
-                attrs: {
-                  id: "reg-ult-con-1",
-                  "data-parent": "#accordion-ult-con"
-                }
-              },
-              [
-                _c("p", [
-                  _vm._v(
-                    "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-                  )
-                ])
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "callout callout-info user-block" }, [
-            _c("img", {
-              staticClass: "img-circle img-bordered-sm",
+            _c("p", [
+              _c("span", { staticClass: "text-sm" }, [
+                _c("i", { staticClass: "fas fa-star mr-1" }),
+                _vm._v(" Votos (15)\n                    ")
+              ]),
+              _vm._v(" "),
+              _c("span", { staticClass: "float-right text-sm" }, [
+                _c("i", { staticClass: "fas fa-comments mr-1" }),
+                _vm._v(" Commentarios (5)\n                    ")
+              ])
+            ])
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h4", [
+      _c("i", { staticClass: "fas fa-comments" }),
+      _vm._v(" Últimos Comentarios")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { attrs: { id: "accordion-ult-com" } }, [
+      _c("div", { staticClass: "callout callout-info user-block" }, [
+        _c("img", {
+          staticClass: "img-circle img-bordered-sm",
+          attrs: {
+            src: "https://lorempixel.com/640/480/?16609",
+            alt: "Foto de la receta"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "float-right text-sm tit_receta_plus",
+            attrs: { href: "#reg-ult-com-1", "data-toggle": "collapse" }
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-plus fa-1x",
+              attrs: { title: "Desplegar/Replegar contenido" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "username" }, [
+          _vm._v("\n                en "),
+          _c(
+            "a",
+            {
+              staticClass: "tit_receta",
               attrs: {
-                src: "https://lorempixel.com/640/480/?16609",
-                alt: "Foto de la receta"
+                href: "#",
+                target: "_blank",
+                title: "Acceder al detalle"
               }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "float-right text-sm tit_receta_plus",
-                attrs: { href: "#reg-ult-con-2", "data-toggle": "collapse" }
-              },
-              [
-                _c("i", {
-                  staticClass: "fas fa-plus fa-1x",
-                  attrs: { title: "Desplegar/Replegar contenido" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "username" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "tit_receta",
-                  attrs: {
-                    href: "#",
-                    target: "_blank",
-                    title: "Acceder al detalle"
-                  }
-                },
-                [_vm._v("Nombre o Asunto")]
+            },
+            [_vm._v("Título de la Receta")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "description" }, [
+          _vm._v("Publicado - 7:30 PM today")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "collapse show",
+            attrs: { id: "reg-ult-com-1", "data-parent": "#accordion-ult-com" }
+          },
+          [
+            _c("p", [
+              _vm._v(
+                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
               )
-            ]),
-            _vm._v(" "),
-            _c("span", { staticClass: "description" }, [
-              _vm._v("Publicado - 7:30 PM today")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse",
-                attrs: {
-                  id: "reg-ult-con-2",
-                  "data-parent": "#accordion-ult-con"
-                }
-              },
-              [
-                _c("p", [
-                  _vm._v(
-                    "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-                  )
-                ])
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "callout callout-info user-block" }, [
-            _c("img", {
-              staticClass: "img-circle img-bordered-sm",
+            ])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "callout callout-info user-block" }, [
+        _c("img", {
+          staticClass: "img-circle img-bordered-sm",
+          attrs: {
+            src: "https://lorempixel.com/640/480/?16609",
+            alt: "Foto de la receta"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "float-right text-sm tit_receta_plus",
+            attrs: { href: "#reg-ult-com-2", "data-toggle": "collapse" }
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-plus fa-1x",
+              attrs: { title: "Desplegar/Replegar contenido" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "username" }, [
+          _vm._v("\n                en "),
+          _c(
+            "a",
+            {
+              staticClass: "tit_receta",
               attrs: {
-                src: "https://lorempixel.com/640/480/?16609",
-                alt: "Foto de la receta"
+                href: "#",
+                target: "_blank",
+                title: "Acceder al detalle"
               }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "float-right text-sm tit_receta_plus",
-                attrs: { href: "#reg-ult-con-2", "data-toggle": "collapse" }
-              },
-              [
-                _c("i", {
-                  staticClass: "fas fa-plus fa-1x",
-                  attrs: { title: "Desplegar/Replegar contenido" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "username" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "tit_receta",
-                  attrs: {
-                    href: "#",
-                    target: "_blank",
-                    title: "Acceder al detalle"
-                  }
-                },
-                [_vm._v("Nombre o Asunto")]
+            },
+            [_vm._v("Título de la Receta")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "description" }, [
+          _vm._v("Publicado - 7:30 PM today")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "collapse",
+            attrs: { id: "reg-ult-com-2", "data-parent": "#accordion-ult-com" }
+          },
+          [
+            _c("p", [
+              _vm._v(
+                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
               )
-            ]),
-            _vm._v(" "),
-            _c("span", { staticClass: "description" }, [
-              _vm._v("Publicado - 7:30 PM today")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse",
-                attrs: {
-                  id: "reg-ult-con-2",
-                  "data-parent": "#accordion-ult-con"
-                }
-              },
-              [
-                _c("p", [
-                  _vm._v(
-                    "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-                  )
-                ])
-              ]
-            )
-          ])
-        ])
-      ]
-    )
+            ])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "callout callout-info user-block" }, [
+        _c("img", {
+          staticClass: "img-circle img-bordered-sm",
+          attrs: {
+            src: "https://lorempixel.com/640/480/?16609",
+            alt: "Foto de la receta"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "float-right text-sm tit_receta_plus",
+            attrs: { href: "#reg-ult-com-3", "data-toggle": "collapse" }
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-plus fa-1x",
+              attrs: { title: "Desplegar/Replegar contenido" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "username" }, [
+          _vm._v("\n                en "),
+          _c(
+            "a",
+            {
+              staticClass: "tit_receta",
+              attrs: {
+                href: "#",
+                target: "_blank",
+                title: "Acceder al detalle"
+              }
+            },
+            [_vm._v("Título de la Receta")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "description" }, [
+          _vm._v("Publicado - 7:30 PM today")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "collapse",
+            attrs: { id: "reg-ult-com-3", "data-parent": "#accordion-ult-com" }
+          },
+          [
+            _c("p", [
+              _vm._v(
+                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
+              )
+            ])
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h4", [
+      _c("i", { staticClass: "fas fa-envelope" }),
+      _vm._v(" Últimos Mens. Contacto")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { attrs: { id: "accordion-ult-con" } }, [
+      _c("div", { staticClass: "callout callout-info user-block" }, [
+        _c("img", {
+          staticClass: "img-circle img-bordered-sm",
+          attrs: {
+            src: "https://lorempixel.com/640/480/?16609",
+            alt: "Foto de la receta"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "float-right text-sm tit_receta_plus",
+            attrs: { href: "#reg-ult-con-1", "data-toggle": "collapse" }
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-plus fa-1x",
+              attrs: { title: "Desplegar/Replegar contenido" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "username" }, [
+          _c(
+            "a",
+            {
+              staticClass: "tit_receta",
+              attrs: {
+                href: "#",
+                target: "_blank",
+                title: "Acceder al detalle"
+              }
+            },
+            [_vm._v("Nombre o Asunto")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "description" }, [
+          _vm._v("Publicado - 7:30 PM today")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "collapse show",
+            attrs: { id: "reg-ult-con-1", "data-parent": "#accordion-ult-con" }
+          },
+          [
+            _c("p", [
+              _vm._v(
+                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
+              )
+            ])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "callout callout-info user-block" }, [
+        _c("img", {
+          staticClass: "img-circle img-bordered-sm",
+          attrs: {
+            src: "https://lorempixel.com/640/480/?16609",
+            alt: "Foto de la receta"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "float-right text-sm tit_receta_plus",
+            attrs: { href: "#reg-ult-con-2", "data-toggle": "collapse" }
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-plus fa-1x",
+              attrs: { title: "Desplegar/Replegar contenido" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "username" }, [
+          _c(
+            "a",
+            {
+              staticClass: "tit_receta",
+              attrs: {
+                href: "#",
+                target: "_blank",
+                title: "Acceder al detalle"
+              }
+            },
+            [_vm._v("Nombre o Asunto")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "description" }, [
+          _vm._v("Publicado - 7:30 PM today")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "collapse",
+            attrs: { id: "reg-ult-con-2", "data-parent": "#accordion-ult-con" }
+          },
+          [
+            _c("p", [
+              _vm._v(
+                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
+              )
+            ])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "callout callout-info user-block" }, [
+        _c("img", {
+          staticClass: "img-circle img-bordered-sm",
+          attrs: {
+            src: "https://lorempixel.com/640/480/?16609",
+            alt: "Foto de la receta"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "float-right text-sm tit_receta_plus",
+            attrs: { href: "#reg-ult-con-2", "data-toggle": "collapse" }
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-plus fa-1x",
+              attrs: { title: "Desplegar/Replegar contenido" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "username" }, [
+          _c(
+            "a",
+            {
+              staticClass: "tit_receta",
+              attrs: {
+                href: "#",
+                target: "_blank",
+                title: "Acceder al detalle"
+              }
+            },
+            [_vm._v("Nombre o Asunto")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "description" }, [
+          _vm._v("Publicado - 7:30 PM today")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "collapse",
+            attrs: { id: "reg-ult-con-2", "data-parent": "#accordion-ult-con" }
+          },
+          [
+            _c("p", [
+              _vm._v(
+                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
+              )
+            ])
+          ]
+        )
+      ])
+    ])
   }
 ]
 render._withStripped = true
@@ -42626,442 +43052,459 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "tab-pane", attrs: { id: "settings" } }, [
-    _c("form", { staticClass: "form-horizontal", attrs: { novalidate: "" } }, [
-      _c("div", { staticClass: "d-flex justify-content-around" }, [
-        _c("div", { staticClass: "p-2 mb-3" }, [
-          _c("small", [
-            _c("strong", [_vm._v("Cuenta creada:")]),
-            _vm._v(" " + _vm._s(_vm.objUser.created_at))
+    _c(
+      "form",
+      {
+        staticClass: "form-horizontal",
+        attrs: { novalidate: "" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            _vm.updateReg()
+          }
+        }
+      },
+      [
+        _c("div", { staticClass: "d-flex justify-content-around" }, [
+          _c("div", { staticClass: "p-2 mb-3" }, [
+            _c("small", [
+              _c("strong", [_vm._v("Cuenta creada:")]),
+              _vm._v(" " + _vm._s(_vm.objReg.created_at))
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "p-2 mb-3" }, [
+            _c("small", [
+              _c("strong", [_vm._v("Editada:")]),
+              _vm._v(" " + _vm._s(_vm.objReg.updated_at))
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "p-2 mb-3" }, [
+            _vm.objReg.last_access_at !== null
+              ? _c("small", [
+                  _c("strong", [_vm._v("Último acceso:")]),
+                  _vm._v(" " + _vm._s(_vm.objReg.last_access_at))
+                ])
+              : _c("small", [
+                  _c("strong", [_vm._v("Último acceso:")]),
+                  _vm._v(" Ningún acceso aún")
+                ])
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "p-2 mb-3" }, [
-          _c("small", [
-            _c("strong", [_vm._v("Editada:")]),
-            _vm._v(" " + _vm._s(_vm.objUser.updated_at))
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "p-2 mb-3" }, [
-          _vm.objUser.last_access_at !== null
-            ? _c("small", [
-                _c("strong", [_vm._v("Último acceso:")]),
-                _vm._v(" " + _vm._s(_vm.objUser.last_access_at))
-              ])
-            : _c("small", [
-                _c("strong", [_vm._v("Último acceso:")]),
-                _vm._v(" Ningún acceso aún")
-              ])
-        ])
-      ]),
-      _vm._v(" "),
-      _vm.objUser.deleted_at !== null
-        ? _c("div", { staticClass: "d-flex justify-content-center" }, [
-            _c("div", { staticClass: "p-2 mb-3" }, [
-              _c("small", [
-                _c("strong", [_vm._v("Cuenta desactivada:")]),
-                _vm._v(" " + _vm._s(_vm.objUser.deleted_at))
+        _vm.objReg.deleted_at !== null
+          ? _c("div", { staticClass: "d-flex justify-content-center" }, [
+              _c("div", { staticClass: "p-2 mb-3" }, [
+                _c("small", [
+                  _c("strong", [_vm._v("Cuenta desactivada:")]),
+                  _vm._v(" " + _vm._s(_vm.objReg.deleted_at))
+                ])
               ])
             ])
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-row" }, [
-        _c("div", { staticClass: "col-md-6 mb-3" }, [
-          _c(
-            "label",
-            { staticClass: "control-label p-2", attrs: { for: "name-id" } },
-            [_vm._v("Nombre")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.objUser.name,
-                expression: "objUser.name"
-              }
-            ],
-            staticClass: "form-control",
-            class: { "is-invalid": _vm.errors.has("name") },
-            attrs: {
-              type: "text",
-              name: "name",
-              id: "name-id",
-              placeholder: "Nombre"
-            },
-            domProps: { value: _vm.objUser.name },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.objUser, "name", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _vm.errors.has("name")
-            ? _c("span", { staticClass: "block text-sm text-danger mt-2" }, [
-                _vm._v(_vm._s(_vm.errors.get("name")))
-              ])
-            : _vm._e()
-        ]),
+          : _vm._e(),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-6 mb-3" }, [
-          _c(
-            "label",
-            { staticClass: "control-label p-2", attrs: { for: "lastname-id" } },
-            [_vm._v("Apellido")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.objUser.lastname,
-                expression: "objUser.lastname"
-              }
-            ],
-            staticClass: "form-control",
-            class: { "is-invalid": _vm.errors.has("lastname") },
-            attrs: {
-              type: "text",
-              name: "lastname",
-              id: "lastname-id",
-              placeholder: "Apellido"
-            },
-            domProps: { value: _vm.objUser.lastname },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.objUser, "lastname", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _vm.errors.has("lastname")
-            ? _c("span", { staticClass: "block text-sm text-danger mt-2" }, [
-                _vm._v(_vm._s(_vm.errors.get("lastname")))
-              ])
-            : _vm._e()
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-row" }, [
-        _c("div", { staticClass: "col-md-5 mb-3" }, [
-          _c(
-            "label",
-            { staticClass: "control-label p-2", attrs: { for: "email-id" } },
-            [_vm._v("Email*")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.objUser.email,
-                expression: "objUser.email"
-              }
-            ],
-            staticClass: "form-control",
-            class: { "is-invalid": _vm.errors.has("email") },
-            attrs: {
-              type: "text",
-              name: "email",
-              id: "email-id",
-              placeholder: "Email",
-              required: ""
-            },
-            domProps: { value: _vm.objUser.email },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.objUser, "email", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _vm.errors.has("email")
-            ? _c("span", { staticClass: "block text-sm text-danger mt-2" }, [
-                _vm._v(_vm._s(_vm.errors.get("email")))
-              ])
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-5 mb-3" }, [
-          _c(
-            "label",
-            { staticClass: "control-label p-2", attrs: { for: "username-id" } },
-            [_vm._v("Nick*")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "input-group" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.objUser.username,
-                  expression: "objUser.username"
-                }
-              ],
-              staticClass: "form-control",
-              class: [
-                { "is-invalid": _vm.errors.has("username") },
-                { borde_redondeo_lateral_dcho: _vm.errors.has("username") }
-              ],
-              attrs: {
-                type: "text",
-                name: "username",
-                id: "username-id",
-                placeholder: "Nick",
-                "aria-describedby": "inputGroupUserN",
-                required: ""
-              },
-              domProps: { value: _vm.objUser.username },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.objUser, "username", $event.target.value)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _vm.errors.has("username")
-              ? _c("span", { staticClass: "block text-sm text-danger mt-2" }, [
-                  _vm._v(_vm._s(_vm.errors.get("username")))
-                ])
-              : _vm._e()
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-2 mb-3" }, [
-          _c(
-            "label",
-            { staticClass: "control-label p-2", attrs: { for: "perfil-id" } },
-            [_vm._v("Perfil*")]
-          ),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.objUser.perfil_id,
-                  expression: "objUser.perfil_id"
-                }
-              ],
-              staticClass: "custom-select",
-              class: { "is-invalid": _vm.errors.has("perfil_id") },
-              attrs: { name: "perfil_id", id: "perfil-id", required: "" },
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.$set(
-                    _vm.objUser,
-                    "perfil_id",
-                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                  )
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { value: "" } }, [
-                _vm._v("Seleccionar un perfil")
-              ]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "1" } }, [
-                _vm._v("Administrador")
-              ]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "2" } }, [_vm._v("Usuario")])
-            ]
-          ),
-          _vm._v(" "),
-          _vm.errors.has("perfil_id")
-            ? _c("span", { staticClass: "block text-sm text-danger mt-2" }, [
-                _vm._v(_vm._s(_vm.errors.get("perfil_id")))
-              ])
-            : _vm._e()
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-row" }, [
-        _c("div", { staticClass: "col-md-6 mb-3" }, [
-          _vm._m(1),
-          _vm._v(" "),
-          _c("div", { staticClass: "input-group" }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.objUser.password,
-                  expression: "objUser.password"
-                }
-              ],
-              staticClass: "form-control",
-              class: [
-                { "is-invalid": _vm.errors.has("password") },
-                { borde_redondeo_lateral_dcho: _vm.errors.has("password") }
-              ],
-              attrs: {
-                type: "password",
-                name: "password",
-                id: "pass_id",
-                placeholder: "Contraseña",
-                "aria-describedby": "inputGroupPass"
-              },
-              domProps: { value: _vm.objUser.password },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.objUser, "password", $event.target.value)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _vm.errors.has("password")
-              ? _c("span", { staticClass: "block text-sm text-danger mt-2" }, [
-                  _vm._v(_vm._s(_vm.errors.get("password")))
-                ])
-              : _vm._e()
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-6 mb-3" }, [
-          _vm._m(3),
-          _vm._v(" "),
-          _c("div", { staticClass: "input-group" }, [
-            _vm._m(4),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.objUser.password_confirmation,
-                  expression: "objUser.password_confirmation"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "password",
-                name: "password_confirmation",
-                id: "pass_confirm_id",
-                placeholder: "Confirmar contraseña",
-                "aria-describedby": "inputGroupPassConf"
-              },
-              domProps: { value: _vm.objUser.password_confirmation },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(
-                    _vm.objUser,
-                    "password_confirmation",
-                    $event.target.value
-                  )
-                }
-              }
-            })
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-row" }, [
-        _c(
-          "div",
-          { staticClass: "col-md-12 col-sm-offset-2 col-sm-10 text-right" },
-          [
+        _c("div", { staticClass: "form-row" }, [
+          _c("div", { staticClass: "col-md-6 mb-3" }, [
             _c(
-              "button",
-              {
-                staticClass: "btn btn-success",
-                attrs: { type: "submit", title: "Actualizar registro" },
-                on: {
-                  submit: function($event) {
-                    $event.preventDefault()
-                    _vm.updateUser()
-                  }
-                }
-              },
-              [_vm._v("Actualizar")]
+              "label",
+              { staticClass: "control-label p-2", attrs: { for: "name-id" } },
+              [_vm._v("Nombre")]
             ),
             _vm._v(" "),
-            _vm.objUser.deleted_at == null
-              ? _c(
-                  "button",
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.objReg.name,
+                  expression: "objReg.name"
+                }
+              ],
+              staticClass: "form-control",
+              class: { "is-invalid": _vm.errors.has("name") },
+              attrs: {
+                type: "text",
+                name: "name",
+                id: "name-id",
+                placeholder: "Nombre"
+              },
+              domProps: { value: _vm.objReg.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.objReg, "name", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.errors.has("name")
+              ? _c("span", { staticClass: "block text-sm text-danger mt-2" }, [
+                  _vm._v(_vm._s(_vm.errors.get("name")))
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-6 mb-3" }, [
+            _c(
+              "label",
+              {
+                staticClass: "control-label p-2",
+                attrs: { for: "lastname-id" }
+              },
+              [_vm._v("Apellido")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.objReg.lastname,
+                  expression: "objReg.lastname"
+                }
+              ],
+              staticClass: "form-control",
+              class: { "is-invalid": _vm.errors.has("lastname") },
+              attrs: {
+                type: "text",
+                name: "lastname",
+                id: "lastname-id",
+                placeholder: "Apellido"
+              },
+              domProps: { value: _vm.objReg.lastname },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.objReg, "lastname", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.errors.has("lastname")
+              ? _c("span", { staticClass: "block text-sm text-danger mt-2" }, [
+                  _vm._v(_vm._s(_vm.errors.get("lastname")))
+                ])
+              : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-row" }, [
+          _c("div", { staticClass: "col-md-5 mb-3" }, [
+            _c(
+              "label",
+              { staticClass: "control-label p-2", attrs: { for: "email-id" } },
+              [_vm._v("Email*")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.objReg.email,
+                  expression: "objReg.email"
+                }
+              ],
+              staticClass: "form-control",
+              class: { "is-invalid": _vm.errors.has("email") },
+              attrs: {
+                type: "text",
+                name: "email",
+                id: "email-id",
+                placeholder: "Email",
+                required: ""
+              },
+              domProps: { value: _vm.objReg.email },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.objReg, "email", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.errors.has("email")
+              ? _c("span", { staticClass: "block text-sm text-danger mt-2" }, [
+                  _vm._v(_vm._s(_vm.errors.get("email")))
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-5 mb-3" }, [
+            _c(
+              "label",
+              {
+                staticClass: "control-label p-2",
+                attrs: { for: "username-id" }
+              },
+              [_vm._v("Nick*")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "input-group" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
                   {
-                    staticClass: "btn btn-papelera-restaurar",
-                    attrs: { type: "button", title: "Mandar a la papelera" },
-                    on: {
-                      click: function($event) {
-                        _vm.trashUser()
-                      }
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.objReg.username,
+                    expression: "objReg.username"
+                  }
+                ],
+                staticClass: "form-control",
+                class: [
+                  { "is-invalid": _vm.errors.has("username") },
+                  { borde_redondeo_lateral_dcho: _vm.errors.has("username") }
+                ],
+                attrs: {
+                  type: "text",
+                  name: "username",
+                  id: "username-id",
+                  placeholder: "Nick",
+                  "aria-describedby": "inputGroupUserN",
+                  required: ""
+                },
+                domProps: { value: _vm.objReg.username },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
                     }
-                  },
-                  [_vm._v("A papelera")]
-                )
-              : _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-papelera-restaurar",
-                    attrs: { type: "button", title: "Restaurar registro" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        _vm.restoreUser()
-                      }
-                    }
-                  },
-                  [_vm._v("Restaurar")]
-                ),
+                    _vm.$set(_vm.objReg, "username", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm.errors.has("username")
+                ? _c(
+                    "span",
+                    { staticClass: "block text-sm text-danger mt-2" },
+                    [_vm._v(_vm._s(_vm.errors.get("username")))]
+                  )
+                : _vm._e()
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-2 mb-3" }, [
+            _c(
+              "label",
+              { staticClass: "control-label p-2", attrs: { for: "perfil-id" } },
+              [_vm._v("Perfil*")]
+            ),
             _vm._v(" "),
             _c(
-              "button",
+              "select",
               {
-                staticClass: "btn btn-danger",
-                attrs: { type: "button", title: "Eliminar registro" },
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.objReg.perfil_id,
+                    expression: "objReg.perfil_id"
+                  }
+                ],
+                staticClass: "custom-select",
+                class: { "is-invalid": _vm.errors.has("perfil_id") },
+                attrs: { name: "perfil_id", id: "perfil-id", required: "" },
                 on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    _vm.deleteUser()
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.objReg,
+                      "perfil_id",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
                   }
                 }
               },
-              [_vm._v("Eliminar")]
-            )
-          ]
-        )
-      ])
-    ])
+              [
+                _c("option", { attrs: { value: "" } }, [
+                  _vm._v("Seleccionar un perfil")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "1" } }, [
+                  _vm._v("Administrador")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "2" } }, [_vm._v("Usuario")])
+              ]
+            ),
+            _vm._v(" "),
+            _vm.errors.has("perfil_id")
+              ? _c("span", { staticClass: "block text-sm text-danger mt-2" }, [
+                  _vm._v(_vm._s(_vm.errors.get("perfil_id")))
+                ])
+              : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-row" }, [
+          _c("div", { staticClass: "col-md-6 mb-3" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c("div", { staticClass: "input-group" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.objReg.password,
+                    expression: "objReg.password"
+                  }
+                ],
+                staticClass: "form-control",
+                class: [
+                  { "is-invalid": _vm.errors.has("password") },
+                  { borde_redondeo_lateral_dcho: _vm.errors.has("password") }
+                ],
+                attrs: {
+                  type: "password",
+                  name: "password",
+                  id: "pass_id",
+                  placeholder: "Contraseña",
+                  "aria-describedby": "inputGroupPass"
+                },
+                domProps: { value: _vm.objReg.password },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.objReg, "password", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm.errors.has("password")
+                ? _c(
+                    "span",
+                    { staticClass: "block text-sm text-danger mt-2" },
+                    [_vm._v(_vm._s(_vm.errors.get("password")))]
+                  )
+                : _vm._e()
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-6 mb-3" }, [
+            _vm._m(3),
+            _vm._v(" "),
+            _c("div", { staticClass: "input-group" }, [
+              _vm._m(4),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.objReg.password_confirmation,
+                    expression: "objReg.password_confirmation"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "password",
+                  name: "password_confirmation",
+                  id: "pass_confirm_id",
+                  placeholder: "Confirmar contraseña",
+                  "aria-describedby": "inputGroupPassConf"
+                },
+                domProps: { value: _vm.objReg.password_confirmation },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.objReg,
+                      "password_confirmation",
+                      $event.target.value
+                    )
+                  }
+                }
+              })
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-row" }, [
+          _c(
+            "div",
+            { staticClass: "col-md-12 col-sm-offset-2 col-sm-10 text-right" },
+            [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  attrs: { type: "submit", title: "Actualizar registro" }
+                },
+                [_vm._v("Actualizar")]
+              ),
+              _vm._v(" "),
+              _vm.objReg.deleted_at == null
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-papelera-restaurar",
+                      attrs: { type: "button", title: "Mandar a la papelera" },
+                      on: {
+                        click: function($event) {
+                          _vm.trashRestoreReg("trash")
+                        }
+                      }
+                    },
+                    [_vm._v("A papelera")]
+                  )
+                : _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-papelera-restaurar",
+                      attrs: { type: "button", title: "Restaurar registro" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.trashRestoreReg("restore")
+                        }
+                      }
+                    },
+                    [_vm._v("Restaurar")]
+                  ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger",
+                  attrs: { type: "button", title: "Eliminar registro" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      _vm.deleteReg()
+                    }
+                  }
+                },
+                [_vm._v("Eliminar")]
+              )
+            ]
+          )
+        ])
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -43149,72 +43592,74 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-body box-profile" }, [
-      _c("div", { staticClass: "text-center" }, [
-        _c("img", {
-          staticClass: "profile-user-img img-fluid img-circle",
-          attrs: {
-            src: "https://lorempixel.com/640/480/?71944",
-            alt: "Avatar del usuario"
-          }
-        })
+  return _c("div", { staticClass: "card-body box-profile" }, [
+    _c("div", { staticClass: "text-center" }, [
+      _c("img", {
+        staticClass: "profile-user-img img-fluid img-circle",
+        attrs: { src: _vm.objDataResReg.avatar, alt: "Avatar del usuario" }
+      })
+    ]),
+    _vm._v(" "),
+    _c("h3", { staticClass: "profile-username text-center" }, [
+      _vm._v(_vm._s(_vm.objDataResReg.name + " " + _vm.objDataResReg.lastname))
+    ]),
+    _vm._v(" "),
+    _c("h5", { staticClass: "text-muted text-center" }, [
+      _vm._v("@" + _vm._s(_vm.objDataResReg.username))
+    ]),
+    _vm._v(" "),
+    _c("ul", { staticClass: "list-group list-group-unbordered mb-3" }, [
+      _c("li", { staticClass: "list-group-item" }, [
+        _c("strong", [_vm._v("Recetas")]),
+        _vm._v(" "),
+        _c("a", { staticClass: "float-right" }, [
+          _vm._v(_vm._s(_vm.objDataResReg.user_recetas_tot))
+        ])
       ]),
       _vm._v(" "),
-      _c("h3", { staticClass: "profile-username text-center" }, [
-        _vm._v("Nina Mcintire")
+      _c("li", { staticClass: "list-group-item" }, [
+        _c("strong", [_vm._v("Comentarios")]),
+        _vm._v(" "),
+        _c("a", { staticClass: "float-right" }, [
+          _vm._v(_vm._s(_vm.objDataResReg.user_comentarios_tot))
+        ])
       ]),
       _vm._v(" "),
-      _c("h5", { staticClass: "text-muted text-center" }, [_vm._v("@laKata")]),
+      _c(
+        "li",
+        { staticClass: "list-group-item", attrs: { id: "top-msgs-contact" } },
+        [
+          _c("strong", [_vm._v("Mens. Contacto")]),
+          _vm._v(" "),
+          _c("a", { staticClass: "float-right" }, [
+            _vm._v(_vm._s(_vm.objDataResReg.user_mens_contacto_tot))
+          ])
+        ]
+      ),
       _vm._v(" "),
-      _c("ul", { staticClass: "list-group list-group-unbordered mb-3" }, [
-        _c("li", { staticClass: "list-group-item" }, [
-          _c("strong", [_vm._v("Recetas")]),
+      _c(
+        "li",
+        { staticClass: "list-group-item", attrs: { id: "top-followers" } },
+        [
+          _c("strong", [_vm._v("Seguidores")]),
           _vm._v(" "),
-          _c("a", { staticClass: "float-right" }, [_vm._v("13,287")])
-        ]),
+          _c("a", { staticClass: "float-right" }, [
+            _vm._v(_vm._s(_vm.objDataResReg.user_seguidores_tot))
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("li", { staticClass: "list-group-item" }, [
+        _c("strong", [_vm._v("Siguiendo a")]),
         _vm._v(" "),
-        _c("li", { staticClass: "list-group-item" }, [
-          _c("strong", [_vm._v("Comentarios")]),
-          _vm._v(" "),
-          _c("a", { staticClass: "float-right" }, [_vm._v("13,287")])
-        ]),
-        _vm._v(" "),
-        _c(
-          "li",
-          { staticClass: "list-group-item", attrs: { id: "top-msgs-contact" } },
-          [
-            _c("strong", [_vm._v("Mens. Contacto")]),
-            _vm._v(" "),
-            _c("a", { staticClass: "float-right" }, [_vm._v("13,287")])
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "li",
-          { staticClass: "list-group-item", attrs: { id: "top-followers" } },
-          [
-            _c("strong", [_vm._v("Seguidores")]),
-            _vm._v(" "),
-            _c("a", { staticClass: "float-right" }, [_vm._v("1,322")])
-          ]
-        ),
-        _vm._v(" "),
-        _c("li", { staticClass: "list-group-item" }, [
-          _c("strong", [_vm._v("Siguiendo a")]),
-          _vm._v(" "),
-          _c("a", { staticClass: "float-right" }, [_vm._v("543")])
+        _c("a", { staticClass: "float-right" }, [
+          _vm._v(_vm._s(_vm.objDataResReg.user_seguidos_tot))
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -43240,11 +43685,7 @@ var render = function() {
     _c("div", { staticClass: "content-header" }, [
       _c("div", { staticClass: "container-fluid" }, [
         _c("div", { staticClass: "row mb-2" }, [
-          _c("div", { staticClass: "col-sm-6" }, [
-            _c("h1", { staticClass: "m-0 text-dark" }, [
-              _vm._v("Perfil de " + _vm._s(_vm.$route.params.id))
-            ])
-          ]),
+          _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "col-sm-6" }, [
             _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
@@ -43304,27 +43745,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "col-md-9" }, [
             _c("div", { staticClass: "card" }, [
-              _c("div", { staticClass: "card-header p-2" }, [
-                _c("ul", { staticClass: "nav nav-pills" }, [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "nav-item" }, [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "nav-link",
-                        attrs: { href: "#settings", "data-toggle": "tab" },
-                        on: {
-                          click: function($event) {
-                            _vm.regEdit(_vm.user_id)
-                          }
-                        }
-                      },
-                      [_vm._v("Editar Perfil")]
-                    )
-                  ])
-                ])
-              ]),
+              _vm._m(1),
               _vm._v(" "),
               _c("div", { staticClass: "card-body" }, [
                 _c(
@@ -43350,15 +43771,38 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "nav-item" }, [
-      _c(
-        "a",
-        {
-          staticClass: "nav-link active",
-          attrs: { href: "#activity", "data-toggle": "tab" }
-        },
-        [_vm._v("Actividad")]
-      )
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Perfil de usuario")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header p-2" }, [
+      _c("ul", { staticClass: "nav nav-pills" }, [
+        _c("li", { staticClass: "nav-item" }, [
+          _c(
+            "a",
+            {
+              staticClass: "nav-link active",
+              attrs: { href: "#activity", "data-toggle": "tab" }
+            },
+            [_vm._v("Actividad")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "nav-item" }, [
+          _c(
+            "a",
+            {
+              staticClass: "nav-link",
+              attrs: { href: "#settings", "data-toggle": "tab" }
+            },
+            [_vm._v("Editar Perfil")]
+          )
+        ])
+      ])
     ])
   }
 ]
@@ -58723,7 +59167,7 @@ function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\inetpubapache-www\__laravel-homestead-proyectos\panpas-restructurado-git-31-ENE\resources\js\app_admin.js */"./resources/js/app_admin.js");
+module.exports = __webpack_require__(/*! D:\inetpubapache-www\__laravel-homestead-proyectos\panpas-restructurado-git\resources\js\app_admin.js */"./resources/js/app_admin.js");
 
 
 /***/ })
