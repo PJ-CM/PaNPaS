@@ -24,6 +24,10 @@ Route::apiResources([
     'users' => 'API\UserController',
 ]);
 // -------------------------------------------------------------------------------
+//Buscador para filtrar resultados en el listado
+//  >> término que buscar
+Route::post('/users/search', 'API\UserController@search')
+->name('user.search');
 //Con el Soft Delete activado, esta ruta es:
 //  >> para forzar el borrado definitivo
 Route::get('/users/force-delete/{id}', 'API\UserController@forceDelete')

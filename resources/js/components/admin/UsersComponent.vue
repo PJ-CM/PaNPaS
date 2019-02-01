@@ -36,9 +36,9 @@
                                             Usuarios [<strong>{{ $valores->total() }}</strong> disponible(s)]-->
                                         </h3>
 
-                                        <form class="form-inline ml-5">
+                                        <form @submit.prevent="search()" class="form-inline ml-5" method="post">
                                             <div class="input-group input-group-sm">
-                                                <input type="search" placeholder="Término..." aria-label="Search" class="form-control form-control-navbar">
+                                                <input type="text" v-model="term" name="term" placeholder="Término..." aria-label="Search" class="form-control form-control-navbar">
                                                 <div class="input-group-append">
                                                     <button type="submit" class="btn btn-navbar">
                                                         <i class="fa fa-search" title="Buscar"></i>
@@ -145,6 +145,7 @@
             return {
                 //Puede ser también     >>      users: [],
                 users: {},  //variable contenedora de los registros a listar
+                term: '',   //término por el que filtrar resultados
             }
         },
 
@@ -175,6 +176,32 @@
                 axios.get(url).then( response => {
                     ////console.log(response.data)
                     this.users = response.data
+                });
+            },
+
+            /**
+             * Obteniendo listado de registros filtrados por término de búsqueda
+            */
+            search() {
+                console.log('Enviando filtrado de búsqueda...por [' + this.term + ']');
+                //URL hacia la ruta del listado de registros
+                //  >> SIN paginación
+                let url = '/api/users/search';
+                //Empleado el método POST de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
+                //  -> Si es correcto, se recogen los datos
+                //  dentro del contenedor definido
+                //  -> IMPORTANTE
+                //  Todo lo que se manda como parámetro debe ser dentro de un OBJETO
+                //  El término de búsqueda se debe mandar dentro de un objeto
+                axios.post(url, {
+                    term: this.term
+                }).then( response => {  //SI TODO OK
+                    ////console.log(response.data)
+                    this.users = response.data
+                })
+                .catch(error => {           //SI HAY ALGÚN ERROR
+                    console.log(error.response.data.errors);
                 });
             },
 

@@ -51,6 +51,9 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * $termino => opcional, para filtrar resultados
+     *          => buscando por nombre, apellido, username, email
+     *
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -66,6 +69,26 @@ class UserController extends Controller
         //  >>CON Soft Delete activado
         //      -> incluyendo los registros en papelera
         return User::withTrashed()->with('perfil:id,nombre')->orderBy('id', 'desc')->get();
+    }
+
+    /**
+     * Filtrar resultados del listado por el término enviado
+     *
+     * $termino => buscando por nombre, apellido, username, email
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function search(Request $request)
+    {
+        $termino = $request->term;
+        return User::withTrashed()
+                ->with('perfil:id,nombre')
+                ->where('name', 'LIKE', "%{$termino}%")
+                ->orWhere('lastname', 'LIKE', "%{$termino}%")
+                ->orWhere('username', 'LIKE', "%{$termino}%")
+                ->orWhere('email', 'LIKE', "%{$termino}%")
+                ->orderBy('id', 'desc')->get();
     }
 
     /**

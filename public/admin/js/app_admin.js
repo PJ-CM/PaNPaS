@@ -3386,7 +3386,9 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       //Puede ser también     >>      users: [],
-      users: {} //variable contenedora de los registros a listar
+      users: {},
+      //variable contenedora de los registros a listar
+      term: '' //término por el que filtrar resultados
 
     };
   },
@@ -3417,6 +3419,35 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(url).then(function (response) {
         ////console.log(response.data)
         _this2.users = response.data;
+      });
+    },
+
+    /**
+     * Obteniendo listado de registros filtrados por término de búsqueda
+    */
+    search: function search() {
+      var _this3 = this;
+
+      console.log('Enviando filtrado de búsqueda...por [' + this.term + ']'); //URL hacia la ruta del listado de registros
+      //  >> SIN paginación
+
+      var url = '/api/users/search'; //Empleado el método POST de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+      //  -> Si es correcto, se recogen los datos
+      //  dentro del contenedor definido
+      //  -> IMPORTANTE
+      //  Todo lo que se manda como parámetro debe ser dentro de un OBJETO
+      //  El término de búsqueda se debe mandar dentro de un objeto
+
+      axios.post(url, {
+        term: this.term
+      }).then(function (response) {
+        //SI TODO OK
+        ////console.log(response.data)
+        _this3.users = response.data;
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
       });
     },
 
@@ -3457,7 +3488,7 @@ __webpack_require__.r(__webpack_exports__);
      * Mandar a papelera / Borrado definitivo del registro
     */
     trashDeleteUser: function trashDeleteUser(id) {
-      var _this3 = this;
+      var _this4 = this;
 
       /* BORRADO SIN CONFIRMACIÓN */
 
@@ -3521,7 +3552,7 @@ __webpack_require__.r(__webpack_exports__);
             //SI TODO OK
             //tras borrado temporal, si todo OK, se muestra
             //el listado tras recargarlo
-            _this3.getUsers();
+            _this4.getUsers();
 
             var server_msg_del = response.data.message;
             console.log(server_msg_del); //Lanzando notificación satisfactoria
@@ -3537,7 +3568,7 @@ __webpack_require__.r(__webpack_exports__);
           }); //Pulsando el botón equivalente a CANCELAR la acción
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           //Borrado definitivo del registro
-          _this3.deleteTotalUser(id); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+          _this4.deleteTotalUser(id); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
 
         } else {
           console.log('Acción cancelada');
@@ -3549,7 +3580,7 @@ __webpack_require__.r(__webpack_exports__);
      * Restaurar / Borrado definitivo del registro
     */
     restoreDeleteUser: function restoreDeleteUser(id) {
-      var _this4 = this;
+      var _this5 = this;
 
       /* BORRADO CON CONFIRMACIÓN */
 
@@ -3576,7 +3607,7 @@ __webpack_require__.r(__webpack_exports__);
             //SI TODO OK
             //tras restaurar de la papelera, si todo OK, se muestra
             //el listado tras recargarlo
-            _this4.getUsers();
+            _this5.getUsers();
 
             var server_msg_del = response.data.message;
             console.log(server_msg_del); //Lanzando notificación satisfactoria
@@ -3592,7 +3623,7 @@ __webpack_require__.r(__webpack_exports__);
           }); //Pulsando el botón equivalente a CANCELAR la acción
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           //Borrado definitivo del registro
-          _this4.deleteTotalUser(id); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+          _this5.deleteTotalUser(id); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
 
         } else {
           console.log('Acción cancelada');
@@ -3604,7 +3635,7 @@ __webpack_require__.r(__webpack_exports__);
      * Borrado definitivo del registro
     */
     deleteTotalUser: function deleteTotalUser(id) {
-      var _this5 = this;
+      var _this6 = this;
 
       //URL hacia la ruta de borrado definitivo de registro
       var url = '/api/users/force-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
@@ -3614,7 +3645,7 @@ __webpack_require__.r(__webpack_exports__);
         //SI TODO OK
         //tras borrado definitivo, si todo OK, se muestra
         //el listado tras recargarlo
-        _this5.getUsers();
+        _this6.getUsers();
 
         var server_msg_del = response.data.message;
         console.log(server_msg_del); //Lanzando notificación satisfactoria
@@ -43889,7 +43920,55 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _vm._m(1),
+                    _c(
+                      "form",
+                      {
+                        staticClass: "form-inline ml-5",
+                        attrs: { method: "post" },
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            _vm.search()
+                          }
+                        }
+                      },
+                      [
+                        _c(
+                          "div",
+                          { staticClass: "input-group input-group-sm" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.term,
+                                  expression: "term"
+                                }
+                              ],
+                              staticClass: "form-control form-control-navbar",
+                              attrs: {
+                                type: "text",
+                                name: "term",
+                                placeholder: "Término...",
+                                "aria-label": "Search"
+                              },
+                              domProps: { value: _vm.term },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.term = $event.target.value
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(1)
+                          ]
+                        )
+                      ]
+                    ),
                     _vm._v(" "),
                     _c("ul", { staticClass: "nav ml-auto p-2" }, [
                       _c("li", { staticClass: "nav-item" }, [
@@ -44127,30 +44206,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("form", { staticClass: "form-inline ml-5" }, [
-      _c("div", { staticClass: "input-group input-group-sm" }, [
-        _c("input", {
-          staticClass: "form-control form-control-navbar",
-          attrs: {
-            type: "search",
-            placeholder: "Término...",
-            "aria-label": "Search"
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "input-group-append" }, [
-          _c(
-            "button",
-            { staticClass: "btn btn-navbar", attrs: { type: "submit" } },
-            [
-              _c("i", {
-                staticClass: "fa fa-search",
-                attrs: { title: "Buscar" }
-              })
-            ]
-          )
-        ])
-      ])
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-navbar", attrs: { type: "submit" } },
+        [_c("i", { staticClass: "fa fa-search", attrs: { title: "Buscar" } })]
+      )
     ])
   },
   function() {
