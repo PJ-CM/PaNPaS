@@ -13,6 +13,7 @@
         @include('layouts.public-navbar-auth')
 
         {{-- Header --}}
+        {{--
         <header class="masthead" style="
             --bg-url: url(../images/header-followed.jpg);
             --bg-attach: fixed;
@@ -26,6 +27,7 @@
                 <span>que hagan los usuarios que sigues</span>
             </div>
         </header>
+        --}}
 
         {{-- Panel-de-Seguidos --}}
         <section id="ranking">

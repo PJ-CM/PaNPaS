@@ -30,6 +30,7 @@
         @include('layouts.public-navbar-auth')
 
         {{-- Header --}}
+        {{--
         <header class="masthead" style="
             --bg-url: url(../images/header-recetas.jpg);
             --bg-attach: fixed;
@@ -43,6 +44,7 @@
                 <span>Ingresa las tuyas. Vota las de otros usuarios</span>
             </div>
         </header>
+        --}}
 
         {{-- Panel-de-Recetas --}}
         <section id="ranking">

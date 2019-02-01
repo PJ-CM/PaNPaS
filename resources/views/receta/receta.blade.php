@@ -78,7 +78,12 @@
                 <div class="row justify-content-center">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header" style="text-align: center; padding: 50px;"><h1 class="frijole">{{$receta->titulo}} <sub><a href="/{{$receta->user->username}}">{{$receta->user->username}}</a></sub></h1><img src="{{$receta->imagen}}" alt="{{$receta->titulo}}" class="img-receta"></div>
+                            <div class="card-header" style="text-align: center; padding: 50px;"><h1 class="frijole">{{$receta->titulo}} <sub><a href="/{{$receta->user->username}}">{{$receta->user->username}}</a></sub></h1><img src="{{$receta->imagen}}" alt="{{$receta->titulo}}" class="img-receta">
+							<p style="text-align: center; margin-top: 50px;">{{$receta->descripcion}}</p>
+                            </div>
+
+                            
+
                             <div class="card-body">
 
 <div class="col-md-12" style="margin-top: 0px;">

@@ -11,6 +11,11 @@
 |
 */
 
+
+Route::get('/grafico', 'PruebaController@usuarios');
+
+
+
 Route::get('/', 'IndexController@getRecetasRanking')->name('index');
 
 //Con Verificación por Email
@@ -101,7 +106,8 @@ Route::get('/home', 'HomeController@index')
 //AJAX
 Route::post ('/ajax/usuarios', 'AjaxController@updateUsers');
 Route::post ('/ajax/getUsuarios', 'AjaxController@getUsuarios');
-Route::post ('/ajax/getUsuarioFollows/{id}', 'AjaxController@getUsuarioFollows');
+Route::post ('/ajax/getSearchUsuarios/{termino}', 'AjaxController@getSearchUsuarios');
+
 
 
 // [API]recoger datos
@@ -111,6 +117,41 @@ Route::get ('/api/perfiles', 'ApiController@getPerfiles');	//json de todos los p
 Route::get ('/api/recetas', 'ApiController@getRecetas');	//json de todas las recetas disponibles
 Route::get ('/api/ingredientes', 'ApiController@getIngredientes');	//json de todos los ingredinetes disponibles
 Route::get ('/api/panaderias', 'ApiController@getPanaderias');	//json de todas las panaderias disponibles
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

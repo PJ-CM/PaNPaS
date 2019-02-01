@@ -1,0 +1,20 @@
+{
+  "name": "chartjs",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Enekovaz4 <Enekovaz4@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/PJCM-ZubiMan/PaNPaS",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "chart.js": "chartjs#^2.7.3"
+  }
+}

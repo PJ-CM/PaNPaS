@@ -15,14 +15,23 @@ class AjaxController extends Controller
     }
 
     public function getUsuarios(){
-    	return User::all();
+    	
+    	$users = User::with('follows')->with('followers')->get();
+
+			return (json_encode($users));
     }
 
-    public function getUsuarioFollows($username){
-    	
-    	$user = new User();
-    	$user = $user->find($username);
-    	return $user;
-    	return $user->follows();
+    public function getSearchUsuarios($termino){
+
+       $users = User::orderBy('username', 'asc')
+                    ->where('username', 'LIKE', "%{$termino}%")
+                    ->with('follows')
+                    ->with('followers')
+                    ->get();
+
+
+            return (json_encode($users));
     }
+
+
 }
