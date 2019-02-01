@@ -1977,7 +1977,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    console.log('Component mounted.');
+    console.log('Component mounted.'); //para cargar total de recursos al llegar al componente
+
+    this.getTotRecursos();
+  },
+  //datos devueltos por el componente:
+  data: function data() {
+    return {
+      //variable para almacenar los datos del registro a almacenar
+      objTotRecursos: {}
+    };
+  },
+  methods: {
+    /**
+     * Cargando datos de resumen
+    */
+    getTotRecursos: function getTotRecursos() {
+      var _this = this;
+
+      console.log('Cargando totales de los recursos disponibles'); //Haciendo la petición de datos
+
+      var url = '/admin/dashboard/getTots';
+      axios.get(url).then(function (response) {
+        //SI TODO OK
+        console.log(response.data);
+        _this.objTotRecursos = response.data;
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+    }
   }
 });
 
@@ -59228,7 +59257,7 @@ function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\inetpubapache-www\__laravel-homestead-proyectos\panpas-restructurado-git\resources\js\app_admin.js */"./resources/js/app_admin.js");
+module.exports = __webpack_require__(/*! /var/www/html/panpas-restructurado/resources/js/app_admin.js */"./resources/js/app_admin.js");
 
 
 /***/ })

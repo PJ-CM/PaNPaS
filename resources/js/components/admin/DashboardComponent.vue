@@ -164,6 +164,38 @@
     export default {
         mounted() {
             console.log('Component mounted.');
+
+            //para cargar total de recursos al llegar al componente
+            this.getTotRecursos();
+        },
+
+        //datos devueltos por el componente:
+        data() {
+            return {
+                //variable para almacenar los datos del registro a almacenar
+                objTotRecursos: {},
+            }
+        },
+
+        methods: {
+
+            /**
+             * Cargando datos de resumen
+            */
+            getTotRecursos() {
+                console.log('Cargando totales de los recursos disponibles');
+                //Haciendo la petición de datos
+                let url = '/admin/dashboard/getTots';
+                axios.get(url)
+                .then( response => {       //SI TODO OK
+                    console.log(response.data)
+                    this.objTotRecursos = response.data
+                })
+                .catch(error => {           //SI HAY ALGÚN ERROR
+                    console.log(error.response.data.errors);
+                });
+            },
+
         },
     }
 </script>
