@@ -180,10 +180,12 @@ class UserController extends Controller
         $_arr_detalle = [];
 
         $ultim_recetas = Receta::where('user_id', $id)
+                            ->with('comentarios')
                             ->orderBy('id', 'DESC')
                             ->take(3)->get();
 
         $ultim_comentarios = Comentario::where('user_id', $id)
+                            ->with('user')
                             ->with('receta:id,titulo')
                             ->orderBy('id', 'DESC')
                             ->take(3)->get();
@@ -192,6 +194,7 @@ class UserController extends Controller
                             ->orderBy('id', 'DESC')
                             ->take(3)->get();
 
+        $_arr_detalle['user'] = $user;
         $_arr_detalle['ultim_recetas'] = $ultim_recetas;
         $_arr_detalle['ultim_comentarios'] = $ultim_comentarios;
         $_arr_detalle['ultim_mens_contacto'] = $ultim_mens_contacto;
@@ -201,6 +204,11 @@ class UserController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * A continuación, forma larga de validar los campos a actualizar
+     *
+     * Finalmente, aplicará la forma de validar a través de un FormRequest
+     * (ver en el bloque siguiente sin comentar, el /app/Http/Requests/UserUpdateRequest)
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id

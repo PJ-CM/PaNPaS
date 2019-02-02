@@ -29291,6 +29291,10 @@ readers do not read off random characters that represent icons */
   font-family: "Font Awesome 5 Brands";
 }
 
+.sidebar .user-panel .info {
+  line-height: 12px;
+}
+
 hr {
   width: 100%;
   height: 1px;
@@ -29439,6 +29443,28 @@ a.text-warning-trash:focus {
 
 #activity .callout-info a.tit_receta_plus:hover {
   color: #1d68a7;
+}
+
+.i_ultim_ninguno {
+  padding: 5px;
+  font-size: 18px;
+}
+
+.i_mens_contacto_leidoOK,
+.i_mens_contacto_leidoNOK {
+  border: 1px solid black;
+  border-radius: 50%;
+  padding: 3px 2px 2px 2px;
+  vertical-align: middle;
+  font-size: 11px;
+}
+
+.i_mens_contacto_leidoOK {
+  color: green;
+}
+
+.i_mens_contacto_leidoNOK {
+  color: red;
 }
 
 .btn-papelera-restaurar {

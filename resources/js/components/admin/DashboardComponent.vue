@@ -30,7 +30,7 @@
                                 <!-- small box -->
                                 <div class="small-box bg-info">
                                 <div class="inner">
-                                    <h3>12</h3>
+                                    <h3>{{ objTotRecursos.tot_users }}</h3>
 
                                     <p>Usuarios</p>
                                 </div>
@@ -38,7 +38,7 @@
                                     <!-- <i class="ion ion-bag"></i> -->
                                     <i class="fa fa-users fa-1x"></i>
                                 </div>
-                                <a href="/admin/users" class="small-box-footer">Más info <i class="fa fa-arrow-circle-right"></i></a>
+                                <router-link to="/admin/users" class="small-box-footer" title="Ir a Usuarios">Más info <i class="fa fa-arrow-circle-right"></i></router-link>
                                 </div>
                             </div>
                             <!-- ./col -->
@@ -46,7 +46,7 @@
                                 <!-- small box -->
                                 <div class="small-box bg-success">
                                 <div class="inner">
-                                    <h3>53<!-- <sup style="font-size: 20px">%</sup> --></h3>
+                                    <h3>{{ objTotRecursos.tot_recetas }}</h3>
 
                                     <p>Recetas</p>
                                 </div>
@@ -62,7 +62,7 @@
                                 <!-- small box -->
                                 <div class="small-box bg-warning">
                                 <div class="inner">
-                                    <h3>44</h3>
+                                    <h3>{{ objTotRecursos.tot_comentarios }}</h3>
 
                                     <p>Comentarios</p>
                                 </div>
@@ -78,7 +78,7 @@
                                 <!-- small box -->
                                 <div class="small-box bg-danger">
                                 <div class="inner">
-                                    <h3>65</h3>
+                                    <h3>{{ objTotRecursos.tot_mens_contacto }}</h3>
 
                                     <p>Mensajes</p>
                                 </div>
@@ -185,7 +185,7 @@
             getTotRecursos() {
                 console.log('Cargando totales de los recursos disponibles');
                 //Haciendo la petición de datos
-                let url = '/admin/dashboard/getTots';
+                let url = '/admin/dashboard/get-tots';
                 axios.get(url)
                 .then( response => {       //SI TODO OK
                     console.log(response.data)

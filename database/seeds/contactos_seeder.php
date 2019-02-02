@@ -13,7 +13,7 @@ class contactos_seeder extends Seeder
     public function run()
     {
         $faker = Factory::create();
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 11; $i++) {
 
             $timestamp = mt_rand(1, time());
             $randomDate = date('Y-m-d H:i:s', $timestamp);

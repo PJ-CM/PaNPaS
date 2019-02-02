@@ -21,11 +21,14 @@ class comentarios_seeder extends Seeder
         static $recetas;
         $recetas = Receta::all();
 
-        $faker = Factory::create();
-        for ($i = 0; $i < 30; $i++) {
+        $comentarios_faker_tot = 134;
 
-            $timestamp = mt_rand(1, time());
-            $randomDate = date('Y-m-d H:i:s', $timestamp);
+        $faker = Factory::create();
+        for ($i = 0; $i < $comentarios_faker_tot; $i++) {
+
+            ////$timestamp = mt_rand(1, time());
+            ////$randomDate = date('Y-m-d H:i:s', $timestamp);
+            $randomDate = $faker->dateTimeBetween($startDate = '-5 years', $endDate = 'now');
 
             DB::table('comentarios')->insert([
                 'padre' => null,

@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Receta;
+use App\Contacto;
+use App\Comentario;
 use Illuminate\Http\Request;
 
 class AdminPanelController extends Controller
@@ -22,6 +26,11 @@ class AdminPanelController extends Controller
         return view('admin.dashboard');
     }
 
+    /**
+     * Obtener totales de los recursos disponibles
+     *
+     * @return void
+     */
     public function getTots()
     {
         $_arr_detalle = [];
