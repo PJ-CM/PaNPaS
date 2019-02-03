@@ -2965,6 +2965,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var _this = this;
@@ -41237,7 +41239,7 @@ var render = function() {
           _c("div", { staticClass: "col-lg-3 col-6" }, [
             _c(
               "div",
-              { staticClass: "small-box bg-info" },
+              { staticClass: "small-box bg-tot_users" },
               [
                 _c("div", { staticClass: "inner" }, [
                   _c("h3", [_vm._v(_vm._s(_vm.objTotRecursos.tot_users))]),
@@ -41264,7 +41266,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "col-lg-3 col-6" }, [
-            _c("div", { staticClass: "small-box bg-success" }, [
+            _c("div", { staticClass: "small-box bg-tot_recetas" }, [
               _c("div", { staticClass: "inner" }, [
                 _c("h3", [_vm._v(_vm._s(_vm.objTotRecursos.tot_recetas))]),
                 _vm._v(" "),
@@ -41278,7 +41280,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "col-lg-3 col-6" }, [
-            _c("div", { staticClass: "small-box bg-warning" }, [
+            _c("div", { staticClass: "small-box bg-tot_comentarios" }, [
               _c("div", { staticClass: "inner" }, [
                 _c("h3", [_vm._v(_vm._s(_vm.objTotRecursos.tot_comentarios))]),
                 _vm._v(" "),
@@ -41292,7 +41294,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "col-lg-3 col-6" }, [
-            _c("div", { staticClass: "small-box bg-danger" }, [
+            _c("div", { staticClass: "small-box bg-tot_mens_contacto" }, [
               _c("div", { staticClass: "inner" }, [
                 _c("h3", [
                   _vm._v(_vm._s(_vm.objTotRecursos.tot_mens_contacto))
@@ -43249,7 +43251,25 @@ var render = function() {
       _c("img", {
         staticClass: "profile-user-img img-fluid img-circle",
         attrs: { src: _vm.objDataResReg.avatar, alt: "Avatar del usuario" }
-      })
+      }),
+      _vm._v(" "),
+      _vm.objDataResReg.isOnline
+        ? _c(
+            "span",
+            {
+              staticClass: "badge badge-success badge-useronoff-profile",
+              attrs: { title: "Está conectado" }
+            },
+            [_vm._v(" ")]
+          )
+        : _c(
+            "span",
+            {
+              staticClass: "badge badge-useroff badge-useronoff-profile",
+              attrs: { title: "Está desconectado" }
+            },
+            [_vm._v(" ")]
+          )
     ]),
     _vm._v(" "),
     _c("h3", { staticClass: "profile-username text-center" }, [
@@ -43649,12 +43669,21 @@ var render = function() {
                                   staticClass: "negrita",
                                   attrs: {
                                     href: "/admin/users/" + user.id,
-                                    title: "Ir al detalle"
+                                    title: [
+                                      user.isOnline
+                                        ? "Ir al detalle::ON"
+                                        : "Ir al detalle::OFF"
+                                    ]
                                   }
                                 },
                                 [
                                   _c("img", {
                                     staticClass: "avatar",
+                                    class: [
+                                      user.isOnline
+                                        ? "marco-useron-list"
+                                        : "marco-useroff-list"
+                                    ],
                                     attrs: {
                                       src: user.avatar,
                                       alt: "Avatar del usuario"

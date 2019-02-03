@@ -28,7 +28,7 @@
                         <div class="row">
                             <div class="col-lg-3 col-6">
                                 <!-- small box -->
-                                <div class="small-box bg-info">
+                                <div class="small-box bg-tot_users">
                                 <div class="inner">
                                     <h3>{{ objTotRecursos.tot_users }}</h3>
 
@@ -44,7 +44,7 @@
                             <!-- ./col -->
                             <div class="col-lg-3 col-6">
                                 <!-- small box -->
-                                <div class="small-box bg-success">
+                                <div class="small-box bg-tot_recetas">
                                 <div class="inner">
                                     <h3>{{ objTotRecursos.tot_recetas }}</h3>
 
@@ -60,7 +60,7 @@
                             <!-- ./col -->
                             <div class="col-lg-3 col-6">
                                 <!-- small box -->
-                                <div class="small-box bg-warning">
+                                <div class="small-box bg-tot_comentarios">
                                 <div class="inner">
                                     <h3>{{ objTotRecursos.tot_comentarios }}</h3>
 
@@ -76,7 +76,7 @@
                             <!-- ./col -->
                             <div class="col-lg-3 col-6">
                                 <!-- small box -->
-                                <div class="small-box bg-danger">
+                                <div class="small-box bg-tot_mens_contacto">
                                 <div class="inner">
                                     <h3>{{ objTotRecursos.tot_mens_contacto }}</h3>
 

@@ -29368,6 +29368,49 @@ hr {
   border-radius: 50%;
 }
 
+.badge-useroff {
+  background-color: #d2d6de;
+}
+
+.badge-useronoff-profile {
+  border: 2px solid white;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  top: 18%;
+  left: 60%;
+}
+
+.marco-useron-list {
+  border: 3px solid #38c172;
+  padding: 3px;
+}
+
+.marco-useroff-list {
+  border: 3px solid #d2d6de;
+  padding: 3px;
+}
+
+.bg-tot_users {
+  background-color: var(--blue);
+  color: white;
+}
+
+.bg-tot_recetas {
+  background-color: #fed136;
+}
+
+.bg-tot_comentarios {
+  background-color: var(--green);
+  color: white;
+}
+
+.bg-tot_mens_contacto {
+  background-color: #f63f3f;
+}
+
 a.text-warning-trash {
   color: #f6993f;
 }
