@@ -79,7 +79,15 @@
                     <div class="col-md-12">
                         <div class="card">
 
-                            <div class="card-header" style="text-align: center; padding: 50px;"><h1 class="frijole">{{$receta->titulo}} <sub><a href="/{{$receta->user->username}}">{{$receta->user->username}}</a></sub></h1><img src="{{$receta->imagen}}" alt="{{$receta->titulo}}" class="img-receta">
+                            <div class="card-header" style="text-align: center; padding: 50px;">
+                                <h1 class="frijole">
+                                    {{$receta->titulo}}
+                                    <sub>
+                                        <a href="/{{$receta->user->username}}">{{$receta->user->username}}</a>
+                                    </sub>
+                                </h1>
+                                <h5><span style="font-weight: normal;">Categoría:</span> {{ ucfirst($receta->categoria) }}</h5>
+                                <img src="{{$receta->imagen}}" alt="{{$receta->titulo}}" class="img-receta">
 							<p style="text-align: center; margin-top: 50px;">{{$receta->descripcion}}</p>
                             </div>
 

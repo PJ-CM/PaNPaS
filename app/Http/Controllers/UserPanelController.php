@@ -131,13 +131,16 @@ class UserPanelController extends Controller
                 'recetas' => $recetas,
                 'columna' => $columna,
                 'orden' => $orden,
+                '_arr_categoria' => $this->_arr_categoria,
             ]);
         } else {
             return view('users.recetas', [
+                'tot_resultados' => count($recetas),
                 'recetas' => $recetas,
                 'columna' => $columna,
                 'orden' => $orden,
-                'busqueda'=>$buscar
+                'busqueda'=>$buscar,
+                '_arr_categoria' => $this->_arr_categoria,
             ]);
         }
     }
