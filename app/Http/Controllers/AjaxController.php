@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use DB;
+use Auth;
 class AjaxController extends Controller
 {
     public function updateUsers(Request $request) //listado de todos los usuarios registrados
@@ -33,5 +35,33 @@ class AjaxController extends Controller
             return (json_encode($users));
     }
 
+    public function follow($id){
+
+        $follower = Auth::user();
+
+        DB::table('user_user')->insert([
+            'follower' => $follower->id,
+            'followed' => $id
+        ]);
+        return Auth::user()->follows;
+    }
+
+
+
+        public function unfollow($id){
+
+            $follower = Auth::user();
+            $followed = new User;
+            $followed = $followed->find($id);
+
+            $misfollows = $follower->follows;
+
+            foreach ($misfollows as $follow) {
+                if ($id == $follow->id) {
+                    DB::table('user_user')->where('follower', $follower->id)->where('followed', $followed->id)->delete();
+                }
+            }
+            return Auth::user()->follows;
+        }
 
 }

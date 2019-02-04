@@ -18,15 +18,19 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript">
+        
+             var listaFollows = {!!json_encode(Auth::user()->follows)!!};
+
             $(document).ready(function(){
-                updateUsuarios();
+
+                searchUsuarios();
             });
 
 
             function searchUsuarios(){
                 var buscador = $("input[name=buscador]");
 
-                if(buscador.val().length > 0){
+                if(buscador.val().length > 0){ //si el buscador está relleno
                     $.ajax({
  
                     type:"post",
@@ -37,14 +41,8 @@
                         listarUsuarios(users);
                     }
                     });               
-                } else {
-                    updateUsuarios();
-                }
-            }
-
-            function updateUsuarios(){
-                
-                $.ajax({
+                } else { //si el buscador está vacío
+                    $.ajax({
  
                     type:"POST",
                     url:"/ajax/getUsuarios",
@@ -56,56 +54,108 @@
                     }    
 
                 });
+                }
             }
+
+            function follow(id){
+
+                var url = "/ajax/follow/" + id ;
+
+                 var ajax = $.ajax({
+                    type:"post",
+                    url: url,
+                    success: function(newFollows){
+                        listaFollows = newFollows;
+                        searchUsuarios();
+                    }
+                    });   
+            }
+
+            function unfollow(id){
+
+                var url = "/ajax/unfollow/" + id ;
+
+                 var ajax = $.ajax({
+                    type:"post",
+                    url: url,
+                    success: function(newFollows){
+                        listaFollows = newFollows;
+                        searchUsuarios();
+                    }
+                    });   
+            }
+
 
             
             function listarUsuarios(users){
                 $("#ListaUsuario").html("");
+              
                 for (var i = 0; i < users.length; i++){
 
                             if(users[i].username != "{{Auth::user()->username}}" ){ //si no soy yo
 
-
-                                 $("#ListaUsuario").html($("#ListaUsuario").html() + '\
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">\
-                                    <a class="ranking-link" href="/unfollow/' + users[i].id + '">\
-                                        <div class="ranking-hover seguido" title="Dejar de seguir a ' + users[i].username + '">\
-                                            <div class="ranking-hover-content">\
-                                                <i class="fas fa-minus fa-3x"></i>\
+                                if(siguiendo(users[i].username)){ //si le sigo
+                                     $("#ListaUsuario").html($("#ListaUsuario").html() + '\
+                                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">\
+                                        <a class="ranking-link">\
+                                            <div class="ranking-hover seguido" title="Dejar de seguir a ' + users[i].username + '" onclick="unfollow(' + users[i].id + ');">\
+                                                <div class="ranking-hover-content">\
+                                                    <i class="fas fa-minus fa-3x"></i>\
+                                                </div>\
                                             </div>\
+                                            <img class="img-fluid" src=" ' + users[i].avatar +' + " alt="Avatar de ' + users[i].username + ' ">\
+                                        </a>\
+                                        <div class="ranking-caption">\
+                                            <h4>\
+                                                <a href="/' + users[i].username +'" class="link-marco" title="Acceder al perfil de ' + users[i].username + '">' + users[i].username + '</a>\
+                                            </h4>\
+                                            <h5 class="stars-votos">\
+                                                <i class="fas fa-lg fas fa-sign-out-alt" title=" ' + users[i].username + ' está siguiendo a ' + users[i].follows.length + ' + usuarios" style="color: green;"></i > ' + users[i].follows.length + '\
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+                                                <i class="fas fa-lg fas fa-sign-in-alt" title="' + users[i].username + ' tiene ' + users[i].followers.length + ' seguidores" style="color: blue;"></i> ' + users[i].followers.length + '\
+                                            </h5>\
                                         </div>\
-                                        <img class="img-fluid" src=" ' + users[i].avatar +' + " alt="Avatar de ' + users[i].username + ' ">\
-                                    </a>\
-                                    <div class="ranking-caption">\
-                                        <h4>\
-                                            <a href="/' + users[i].username +'" class="link-marco" title="Acceder al perfil de ' + users[i].username + '">' + users[i].username + '</a>\
-                                        </h4>\
-                                        <h5 class="stars-votos">\
-                                            <i class="fas fa-lg fas fa-sign-out-alt" title=" ' + users[i].username + ' está siguiendo a ' + users[i].follows.length + ' + usuarios" style="color: green;"></i > ' + users[i].follows.length + '\
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
-                                            <i class="fas fa-lg fas fa-sign-in-alt" title="' + users[i].username + ' tiene ' + users[i].followers.length + ' seguidores" style="color: blue;"></i> ' + users[i].followers.length + '\
-                                        </h5>\
-                                    </div>\
-                                </div>');
-                                
+                                    </div>');
+                                } else { //si NO le sigo
+
+                                    $("#ListaUsuario").html($("#ListaUsuario").html() + '\
+                                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ranking-item">\
+                                        <a class="ranking-link">\
+                                            <div class="ranking-hover seguido" title="Seguir a ' + users[i].username + '"  onclick="follow(' + users[i].id + ');">\
+                                                <div class="ranking-hover-content">\
+                                                    <i class="fas fa-plus fa-3x"></i>\
+                                                </div>\
+                                            </div>\
+                                            <img class="img-fluid" src=" ' + users[i].avatar +' + " alt="Avatar de ' + users[i].username + ' ">\
+                                        </a>\
+                                        <div class="ranking-caption">\
+                                            <h4>\
+                                                <a href="/' + users[i].username +'" class="link-marco" title="Acceder al perfil de ' + users[i].username + '">' + users[i].username + '</a>\
+                                            </h4>\
+                                            <h5 class="stars-votos">\
+                                                <i class="fas fa-lg fas fa-sign-out-alt" title=" ' + users[i].username + ' está siguiendo a ' + users[i].follows.length + ' + usuarios" style="color: grey;"></i > ' + users[i].follows.length + '\
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+                                                <i class="fas fa-lg fas fa-sign-in-alt" title="' + users[i].username + ' tiene ' + users[i].followers.length + ' seguidores" style="color: grey;"></i> ' + users[i].followers.length + '\
+                                            </h5>\
+                                        </div>\
+                                    </div>');
+                                }
                             }     
                         } 
             }
 
             //lista de los usuarios que sigues, nombre del usuario
-            function siguiendo (listaFollows, nombre){ //devuelve true si lo estás siguiendo o false si no
-
-                var auth = "{{Auth::user()->username}}";
-
+            function siguiendo (nombre){ //devuelve true si lo estás siguiendo o false si no
+                
+              
+                
                 for (var i = 0; i < listaFollows.length; i++){
+                   
                     if (listaFollows[i].username == nombre){
-                        alert(auth + "sigue a " + nombre);
                         return true;
-                    }else {
-                        return false;
-                    }
+                    } 
                 }
-
+                return false;
             }
 
 
@@ -134,6 +184,8 @@
             </div>
         </header>
         --}}
+
+
 
         {{-- Panel-de-Usuarios --}}
         <section id="ranking">

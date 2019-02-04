@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Receta;
 use App\User;
+
 class UserPanelController extends Controller
 {
     /**

@@ -107,6 +107,10 @@ Route::get('/home', 'HomeController@index')
 Route::post ('/ajax/usuarios', 'AjaxController@updateUsers');
 Route::post ('/ajax/getUsuarios', 'AjaxController@getUsuarios');
 Route::post ('/ajax/getSearchUsuarios/{termino}', 'AjaxController@getSearchUsuarios');
+Route::post ('/ajax/follow/{id}', 'AjaxController@follow');
+Route::post ('/ajax/unfollow/{id}', 'AjaxController@unfollow');
+
+
 
 
 
