@@ -47,13 +47,13 @@
 
 
 		<style type="text/css">
-	
+
 			.icono{
 				color: white;
 				font-size: 5em;
 			}
 			.img-receta{
-				max-width: 640px; 
+				max-width: 640px;
 				max-height: 480px;
 				width: 640px;
 				height: 480px;
@@ -78,16 +78,15 @@
                 <div class="row justify-content-center">
                     <div class="col-md-12">
                         <div class="card">
+
                             <div class="card-header" style="text-align: center; padding: 50px;"><h1 class="frijole">{{$receta->titulo}} <sub><a href="/{{$receta->user->username}}">{{$receta->user->username}}</a></sub></h1><img src="{{$receta->imagen}}" alt="{{$receta->titulo}}" class="img-receta">
 							<p style="text-align: center; margin-top: 50px;">{{$receta->descripcion}}</p>
                             </div>
 
-                            
-
                             <div class="card-body">
 
 <div class="col-md-12" style="margin-top: 0px;">
-<div class="container"> 
+<div class="container">
 
   <div class="row row-receta">
     <div class="col-md-5" style="background-color: lightblue; padding: 30px;">
@@ -101,14 +100,14 @@
 	      @endforeach
   		</ul>
 
-      
+
     </div>
 
     <div class="col-md-7 vertical-line" style="background-color: lightblue; padding: 30px;">
       <h2 class="frijole"> Preparación </h2>
-      
+
         <div style="text-align: justify;"> {!!$receta->elaboracion!!} </div>
-      
+
     <!--<img src="{{$receta->imagen}}" class="img-receta"> -->
     </div>
 </div>
@@ -132,7 +131,7 @@
                             <div class="card-header" id="comentarios"><h1 class="frijole">Comentarios</h1></div>
 
                             <div class="card-body">
-                                
+
                             	<!-- COMENTARIOS -->
 									<!-- Contenedor Principal -->
 								<div class="comments-container">
@@ -159,7 +158,7 @@
 												</div>
 											</li>
 										@endforeach
-										
+
 										<!-- Formulario para insertar comentario en la receta -->
 										<div class="insertar-comentario-container">
 											<form action="/insertarComentario" method="post">
@@ -168,7 +167,7 @@
 
 												<input type="submit" name="enviarComentario" class="btn btn-primary">
 											</form>
-											
+
 										</div>
 
 

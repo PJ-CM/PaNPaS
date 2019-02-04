@@ -1977,7 +1977,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    console.log('Component mounted.');
+    console.log('Component mounted.'); //para cargar total de recursos al llegar al componente
+
+    this.getTotRecursos();
+  },
+  //datos devueltos por el componente:
+  data: function data() {
+    return {
+      //variable para almacenar los datos del registro a almacenar
+      objTotRecursos: {}
+    };
+  },
+  methods: {
+    /**
+     * Cargando datos de resumen
+    */
+    getTotRecursos: function getTotRecursos() {
+      var _this = this;
+
+      console.log('Cargando totales de los recursos disponibles'); //Haciendo la petición de datos
+
+      var url = '/admin/dashboard/get-tots';
+      axios.get(url).then(function (response) {
+        //SI TODO OK
+        console.log(response.data);
+        _this.objTotRecursos = response.data;
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+    }
   }
 });
 
@@ -2401,178 +2430,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var _this = this;
@@ -2587,10 +2444,104 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       //variable para almacenar los datos del registro a almacenar
-      objActivReg: {}
+      objActivReg: {},
+      element: '',
+      element_parent: '',
+      ultRects_accordBtns: [{
+        collapsed: false,
+        title: 'Replegar'
+      }, {
+        collapsed: true,
+        title: 'Desplegar'
+      }, {
+        collapsed: true,
+        title: 'Desplegar'
+      }],
+      ultComs_accordBtns: [{
+        collapsed: false,
+        title: 'Replegar'
+      }, {
+        collapsed: true,
+        title: 'Desplegar'
+      }, {
+        collapsed: true,
+        title: 'Desplegar'
+      }],
+      ultMsgsCon_accordBtns: [{
+        collapsed: false,
+        title: 'Replegar'
+      }, {
+        collapsed: true,
+        title: 'Desplegar'
+      }, {
+        collapsed: true,
+        title: 'Desplegar'
+      }]
     };
   },
   methods: {
+    /**
+     * Cambio de icono en los "accordion"s tratados
+     *
+     * arrAccordBtns, el array de botones a tratar
+     * index, el índice del array referido al botón pulsado
+     * event, el evento lanzado a través del cuál se localiza
+     * el elemento que recibe dicho evento
+    */
+    changeIcon: function changeIcon(arrAccordBtns, index, event) {
+      //NOTA EXTRA
+      //Para recorrer el DOM por vue-devtools:
+      //- Posicionarse en el elemento
+      //- teclear la referencia inicial indicada $vm0
+      //- a partir de ahí, sale un árbol de las opciones disponibles
+      //-----------------------------------------------------------------
+      //Elementos referenciados con REF
+      ////console.log('ELEM-REFs-LOG => ' + this.$refs);
+      //TagName del Elemento de destino del evento lanzado
+      ////console.log('EVENT-TARGET => ' + event.target.tagName);
+      ////console.log('EVENT-TARGET-parentElement.attributes => ' + event.target.parentElement.attributes);
+      //Elemento que recibe el evento lanzado
+      this.element = event.target; //console.log('this.element.id => ' + this.element.id)
+      //Tratando el botón pulsado
+
+      if (this.element.classList.contains('fa-plus')) {
+        //console.log('ICONO actual FA-PLUS pasa a FA-MINUS');
+        document.getElementById(this.element.id).classList.remove('fa-plus');
+        document.getElementById(this.element.id).classList.add('fa-minus');
+      } else {
+        //console.log('ICONO actual FA-MINUS pasa a FA-PLUS');
+        document.getElementById(this.element.id).classList.remove('fa-minus');
+        document.getElementById(this.element.id).classList.add('fa-plus');
+      } //Tratando los demás botones del mismo accordion según:
+      //  >> el botón pulsado
+      //  >> el estado de la parte del accordion
+      //  a la que pertenece ese botón
+
+
+      if (arrAccordBtns == 'ultim_recetas') {
+        this.ultRects_accordBtns.forEach(function (accordBtn) {
+          accordBtn.collapsed = true;
+          accordBtn.title = 'Desplegar';
+        });
+        this.ultRects_accordBtns[index].collapsed = !this.ultRects_accordBtns[index].collapsed;
+        if (this.ultRects_accordBtns[index].collapsed) this.ultRects_accordBtns[index].title = 'Desplegar';else this.ultRects_accordBtns[index].title = 'Replegar';
+      } else if (arrAccordBtns == 'ultim_comentarios') {
+        this.ultComs_accordBtns.forEach(function (accordBtn) {
+          accordBtn.collapsed = true;
+          accordBtn.title = 'Desplegar';
+        });
+        this.ultComs_accordBtns[index].collapsed = !this.ultComs_accordBtns[index].collapsed;
+        if (this.ultComs_accordBtns[index].collapsed) this.ultComs_accordBtns[index].title = 'Desplegar';else this.ultComs_accordBtns[index].title = 'Replegar';
+      } else if (arrAccordBtns == 'ultim_mens_contacto') {
+        this.ultMsgsCon_accordBtns.forEach(function (accordBtn) {
+          accordBtn.collapsed = true;
+          accordBtn.title = 'Desplegar';
+        });
+        this.ultMsgsCon_accordBtns[index].collapsed = !this.ultMsgsCon_accordBtns[index].collapsed;
+        if (this.ultMsgsCon_accordBtns[index].collapsed) this.ultMsgsCon_accordBtns[index].title = 'Desplegar';else this.ultMsgsCon_accordBtns[index].title = 'Replegar';
+      }
+    },
+
     /**
      * Cargando datos de resumen
     */
@@ -2608,55 +2559,6 @@ __webpack_require__.r(__webpack_exports__);
         //SI HAY ALGÚN ERROR
         console.log(error.response.data.errors);
       });
-      /*
-      
-      this.objActivReg =  {
-          "ultim_recetas": [
-              {
-                  "id": 23,
-                  "titulo": "titulo22",
-                  "descripcion": "I shall only look up in spite of all her fancy, that: they never executes nobody, you know. Come on!' So they got their tails in their mouths. So they began solemnly dancing round and swam slowly.",
-                  "imagen": "https:\/\/lorempixel.com\/640\/480\/?29389",
-                  "elaboracion": "Paso 1: Alice would not allow without knowing how old it was, and, as the other.' As soon as there was a long argument with the time,' she said.<br \/><br \/>Paso 2: Mock Turtle drew a long breath, and till the Pigeon had finished. 'As if it thought that it might happen any minute, 'and then,' thought Alice, 'to speak to this mouse? Everything.<br \/><br \/>Paso 3: Eaglet. 'I don't know of any one; so, when the Rabbit was no longer.<br \/><br \/>Paso 4: Alice, 'because I'm not particular as to the.<br \/><br \/>",
-                  "ingredientes": "ingrediente22 395ml",
-                  "votos": 0,
-                  "user_id": 25,
-                  "created_at": "2012-10-18 00:00:00",
-                  "updated_at": null
-              },
-              {
-                  "id": 7,
-                  "titulo": "titulo6",
-                  "descripcion": "It sounded an excellent plan, no doubt, and very soon finished off the cake. * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 'What a number of bathing machines in the sea.",
-                  "imagen": "https:\/\/lorempixel.com\/640\/480\/?12365",
-                  "elaboracion": "Paso 1: However, on the whole pack of cards!' At this moment the King, and the moon, and memory, and muchness--you know you say things are \"much of a bottle. They all sat down and.<br \/><br \/>Paso 2: CHAPTER IV. The Rabbit started violently, dropped the white kid gloves, and was going to shrink any further: she felt sure it would be quite absurd for.<br \/><br \/>Paso 3: CURTSEYING as you're falling through the door, staring stupidly up.<br \/><br \/>Paso 4: Father William,' the young.<br \/><br \/>","ingredientes":"ingrediente6 472ml",
-                  "votos": 0,
-                  "user_id": 25,
-                  "created_at": "2005-09-03 00:00:00",
-                  "updated_at": null
-              }
-          ],
-      
-          "ultim_comentarios":[
-              {
-                  "id": 15,
-                  "padre": null,
-                  "mensaje": "For, you see, Miss, we're.",
-                  "user_id": 25,
-                  "receta_id": 23,
-                  "time": 1548804659,
-                  "leido": 0,
-                  "created_at": "2000-05-21 06:34:54",
-                  "updated_at": "2000-05-21 06:34:54",
-                  "receta": null
-              }
-          ],
-      
-          "ultim_mens_contacto": []
-      };
-      
-      
-      */
     }
   }
 });
@@ -3031,6 +2933,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -41326,226 +41230,261 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "content-header" }, [
-        _c("div", { staticClass: "container-fluid" }, [
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-sm-6" }, [
-              _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Dashboard")])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-sm-6" }, [
-              _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
-                _c("li", { staticClass: "breadcrumb-item active" }, [
-                  _vm._v("Dashboard")
-                ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "content" }, [
-        _c("div", { staticClass: "container-fluid" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-lg-3 col-6" }, [
-              _c("div", { staticClass: "small-box bg-info" }, [
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "content" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-lg-3 col-6" }, [
+            _c(
+              "div",
+              { staticClass: "small-box bg-tot_users" },
+              [
                 _c("div", { staticClass: "inner" }, [
-                  _c("h3", [_vm._v("12")]),
+                  _c("h3", [_vm._v(_vm._s(_vm.objTotRecursos.tot_users))]),
                   _vm._v(" "),
                   _c("p", [_vm._v("Usuarios")])
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "icon" }, [
-                  _c("i", { staticClass: "fa fa-users fa-1x" })
-                ]),
+                _vm._m(1),
                 _vm._v(" "),
                 _c(
-                  "a",
+                  "router-link",
                   {
                     staticClass: "small-box-footer",
-                    attrs: { href: "/admin/users" }
+                    attrs: { to: "/admin/users", title: "Ir a Usuarios" }
                   },
                   [
                     _vm._v("Más info "),
                     _c("i", { staticClass: "fa fa-arrow-circle-right" })
                   ]
                 )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-lg-3 col-6" }, [
-              _c("div", { staticClass: "small-box bg-success" }, [
-                _c("div", { staticClass: "inner" }, [
-                  _c("h3", [_vm._v("53")]),
-                  _vm._v(" "),
-                  _c("p", [_vm._v("Recetas")])
-                ]),
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-lg-3 col-6" }, [
+            _c("div", { staticClass: "small-box bg-tot_recetas" }, [
+              _c("div", { staticClass: "inner" }, [
+                _c("h3", [_vm._v(_vm._s(_vm.objTotRecursos.tot_recetas))]),
                 _vm._v(" "),
-                _c("div", { staticClass: "icon" }, [
-                  _c("i", { staticClass: "fas fa-book-open fa-1x" })
-                ]),
-                _vm._v(" "),
-                _c(
-                  "a",
-                  { staticClass: "small-box-footer", attrs: { href: "#" } },
-                  [
-                    _vm._v("Más info "),
-                    _c("i", { staticClass: "fa fa-arrow-circle-right" })
-                  ]
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-lg-3 col-6" }, [
-              _c("div", { staticClass: "small-box bg-warning" }, [
-                _c("div", { staticClass: "inner" }, [
-                  _c("h3", [_vm._v("44")]),
-                  _vm._v(" "),
-                  _c("p", [_vm._v("Comentarios")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "icon" }, [
-                  _c("i", { staticClass: "fa fa-comments fa-1x" })
-                ]),
-                _vm._v(" "),
-                _c(
-                  "a",
-                  { staticClass: "small-box-footer", attrs: { href: "#" } },
-                  [
-                    _vm._v("Más info "),
-                    _c("i", { staticClass: "fa fa-arrow-circle-right" })
-                  ]
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-lg-3 col-6" }, [
-              _c("div", { staticClass: "small-box bg-danger" }, [
-                _c("div", { staticClass: "inner" }, [
-                  _c("h3", [_vm._v("65")]),
-                  _vm._v(" "),
-                  _c("p", [_vm._v("Mensajes")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "icon" }, [
-                  _c("i", { staticClass: "fas fa-envelope fa-1x" })
-                ]),
-                _vm._v(" "),
-                _c(
-                  "a",
-                  { staticClass: "small-box-footer", attrs: { href: "#" } },
-                  [
-                    _vm._v("Más info "),
-                    _c("i", { staticClass: "fa fa-arrow-circle-right" })
-                  ]
-                )
-              ])
+                _c("p", [_vm._v("Recetas")])
+              ]),
+              _vm._v(" "),
+              _vm._m(2),
+              _vm._v(" "),
+              _vm._m(3)
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-lg-6" }, [
-              _c("div", { staticClass: "card" }, [
-                _c("div", { staticClass: "card-body" }, [
-                  _c("h5", { staticClass: "card-title" }, [
-                    _vm._v("Card title")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "card-text" }, [
-                    _vm._v(
-                      "\n                                        Kesi KEsi Kesito\n                                    "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-                    _vm._v("Card link")
-                  ]),
-                  _vm._v(" "),
-                  _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-                    _vm._v("Another link")
-                  ])
-                ])
+          _c("div", { staticClass: "col-lg-3 col-6" }, [
+            _c("div", { staticClass: "small-box bg-tot_comentarios" }, [
+              _c("div", { staticClass: "inner" }, [
+                _c("h3", [_vm._v(_vm._s(_vm.objTotRecursos.tot_comentarios))]),
+                _vm._v(" "),
+                _c("p", [_vm._v("Comentarios")])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "card card-primary card-outline" }, [
-                _c("div", { staticClass: "card-body" }, [
-                  _c("h5", { staticClass: "card-title" }, [
-                    _vm._v("Card title")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "card-text" }, [
-                    _vm._v(
-                      "\n                                        Some quick example text to build on the card title and make up the bulk of the card's content.\n                                    "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-                    _vm._v("Card link")
-                  ]),
-                  _vm._v(" "),
-                  _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-                    _vm._v("Another link")
-                  ])
-                ])
+              _vm._m(4),
+              _vm._v(" "),
+              _vm._m(5)
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-lg-3 col-6" }, [
+            _c("div", { staticClass: "small-box bg-tot_mens_contacto" }, [
+              _c("div", { staticClass: "inner" }, [
+                _c("h3", [
+                  _vm._v(_vm._s(_vm.objTotRecursos.tot_mens_contacto))
+                ]),
+                _vm._v(" "),
+                _c("p", [_vm._v("Mensajes")])
+              ]),
+              _vm._v(" "),
+              _vm._m(6),
+              _vm._v(" "),
+              _vm._m(7)
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _vm._m(8)
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "content-header" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c("div", { staticClass: "row mb-2" }, [
+          _c("div", { staticClass: "col-sm-6" }, [
+            _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Dashboard")])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-6" }, [
+            _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
+              _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Dashboard")
               ])
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fa fa-users fa-1x" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fas fa-book-open fa-1x" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "small-box-footer", attrs: { href: "#" } }, [
+      _vm._v("Más info "),
+      _c("i", { staticClass: "fa fa-arrow-circle-right" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fa fa-comments fa-1x" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "small-box-footer", attrs: { href: "#" } }, [
+      _vm._v("Más info "),
+      _c("i", { staticClass: "fa fa-arrow-circle-right" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fas fa-envelope fa-1x" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "small-box-footer", attrs: { href: "#" } }, [
+      _vm._v("Más info "),
+      _c("i", { staticClass: "fa fa-arrow-circle-right" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-6" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("h5", { staticClass: "card-title" }, [_vm._v("Card title")]),
+            _vm._v(" "),
+            _c("p", { staticClass: "card-text" }, [
+              _vm._v(
+                "\n                                        Kesi KEsi Kesito\n                                    "
+              )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-lg-6" }, [
-              _c("div", { staticClass: "card" }, [
-                _c("div", { staticClass: "card-header" }, [
-                  _c("h5", { staticClass: "m-0" }, [_vm._v("Featured")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-body" }, [
-                  _c("h6", { staticClass: "card-title" }, [
-                    _vm._v("Special title treatment")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "card-text" }, [
-                    _vm._v(
-                      "With supporting text below as a natural lead-in to additional content."
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "a",
-                    { staticClass: "btn btn-primary", attrs: { href: "#" } },
-                    [_vm._v("Go somewhere")]
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card card-primary card-outline" }, [
-                _c("div", { staticClass: "card-header" }, [
-                  _c("h5", { staticClass: "m-0" }, [_vm._v("Featured")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-body" }, [
-                  _c("h6", { staticClass: "card-title" }, [
-                    _vm._v("Special title treatment")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "card-text" }, [
-                    _vm._v(
-                      "With supporting text below as a natural lead-in to additional content."
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "a",
-                    { staticClass: "btn btn-primary", attrs: { href: "#" } },
-                    [_vm._v("Go somewhere")]
-                  )
-                ])
-              ])
+            _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
+              _vm._v("Card link")
+            ]),
+            _vm._v(" "),
+            _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
+              _vm._v("Another link")
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card card-primary card-outline" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("h5", { staticClass: "card-title" }, [_vm._v("Card title")]),
+            _vm._v(" "),
+            _c("p", { staticClass: "card-text" }, [
+              _vm._v(
+                "\n                                        Some quick example text to build on the card title and make up the bulk of the card's content.\n                                    "
+              )
+            ]),
+            _vm._v(" "),
+            _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
+              _vm._v("Card link")
+            ]),
+            _vm._v(" "),
+            _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
+              _vm._v("Another link")
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-lg-6" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("h5", { staticClass: "m-0" }, [_vm._v("Featured")])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("h6", { staticClass: "card-title" }, [
+              _vm._v("Special title treatment")
+            ]),
+            _vm._v(" "),
+            _c("p", { staticClass: "card-text" }, [
+              _vm._v(
+                "With supporting text below as a natural lead-in to additional content."
+              )
+            ]),
+            _vm._v(" "),
+            _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
+              _vm._v("Go somewhere")
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card card-primary card-outline" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("h5", { staticClass: "m-0" }, [_vm._v("Featured")])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("h6", { staticClass: "card-title" }, [
+              _vm._v("Special title treatment")
+            ]),
+            _vm._v(" "),
+            _c("p", { staticClass: "card-text" }, [
+              _vm._v(
+                "With supporting text below as a natural lead-in to additional content."
+              )
+            ]),
+            _vm._v(" "),
+            _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
+              _vm._v("Go somewhere")
             ])
           ])
         ])
@@ -42306,84 +42245,374 @@ var render = function() {
       _vm._m(0),
       _vm._v(" "),
       _c(
-        "table",
+        "div",
+        { attrs: { id: "accordion-ult-rec" } },
         [
-          _vm._m(1),
-          _vm._v(" "),
-          _vm._m(2),
-          _vm._v(" "),
-          _vm._l(_vm.objActivReg.ultim_recetas, function(receta, index) {
-            return _c("tr", { key: index }, [
-              _c("td", [_vm._v(_vm._s(receta.id))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(receta.titulo))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(receta.created_at))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(receta.descripcion))])
-            ])
-          })
+          _vm.objActivReg.ultim_recetas == ""
+            ? _c("div", { staticClass: "callout callout-info user-block" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("span", [
+                  _vm._v(
+                    "\n                Ninguna publicada aún\n            "
+                  )
+                ])
+              ])
+            : _vm._l(_vm.objActivReg.ultim_recetas, function(receta, index) {
+                return _c(
+                  "div",
+                  {
+                    key: index,
+                    staticClass: "callout callout-info user-block"
+                  },
+                  [
+                    _c("img", {
+                      staticClass: "img-circle img-bordered-sm",
+                      attrs: { src: receta.imagen, alt: "Foto de la receta" }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "float-right text-sm tit_receta_plus",
+                        attrs: {
+                          href: "#reg-ult-rec-" + index,
+                          "data-toggle": "collapse"
+                        },
+                        on: {
+                          click: function($event) {
+                            _vm.changeIcon("ultim_recetas", index, $event)
+                          }
+                        }
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "fas fa-1x",
+                          class: [
+                            _vm.ultRects_accordBtns[index].collapsed
+                              ? "fa-plus"
+                              : "fa-minus"
+                          ],
+                          attrs: {
+                            id: "ico_onoff_ult_rec_" + index,
+                            title:
+                              _vm.ultRects_accordBtns[index].title +
+                              " contenido"
+                          }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "username" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "tit_receta",
+                          attrs: {
+                            href: "#",
+                            target: "_blank",
+                            title: "Acceder al detalle"
+                          }
+                        },
+                        [_vm._v(_vm._s(receta.titulo))]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "description" }, [
+                      _vm._v("Publicada - " + _vm._s(receta.created_at))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "collapse",
+                        class: { show: index == 0 },
+                        attrs: {
+                          id: "reg-ult-rec-" + index,
+                          "data-parent": "#accordion-ult-rec"
+                        }
+                      },
+                      [
+                        _c("p", [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(receta.descripcion) +
+                              "\n                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _c("span", { staticClass: "text-sm" }, [
+                            _c("i", { staticClass: "fas fa-star mr-1" }),
+                            _vm._v(
+                              " Votos (" +
+                                _vm._s(receta.votos) +
+                                ")\n                    "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "float-right text-sm" }, [
+                            _c("i", { staticClass: "fas fa-comments mr-1" }),
+                            _vm._v(
+                              " Commentarios (" +
+                                _vm._s(receta.comentarios.length) +
+                                ")\n                    "
+                            )
+                          ])
+                        ])
+                      ]
+                    )
+                  ]
+                )
+              })
         ],
         2
       ),
-      _vm._v(" "),
-      _c(
-        "table",
-        [
-          _vm._m(3),
-          _vm._v(" "),
-          _vm._m(4),
-          _vm._v(" "),
-          _vm._l(_vm.objActivReg.ultim_comentarios, function(coment, index) {
-            return _c("tr", { key: index }, [
-              _c("td", [_vm._v(_vm._s(coment.id))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(coment.receta_id))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(coment.created_at))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(coment.mensaje))])
-            ])
-          })
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c(
-        "table",
-        [
-          _vm._m(5),
-          _vm._v(" "),
-          _vm._m(6),
-          _vm._v(" "),
-          _vm._l(_vm.objActivReg.ultim_mens_contacto, function(contact, index) {
-            return _c("tr", { key: index }, [
-              _c("td", [_vm._v(_vm._s(contact.id))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(contact.correo))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(contact.mensaje))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(contact.created_at))])
-            ])
-          })
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _vm._m(7),
       _vm._v(" "),
       _c("hr", { staticClass: "separador" }),
       _vm._v(" "),
-      _vm._m(8),
+      _vm._m(2),
       _vm._v(" "),
-      _vm._m(9),
+      _c(
+        "div",
+        { attrs: { id: "accordion-ult-com" } },
+        [
+          _vm.objActivReg.ultim_comentarios == ""
+            ? _c("div", { staticClass: "callout callout-info user-block" }, [
+                _vm._m(3),
+                _vm._v(" "),
+                _c("span", [
+                  _vm._v(
+                    "\n                Ninguno publicado aún\n            "
+                  )
+                ])
+              ])
+            : _vm._l(_vm.objActivReg.ultim_comentarios, function(
+                comentario,
+                index
+              ) {
+                return _c(
+                  "div",
+                  {
+                    key: index,
+                    staticClass: "callout callout-info user-block"
+                  },
+                  [
+                    _c("img", {
+                      staticClass: "img-circle img-bordered-sm",
+                      attrs: {
+                        src: comentario.user.avatar,
+                        alt: "Foto del autor"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "float-right text-sm tit_receta_plus",
+                        attrs: {
+                          href: "#reg-ult-com-" + index,
+                          "data-toggle": "collapse"
+                        },
+                        on: {
+                          click: function($event) {
+                            _vm.changeIcon("ultim_comentarios", index, $event)
+                          }
+                        }
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "fas fa-1x",
+                          class: [
+                            _vm.ultComs_accordBtns[index].collapsed
+                              ? "fa-plus"
+                              : "fa-minus"
+                          ],
+                          attrs: {
+                            id: "ico_onoff_ult_com_" + index,
+                            title:
+                              _vm.ultComs_accordBtns[index].title + " contenido"
+                          }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "username" }, [
+                      _vm._v("\n                en "),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "tit_receta",
+                          attrs: {
+                            href: "#",
+                            target: "_blank",
+                            title: "Acceder al detalle"
+                          }
+                        },
+                        [_vm._v(_vm._s(comentario.receta.titulo))]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "description" }, [
+                      _vm._v("Publicado - " + _vm._s(comentario.created_at))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "collapse",
+                        class: { show: index == 0 },
+                        attrs: {
+                          id: "reg-ult-com-" + index,
+                          "data-parent": "#accordion-ult-com"
+                        }
+                      },
+                      [
+                        _c("p", [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(comentario.mensaje) +
+                              "\n                "
+                          )
+                        ])
+                      ]
+                    )
+                  ]
+                )
+              })
+        ],
+        2
+      ),
       _vm._v(" "),
       _c("hr", { staticClass: "separador" }),
       _vm._v(" "),
-      _vm._m(10),
+      _vm._m(4),
       _vm._v(" "),
-      _vm._m(11)
+      _c(
+        "div",
+        { attrs: { id: "accordion-ult-con" } },
+        [
+          _vm.objActivReg.ultim_mens_contacto == ""
+            ? _c("div", { staticClass: "callout callout-info user-block" }, [
+                _vm._m(5),
+                _vm._v(" "),
+                _c("span", [
+                  _vm._v("\n                Ninguno enviado aún\n            ")
+                ])
+              ])
+            : _vm._l(_vm.objActivReg.ultim_mens_contacto, function(
+                mens_contacto,
+                index
+              ) {
+                return _c(
+                  "div",
+                  {
+                    key: index,
+                    staticClass: "callout callout-info user-block"
+                  },
+                  [
+                    _c("img", {
+                      staticClass: "img-circle img-bordered-sm",
+                      attrs: {
+                        src: _vm.objActivReg.user.avatar,
+                        alt: "Foto del autor"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "float-right text-sm tit_receta_plus",
+                        attrs: {
+                          href: "#reg-ult-con-" + index,
+                          "data-toggle": "collapse"
+                        },
+                        on: {
+                          click: function($event) {
+                            _vm.changeIcon("ultim_mens_contacto", index, $event)
+                          }
+                        }
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "fas fa-1x",
+                          class: [
+                            _vm.ultMsgsCon_accordBtns[index].collapsed
+                              ? "fa-plus"
+                              : "fa-minus"
+                          ],
+                          attrs: {
+                            id: "ico_onoff_ult_con_" + index,
+                            title:
+                              _vm.ultMsgsCon_accordBtns[index].title +
+                              " contenido"
+                          }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "username" }, [
+                      _vm._v("\n                por "),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "tit_receta",
+                          attrs: {
+                            href: "#",
+                            target: "_blank",
+                            title: "Acceder al detalle"
+                          }
+                        },
+                        [_vm._v(_vm._s(mens_contacto.nombre))]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "description" }, [
+                      _vm._v("Enviado - " + _vm._s(mens_contacto.created_at))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "collapse",
+                        class: { show: index == 0 },
+                        attrs: {
+                          id: "reg-ult-con-" + index,
+                          "data-parent": "#accordion-ult-con"
+                        }
+                      },
+                      [
+                        _c("p", [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(mens_contacto.mensaje) +
+                              "\n                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _c("span", { staticClass: "float-right text-sm" }, [
+                            mens_contacto.leido
+                              ? _c("i", {
+                                  staticClass:
+                                    "fas fa-circle i_mens_contacto_leidoOK",
+                                  attrs: { title: "Leido" }
+                                })
+                              : _c("i", {
+                                  staticClass:
+                                    "fas fa-circle i_mens_contacto_leidoNOK",
+                                  attrs: { title: "Sin leer" }
+                                })
+                          ])
+                        ])
+                      ]
+                    )
+                  ]
+                )
+              })
+        ],
+        2
+      )
     ]
   )
 }
@@ -42401,283 +42630,14 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("td", { attrs: { colspan: "4" } }, [_vm._v("Ultim-Recetas")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("th", [_vm._v("ID")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Título")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Publicada")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Descripcion")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("td", { attrs: { colspan: "4" } }, [_vm._v("Ultim-Comentarios")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("th", [_vm._v("ID")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Receta_ID")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Publicado")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Texto")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("td", { attrs: { colspan: "4" } }, [_vm._v("Ultim-Mens-Contacto")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("th", [_vm._v("ID")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Correo")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Mensaje")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Fecha")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { attrs: { id: "accordion-ult-rec" } }, [
-      _c("div", { staticClass: "callout callout-info user-block" }, [
-        _c("img", {
-          staticClass: "img-circle img-bordered-sm",
-          attrs: {
-            src: "https://lorempixel.com/640/480/?16609",
-            alt: "Foto de la receta"
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "float-right text-sm tit_receta_plus",
-            attrs: { href: "#reg-ult-rec-1", "data-toggle": "collapse" }
-          },
-          [
-            _c("i", {
-              staticClass: "fas fa-plus fa-1x",
-              attrs: { title: "Desplegar/Replegar contenido" }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", { staticClass: "username" }, [
-          _c(
-            "a",
-            {
-              staticClass: "tit_receta",
-              attrs: {
-                href: "#",
-                target: "_blank",
-                title: "Acceder al detalle"
-              }
-            },
-            [_vm._v("Título de la Receta")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "description" }, [
-          _vm._v("Publicada - 7:30 PM today")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "collapse show",
-            attrs: { id: "reg-ult-rec-1", "data-parent": "#accordion-ult-rec" }
-          },
-          [
-            _c("p", [
-              _vm._v(
-                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _c("span", { staticClass: "text-sm" }, [
-                _c("i", { staticClass: "fas fa-star mr-1" }),
-                _vm._v(" Votos (15)\n                    ")
-              ]),
-              _vm._v(" "),
-              _c("span", { staticClass: "float-right text-sm" }, [
-                _c("i", { staticClass: "fas fa-comments mr-1" }),
-                _vm._v(" Commentarios (5)\n                    ")
-              ])
-            ])
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "callout callout-info user-block" }, [
-        _c("img", {
-          staticClass: "img-circle img-bordered-sm",
-          attrs: {
-            src: "https://lorempixel.com/640/480/?16609",
-            alt: "Foto de la receta"
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "float-right text-sm tit_receta_plus",
-            attrs: { href: "#reg-ult-rec-2", "data-toggle": "collapse" }
-          },
-          [
-            _c("i", {
-              staticClass: "fas fa-plus fa-1x",
-              attrs: { title: "Desplegar/Replegar contenido" }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", { staticClass: "username" }, [
-          _c(
-            "a",
-            {
-              staticClass: "tit_receta",
-              attrs: {
-                href: "#",
-                target: "_blank",
-                title: "Acceder al detalle"
-              }
-            },
-            [_vm._v("Título de la Receta")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "description" }, [
-          _vm._v("Publicada - 7:30 PM today")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "collapse",
-            attrs: { id: "reg-ult-rec-2", "data-parent": "#accordion-ult-rec" }
-          },
-          [
-            _c("p", [
-              _vm._v(
-                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _c("span", { staticClass: "text-sm" }, [
-                _c("i", { staticClass: "fas fa-star mr-1" }),
-                _vm._v(" Votos (15)\n                    ")
-              ]),
-              _vm._v(" "),
-              _c("span", { staticClass: "float-right text-sm" }, [
-                _c("i", { staticClass: "fas fa-comments mr-1" }),
-                _vm._v(" Commentarios (5)\n                    ")
-              ])
-            ])
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "callout callout-info user-block" }, [
-        _c("img", {
-          staticClass: "img-circle img-bordered-sm",
-          attrs: {
-            src: "https://lorempixel.com/640/480/?16609",
-            alt: "Foto de la receta"
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "float-right text-sm tit_receta_plus",
-            attrs: { href: "#reg-ult-rec-3", "data-toggle": "collapse" }
-          },
-          [
-            _c("i", {
-              staticClass: "fas fa-plus fa-1x",
-              attrs: { title: "Desplegar/Replegar contenido" }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", { staticClass: "username" }, [
-          _c(
-            "a",
-            {
-              staticClass: "tit_receta",
-              attrs: {
-                href: "#",
-                target: "_blank",
-                title: "Acceder al detalle"
-              }
-            },
-            [_vm._v("Título de la Receta")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "description" }, [
-          _vm._v("Publicada - 7:30 PM today")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "collapse",
-            attrs: { id: "reg-ult-rec-3", "data-parent": "#accordion-ult-rec" }
-          },
-          [
-            _c("p", [
-              _vm._v(
-                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _c("span", { staticClass: "text-sm" }, [
-                _c("i", { staticClass: "fas fa-star mr-1" }),
-                _vm._v(" Votos (15)\n                    ")
-              ]),
-              _vm._v(" "),
-              _c("span", { staticClass: "float-right text-sm" }, [
-                _c("i", { staticClass: "fas fa-comments mr-1" }),
-                _vm._v(" Commentarios (5)\n                    ")
-              ])
-            ])
-          ]
-        )
-      ])
-    ])
+    return _c(
+      "span",
+      {
+        staticClass: "img-circle img-bordered-sm",
+        attrs: { title: "Icono genérico de receta" }
+      },
+      [_c("i", { staticClass: "fas fa-book-open i_ultim_ninguno" })]
+    )
   },
   function() {
     var _vm = this
@@ -42692,184 +42652,14 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { attrs: { id: "accordion-ult-com" } }, [
-      _c("div", { staticClass: "callout callout-info user-block" }, [
-        _c("img", {
-          staticClass: "img-circle img-bordered-sm",
-          attrs: {
-            src: "https://lorempixel.com/640/480/?16609",
-            alt: "Foto de la receta"
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "float-right text-sm tit_receta_plus",
-            attrs: { href: "#reg-ult-com-1", "data-toggle": "collapse" }
-          },
-          [
-            _c("i", {
-              staticClass: "fas fa-plus fa-1x",
-              attrs: { title: "Desplegar/Replegar contenido" }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", { staticClass: "username" }, [
-          _vm._v("\n                en "),
-          _c(
-            "a",
-            {
-              staticClass: "tit_receta",
-              attrs: {
-                href: "#",
-                target: "_blank",
-                title: "Acceder al detalle"
-              }
-            },
-            [_vm._v("Título de la Receta")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "description" }, [
-          _vm._v("Publicado - 7:30 PM today")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "collapse show",
-            attrs: { id: "reg-ult-com-1", "data-parent": "#accordion-ult-com" }
-          },
-          [
-            _c("p", [
-              _vm._v(
-                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-              )
-            ])
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "callout callout-info user-block" }, [
-        _c("img", {
-          staticClass: "img-circle img-bordered-sm",
-          attrs: {
-            src: "https://lorempixel.com/640/480/?16609",
-            alt: "Foto de la receta"
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "float-right text-sm tit_receta_plus",
-            attrs: { href: "#reg-ult-com-2", "data-toggle": "collapse" }
-          },
-          [
-            _c("i", {
-              staticClass: "fas fa-plus fa-1x",
-              attrs: { title: "Desplegar/Replegar contenido" }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", { staticClass: "username" }, [
-          _vm._v("\n                en "),
-          _c(
-            "a",
-            {
-              staticClass: "tit_receta",
-              attrs: {
-                href: "#",
-                target: "_blank",
-                title: "Acceder al detalle"
-              }
-            },
-            [_vm._v("Título de la Receta")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "description" }, [
-          _vm._v("Publicado - 7:30 PM today")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "collapse",
-            attrs: { id: "reg-ult-com-2", "data-parent": "#accordion-ult-com" }
-          },
-          [
-            _c("p", [
-              _vm._v(
-                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-              )
-            ])
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "callout callout-info user-block" }, [
-        _c("img", {
-          staticClass: "img-circle img-bordered-sm",
-          attrs: {
-            src: "https://lorempixel.com/640/480/?16609",
-            alt: "Foto de la receta"
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "float-right text-sm tit_receta_plus",
-            attrs: { href: "#reg-ult-com-3", "data-toggle": "collapse" }
-          },
-          [
-            _c("i", {
-              staticClass: "fas fa-plus fa-1x",
-              attrs: { title: "Desplegar/Replegar contenido" }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", { staticClass: "username" }, [
-          _vm._v("\n                en "),
-          _c(
-            "a",
-            {
-              staticClass: "tit_receta",
-              attrs: {
-                href: "#",
-                target: "_blank",
-                title: "Acceder al detalle"
-              }
-            },
-            [_vm._v("Título de la Receta")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "description" }, [
-          _vm._v("Publicado - 7:30 PM today")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "collapse",
-            attrs: { id: "reg-ult-com-3", "data-parent": "#accordion-ult-com" }
-          },
-          [
-            _c("p", [
-              _vm._v(
-                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-              )
-            ])
-          ]
-        )
-      ])
-    ])
+    return _c(
+      "span",
+      {
+        staticClass: "img-circle img-bordered-sm",
+        attrs: { title: "Icono genérico de comentario" }
+      },
+      [_c("i", { staticClass: "fas fa-comments i_ultim_ninguno" })]
+    )
   },
   function() {
     var _vm = this
@@ -42884,181 +42674,14 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { attrs: { id: "accordion-ult-con" } }, [
-      _c("div", { staticClass: "callout callout-info user-block" }, [
-        _c("img", {
-          staticClass: "img-circle img-bordered-sm",
-          attrs: {
-            src: "https://lorempixel.com/640/480/?16609",
-            alt: "Foto de la receta"
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "float-right text-sm tit_receta_plus",
-            attrs: { href: "#reg-ult-con-1", "data-toggle": "collapse" }
-          },
-          [
-            _c("i", {
-              staticClass: "fas fa-plus fa-1x",
-              attrs: { title: "Desplegar/Replegar contenido" }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", { staticClass: "username" }, [
-          _c(
-            "a",
-            {
-              staticClass: "tit_receta",
-              attrs: {
-                href: "#",
-                target: "_blank",
-                title: "Acceder al detalle"
-              }
-            },
-            [_vm._v("Nombre o Asunto")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "description" }, [
-          _vm._v("Publicado - 7:30 PM today")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "collapse show",
-            attrs: { id: "reg-ult-con-1", "data-parent": "#accordion-ult-con" }
-          },
-          [
-            _c("p", [
-              _vm._v(
-                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-              )
-            ])
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "callout callout-info user-block" }, [
-        _c("img", {
-          staticClass: "img-circle img-bordered-sm",
-          attrs: {
-            src: "https://lorempixel.com/640/480/?16609",
-            alt: "Foto de la receta"
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "float-right text-sm tit_receta_plus",
-            attrs: { href: "#reg-ult-con-2", "data-toggle": "collapse" }
-          },
-          [
-            _c("i", {
-              staticClass: "fas fa-plus fa-1x",
-              attrs: { title: "Desplegar/Replegar contenido" }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", { staticClass: "username" }, [
-          _c(
-            "a",
-            {
-              staticClass: "tit_receta",
-              attrs: {
-                href: "#",
-                target: "_blank",
-                title: "Acceder al detalle"
-              }
-            },
-            [_vm._v("Nombre o Asunto")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "description" }, [
-          _vm._v("Publicado - 7:30 PM today")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "collapse",
-            attrs: { id: "reg-ult-con-2", "data-parent": "#accordion-ult-con" }
-          },
-          [
-            _c("p", [
-              _vm._v(
-                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-              )
-            ])
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "callout callout-info user-block" }, [
-        _c("img", {
-          staticClass: "img-circle img-bordered-sm",
-          attrs: {
-            src: "https://lorempixel.com/640/480/?16609",
-            alt: "Foto de la receta"
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "float-right text-sm tit_receta_plus",
-            attrs: { href: "#reg-ult-con-2", "data-toggle": "collapse" }
-          },
-          [
-            _c("i", {
-              staticClass: "fas fa-plus fa-1x",
-              attrs: { title: "Desplegar/Replegar contenido" }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", { staticClass: "username" }, [
-          _c(
-            "a",
-            {
-              staticClass: "tit_receta",
-              attrs: {
-                href: "#",
-                target: "_blank",
-                title: "Acceder al detalle"
-              }
-            },
-            [_vm._v("Nombre o Asunto")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "description" }, [
-          _vm._v("Publicado - 7:30 PM today")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "collapse",
-            attrs: { id: "reg-ult-con-2", "data-parent": "#accordion-ult-con" }
-          },
-          [
-            _c("p", [
-              _vm._v(
-                "\n                    Lorem ipsum represents a long-held tradition for designers,\n                    typographers and the like. Some people hate it and argue for\n                    its demise, but others ignore the hate as they create awesome\n                    tools to help create filler text for everyone from bacon lovers\n                    to Charlie Sheen fans.\n                "
-              )
-            ])
-          ]
-        )
-      ])
-    ])
+    return _c(
+      "span",
+      {
+        staticClass: "img-circle img-bordered-sm",
+        attrs: { title: "Icono genérico de mensaje de contacto" }
+      },
+      [_c("i", { staticClass: "fas fa-envelope i_ultim_ninguno" })]
+    )
   }
 ]
 render._withStripped = true
@@ -43628,7 +43251,25 @@ var render = function() {
       _c("img", {
         staticClass: "profile-user-img img-fluid img-circle",
         attrs: { src: _vm.objDataResReg.avatar, alt: "Avatar del usuario" }
-      })
+      }),
+      _vm._v(" "),
+      _vm.objDataResReg.isOnline
+        ? _c(
+            "span",
+            {
+              staticClass: "badge badge-success badge-useronoff-profile",
+              attrs: { title: "Está conectado" }
+            },
+            [_vm._v(" ")]
+          )
+        : _c(
+            "span",
+            {
+              staticClass: "badge badge-useroff badge-useronoff-profile",
+              attrs: { title: "Está desconectado" }
+            },
+            [_vm._v(" ")]
+          )
     ]),
     _vm._v(" "),
     _c("h3", { staticClass: "profile-username text-center" }, [
@@ -44027,13 +43668,22 @@ var render = function() {
                                 {
                                   staticClass: "negrita",
                                   attrs: {
-                                    href: "admin/users/detalle/" + user.id,
-                                    title: "Ir al detalle"
+                                    href: "/admin/users/" + user.id,
+                                    title: [
+                                      user.isOnline
+                                        ? "Ir al detalle::ON"
+                                        : "Ir al detalle::OFF"
+                                    ]
                                   }
                                 },
                                 [
                                   _c("img", {
                                     staticClass: "avatar",
+                                    class: [
+                                      user.isOnline
+                                        ? "marco-useron-list"
+                                        : "marco-useroff-list"
+                                    ],
                                     attrs: {
                                       src: user.avatar,
                                       alt: "Avatar del usuario"

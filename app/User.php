@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use Cache;
+
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
@@ -65,6 +67,15 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function follows(){
         return $this->belongsToMany('App\User', 'user_user', 'follower', 'followed');
+    }
+
+    /**
+     * Comprobando si el usuario está online.
+     *
+     */
+    public function isOnline()
+    {
+        return Cache::has('user-is-online-' . $this->id);
     }
 
 }

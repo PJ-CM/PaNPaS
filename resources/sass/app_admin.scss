@@ -39,6 +39,9 @@ $fa-font-path: '../webfonts';
 //Propio(s) del proyecto :: parte privada
 //==================================================
 
+//DIV dónde reside el icono del usuario ADMIN
+.sidebar .user-panel .info { line-height: 12px; }
+
 hr { width: 100%; height: 1px; background-color: #4f5962; }
 
 .txt_blanco {
@@ -86,6 +89,35 @@ hr { width: 100%; height: 1px; background-color: #4f5962; }
     border-radius: 50%;
 }
 
+//Punto indicativo de que el usuario está conectado
+//----------------------------------------------------------------------------
+.badge-useroff { background-color: #d2d6de; }
+//.badge-useron-gnral {}
+.badge-useronoff-profile {
+    border: 2px solid white;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 1;
+    width: 16px;
+    height: 16px;
+    top: 18%;
+    left: 60%;
+}
+.marco-useron-list {
+    border: 3px solid #38c172;
+    padding: 3px;
+}
+.marco-useroff-list {
+    border: 3px solid #d2d6de;
+    padding: 3px;
+}
+
+//Dashboard - Cajas de Totales
+.bg-tot_users { background-color: var(--blue); color: white; }
+.bg-tot_recetas { background-color: #fed136; }
+.bg-tot_comentarios { background-color: var(--green); color: white; }
+.bg-tot_mens_contacto { background-color: #f63f3f; }
+
 //Icono papelera en listados
 a.text-warning-trash {
     color: #f6993f;
@@ -127,10 +159,12 @@ a.text-warning-trash:hover, a.text-warning-trash:focus {
 }
 
 //Usuario::Perfil.Completo-Li.Tot.Followers
+//----------------------------------------------------------------
 #top-msgs-contact { border-bottom: black 0.05rem solid; }
 #top-followers { border-top: black 0.095rem solid; }
 
 //Usuario::Perfil.Completo-Últimos
+//----------------------------------------------------------------
 //<DIV> Color.Borde
 #activity .callout-info {
     border-left-color: #007bff;
@@ -145,9 +179,7 @@ a.text-warning-trash:hover, a.text-warning-trash:focus {
     color: #1d68a7;
     text-decoration: underline;
 }
-
 //Estilos <i>+
-
 #activity .callout-info a.tit_receta_plus {
     color: #ccc;
     text-decoration: none;
@@ -156,7 +188,23 @@ a.text-warning-trash:hover, a.text-warning-trash:focus {
 #activity .callout-info a.tit_receta_plus:hover {
     color: #1d68a7;
 }
+//Estilos <i> cuando no hay actividad
+.i_ultim_ninguno {
+    padding: 5px;
+    font-size: 18px;
+}
+.i_mens_contacto_leidoOK, .i_mens_contacto_leidoNOK {
+    border: 1px solid black;
+    border-radius: 50%;
+    padding: 3px 2px 2px 2px;
+    vertical-align: middle;
+    font-size: 11px;
+}
+.i_mens_contacto_leidoOK { color: green; }
+.i_mens_contacto_leidoNOK { color: red; }
 
+//Usuario::Perfil.Completo-Editar
+//----------------------------------------------------------------
 .btn-papelera-restaurar {
     background-color: #f6993f;
     border-color: #f6993f;

@@ -80,7 +80,7 @@
                                                         <span v-if="user.deleted_at == null" class="reg-activo">{{ users.length - index }}</span>
                                                         <span v-else class="reg-trashed">{{ users.length - index }}</span>
                                                     </td>
-                                                    <td class="text-center"><a :href="'admin/users/detalle/' + user.id" title="Ir al detalle" class="negrita"><img class="avatar" :src="user.avatar" alt="Avatar del usuario"></a></td>
+                                                    <td class="text-center"><a :href="'/admin/users/' + user.id" :title="[user.isOnline ? 'Ir al detalle::ON' : 'Ir al detalle::OFF']" class="negrita"><img class="avatar" :class="[ user.isOnline ? 'marco-useron-list' : 'marco-useroff-list' ]" :src="user.avatar" alt="Avatar del usuario"></a></td>
                                                     <td v-if="user.name == ''"><small>Sin detallar</small></td>
                                                     <td v-else-if="user.name == null"><small>Sin detallar</small></td>
                                                     <td v-else v-text="user.name"></td>

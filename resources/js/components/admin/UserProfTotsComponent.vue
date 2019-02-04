@@ -4,6 +4,8 @@
             <img class="profile-user-img img-fluid img-circle"
                 :src="objDataResReg.avatar"
                 alt="Avatar del usuario">
+            <span v-if="objDataResReg.isOnline" title="Está conectado" class="badge badge-success badge-useronoff-profile">&nbsp;</span>
+            <span v-else title="Está desconectado" class="badge badge-useroff badge-useronoff-profile">&nbsp;</span>
         </div>
 
         <h3 class="profile-username text-center">{{ objDataResReg.name + ' ' + objDataResReg.lastname }}</h3>

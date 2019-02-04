@@ -74,6 +74,7 @@ class RecetaController extends Controller
         $receta->titulo = $data['titulo'];
         $receta->descripcion = $data['descripcion'];
         $receta->elaboracion = $data['elaboracion'];
+        $receta->categoria = $data['categoria'];
 
 
         $receta->elaboracion = nl2br($receta->elaboracion);

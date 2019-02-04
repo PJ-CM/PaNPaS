@@ -92,6 +92,7 @@
                             <h4>
                                 {{ $receta->titulo }}
                             </h4>
+                            <p><small>({{ ucfirst($receta->categoria) }})</small></p>
                             <p class="text-muted">por <a href="/{{ $receta->user->username }}" title="Ver perfil de {{ $receta->user->username }}" class="link-marco">{{ $receta->user->username }}</a></p>
                             <h5 class="stars-votos" title="{{ $receta->titulo }} tiene {{ $receta->votos }} votos">
 
@@ -140,10 +141,23 @@
                     <form action="/insertarReceta" method="post" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
-                        <p class="col-lg-12">
-                            <label><strong>Título</strong></label>
-                            <input type="text" name="titulo" class="col-lg-12 w3-input" required>
-                        </p>
+                        <div style="margin-bottom: 10px;">
+                            <div class="col-lg-8" style="display: inline-block;">
+                                <label><strong>Título</strong></label>
+                                <input type="text" name="titulo" class="col-lg-12 w3-input" required>
+                            </div>
+                            <div class="col-lg-3" style="display: inline-block;">
+                                <label><strong>Categoría</strong></label>
+                                <select name="categoria" id="categoria-id" required>
+                                    <option value="">Seleccionar</option>
+                                    @foreach($_arr_categoria as $categ)
+                                    <option value="{{ $categ }}">@php
+                                        echo strtoupper($categ);
+                                    @endphp</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <p class="col-lg-12">
                             <label><strong>Descripción</strong></label>
                             <textarea name="descripcion" class="col-lg-12 w3-input" required></textarea>

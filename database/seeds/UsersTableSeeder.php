@@ -22,7 +22,7 @@ class UsersTableSeeder extends Seeder
 
             if ($i == 0) {
                 DB::table('users')->insert([
-                    'username' => 'admin',
+                    'username' => 'panpas',
                     'name' => 'admin',
                     'lastname' => 'Admin',
                     'email' => 'admin@gmail.com',

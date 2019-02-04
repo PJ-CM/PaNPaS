@@ -84,11 +84,9 @@ Route::get('/unfav/{id}', 'RecetaController@eliminarFavoritos')
 
 //Panel Admin
 Route::get('/admin/dashboard', 'AdminPanelController@index')
-    ->name('admin_panel_index');
-Route::get('/admin/profile', 'AdminPanelController@profile')
-    ->name('admin_panel_profile');
-//Route::get('/admin/users', 'AdminPanelController@index')
-//    ->name('admin_panel_index');
+    ->name('admin_pnl_index');
+Route::get('/admin/dashboard/get-tots', 'AdminPanelController@getTots')
+    ->name('admin_pnl_index_tots');
 
 //Para aceptar URLs de todo tipo dentro de  este controlador
 //  >> establecido para aceptar peticiones GET a las rutas

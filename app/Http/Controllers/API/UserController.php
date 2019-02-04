@@ -68,7 +68,12 @@ class UserController extends Controller
         ////return User::with('perfil:id,nombre')->orderBy('id', 'desc')->get();
         //  >>CON Soft Delete activado
         //      -> incluyendo los registros en papelera
-        return User::withTrashed()->with('perfil:id,nombre')->orderBy('id', 'desc')->get();
+        return User::withTrashed()->with('perfil:id,nombre')
+                    ->orderBy('id', 'desc')->get()
+                    ->map(function ($user) {//Registrando si el usuario recorrido está conectado
+                        $user->isOnline = $user->isOnline();
+                        return $user;
+                    });
     }
 
     /**
@@ -88,7 +93,11 @@ class UserController extends Controller
                 ->orWhere('lastname', 'LIKE', "%{$termino}%")
                 ->orWhere('username', 'LIKE', "%{$termino}%")
                 ->orWhere('email', 'LIKE', "%{$termino}%")
-                ->orderBy('id', 'desc')->get();
+                ->orderBy('id', 'desc')->get()
+                ->map(function ($user) {//Registrando si el usuario recorrido está conectado
+                    $user->isOnline = $user->isOnline();
+                    return $user;
+                });
     }
 
     /**
@@ -151,6 +160,8 @@ class UserController extends Controller
         $_arr_detalle['lastname'] = $user->lastname;
         $_arr_detalle['username'] = $user->username;
         $_arr_detalle['avatar'] = $user->avatar;
+        //Verificando si está conectado
+        $_arr_detalle['isOnline'] = $user->isOnline();
 
         $user_recetas               = Receta::where('user_id', $id)->get();
         $user_comentarios_count     = Comentario::where(['user_id' => $id])->count();
@@ -180,18 +191,24 @@ class UserController extends Controller
         $_arr_detalle = [];
 
         $ultim_recetas = Receta::where('user_id', $id)
-                            ->orderBy('id', 'DESC')
+                            ->with('comentarios')
+                            ->orderBy('created_at', 'DESC')//primero, por fecha DESC
+                            ->orderBy('id', 'DESC')//segundo, por ID DESC
                             ->take(3)->get();
 
         $ultim_comentarios = Comentario::where('user_id', $id)
+                            ->with('user')
                             ->with('receta:id,titulo')
+                            ->orderBy('created_at', 'DESC')
                             ->orderBy('id', 'DESC')
                             ->take(3)->get();
 
         $ultim_mens_contacto = Contacto::where('correo', $user->email)
+                            ->orderBy('created_at', 'DESC')
                             ->orderBy('id', 'DESC')
                             ->take(3)->get();
 
+        $_arr_detalle['user'] = $user;
         $_arr_detalle['ultim_recetas'] = $ultim_recetas;
         $_arr_detalle['ultim_comentarios'] = $ultim_comentarios;
         $_arr_detalle['ultim_mens_contacto'] = $ultim_mens_contacto;
@@ -201,6 +218,11 @@ class UserController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * A continuación, forma larga de validar los campos a actualizar
+     *
+     * Finalmente, aplicará la forma de validar a través de un FormRequest
+     * (ver en el bloque siguiente sin comentar, el /app/Http/Requests/UserUpdateRequest)
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
