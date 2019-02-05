@@ -366,4 +366,25 @@ class UserController extends Controller
             'message' => $msg,
         ];
     }
+
+    //********************************************************************************
+    //********************************************************************************
+
+    /**
+     * Filtrar altas de recetas por un rango de fechas
+     *
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function searchXDateRange(Request $request)
+    {
+        $fecha_ini = $request->fecha_ini;
+        $fecha_fin = $request->fecha_fin;
+        return Receta::where('created_at', 'LIKE', "%{$termino}%")
+                ->orWhere('lastname', 'LIKE', "%{$termino}%")
+                ->orWhere('username', 'LIKE', "%{$termino}%")
+                ->orWhere('email', 'LIKE', "%{$termino}%")
+                ->orderBy('created_at', 'asc')->get();
+    }
 }

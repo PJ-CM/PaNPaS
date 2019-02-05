@@ -23,6 +23,19 @@ const toast = Swal.mixin({
 //y pasando variable a global
 window.toast = toast;
 
+//Importando Vue-Google.Charts
+import VueGoogleCharts from 'vue-google-charts'
+//  >> Indicando a Vue que utilice VueGoogleCharts
+Vue.use(VueGoogleCharts);
+
+//Importando Moment
+import moment from 'moment';
+
+//Importando DatetimePicker
+import datePicker from 'vue-bootstrap-datetimepicker';
+//  >> Indicando a Vue que utilice DatetimePicker
+Vue.use(datePicker);
+
 //Tratamiento de rutas en VueJS a través de VueRouter
 //  >> Importando Vue Router
 import VueRouter from 'vue-router';
