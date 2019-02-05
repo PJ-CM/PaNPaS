@@ -23,11 +23,11 @@ class UserController extends Controller
     public function __construct()
     {
         //Exigiendo: autenticarse, verificar-email-registro
-        ////$this->middleware('auth');
+        ////$this->middleware('auth:api');
         ////$this->middleware('verified');
         //----------------------------------------------------------
         //  >> Desactivado mientras se desarrolla
-        ////$this->middleware(['auth', 'verified']);
+        $this->middleware(['auth:api', 'verified']);
     }
 
     /**
