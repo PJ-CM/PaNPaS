@@ -13,13 +13,13 @@
 
         <style type="text/css">
             .avatar {
-                max-width: 600px;
+                max-width: 300px;
                 width: 100%;
                 height: auto;
-                max-height: 600px;
+                max-height: 300px;
             }
             .centrado {
-                text-align: center;
+                text-align: left;
             }
 
 
@@ -46,8 +46,10 @@
                                 <h1>Modificar Avatar:</h1>
                                 <form action="/user/guardarFotoPerfil" method="post" enctype="multipart/form-data" class="centrado">
                                 	<img src="{{$user->avatar}}" class="avatar">
+                                    <canvas id="graph_recetas" style="float: right; max-width: 390px; display: inline-block;"></canvas>
                                 	<input type="file" name="newAvatar" class="btn btn-secondary"><input type="submit" name="sub_avatar" value="Cambiar" class="btn btn-primary">
                                 </form>
+
 
                                 <h1>Modificar Datos:</h1>
                                 <form action="/user/actualizarDatos" method="post" enctype="multipart/form-data">
@@ -66,6 +68,13 @@
                                     <input type="submit" name="sub_avatar", value="Actualizar" class="btn btn-primary right">
                                 </form>
 
+
+
+                                
+
+
+
+
                             </div>
                         </div>
                     </div>
@@ -83,4 +92,52 @@
 
         {{-- Otros --}}
         <script src="js/agency.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+
+        <script>
+
+            var totalRecetaMeses = [];
+
+            @foreach($recetas_meses as $mes)
+                totalRecetaMeses.push({!!$mes!!});
+            @endforeach
+
+
+
+            console.log ("receta por meses en JS");
+            console.log(totalRecetaMeses);
+
+            var ctx = document.getElementById("graph_recetas").getContext("2d");
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Enero", "Febrero", "Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+                    datasets: [{
+                        label: 'Recetas Publicadas',
+                        data: totalRecetaMeses,
+                        borderWidth: 1,
+                          backgroundColor: [
+                                'rgba(255,175,0, 0.7)',
+                            ],
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true,
+                                stepSize: 1
+                            }
+                        }],
+                        xAxes: [{
+                            display: false
+                        }]
+                    }
+                }
+            });
+        </script>
+
 @endsection
+
+
