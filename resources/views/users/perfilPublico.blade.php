@@ -37,7 +37,7 @@
                                 @endif
 
                                <img src="{{$user->avatar}}" id="avatar" class="img">
-                               <h1>{{$user->nombre}} {{$user->apellido}}</h1>
+                              <canvas id="graph_recetas" style="max-width: 60%; max-height: auto; display: inline-block;float: right;"></canvas>
 
                                <!-- Recetas del Usuario Seleccionado -->
                                <br>
@@ -66,7 +66,9 @@
 								                    	</div>
 								                    @endforeach
 								        </section>
-                               	<!-- FIN Refetas del Usuario Seleccionado -->
+                               	
+                                
+
 
                             </div>
                         </div>
@@ -87,4 +89,50 @@
 
         {{-- Otros --}}
         <script src="js/agency.js"></script>
+
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+
+        <script>
+
+            var totalRecetaMeses = [];
+
+            @foreach($recetas_meses as $mes)
+                totalRecetaMeses.push({!!$mes!!});
+            @endforeach
+
+
+
+            console.log ("receta por meses en JS");
+            console.log(totalRecetaMeses);
+
+            var ctx = document.getElementById("graph_recetas").getContext("2d");
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Enero", "Febrero", "Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+                    datasets: [{
+                        label: 'Recetas Publicadas',
+                        data: totalRecetaMeses,
+                        borderWidth: 1,
+                          backgroundColor: [
+                                'rgba(255,175,0, 0.7)',
+                            ],
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true,
+                                stepSize: 1
+                            }
+                        }],
+                        xAxes: [{
+                            display: false
+                        }]
+                    }
+                }
+            });
+        </script>
+
 @endsection

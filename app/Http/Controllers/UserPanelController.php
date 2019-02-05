@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Receta;
 use App\User;
-
+use DB;
 class UserPanelController extends Controller
 {
     /**
@@ -53,10 +53,28 @@ class UserPanelController extends Controller
         $var = $user->where('username', $username)->get();
         $user = $var[0];
 
+
+        //recoger recetas por meses
+
+        $recetasUsuario =   Receta::select(DB::raw('count(*) as `totalRecetas`'), DB::raw('MONTH(created_at) month'))
+            ->where('user_id', $user->id)
+            ->groupby('month')
+            ->get();
+
+
+            //ordenar por mes
+            $listaResponse = [0,0,0,0,0,0,0,0,0,0,0,0]; //inicializar con todos los meses
+
+            foreach ($recetasUsuario as $item) {
+                $listaResponse[($item['month'] - 1)] = $item['totalRecetas']; //meter cantidad total de recetas en cada mes
+            }
+
+
+
         if ($user->id == Auth::user()->id) {
-            return view('users.perfilPrivado', [ 'user' => $user ]);
+            return view('users.perfilPrivado', [ 'user' => $user, 'recetas_meses' => $listaResponse ]);
         } else {
-            return view('users.perfilPublico', [ 'user' => $user ]);
+            return view('users.perfilPublico', [ 'user' => $user, 'recetas_meses' => $listaResponse ]);
         }
     }
 

@@ -12,7 +12,7 @@
 */
 
 
-Route::get('/grafico', 'PruebaController@usuarios');
+
 
 
 

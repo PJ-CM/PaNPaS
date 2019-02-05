@@ -92,7 +92,7 @@
                             <h4>
                                 {{ $receta->titulo }}
                             </h4>
-                            <p><small>({{ ucfirst($receta->categoria) }})</small></p>
+                            {{--<p><small>({{ ucfirst($receta->categoria) }})</small></p>--}}
                             <p class="text-muted">por <a href="/{{ $receta->user->username }}" title="Ver perfil de {{ $receta->user->username }}" class="link-marco">{{ $receta->user->username }}</a></p>
                             <h5 class="stars-votos" title="{{ $receta->titulo }} tiene {{ $receta->votos }} votos">
 
@@ -100,9 +100,9 @@
                                 {{-- Si el usuario no coincide con el de la receta --}}
 
                                 @if(Auth::user()->favoritos->contains('id', $receta->id)) {{-- si ya la tiene en favoritos --}}
-                                    <a href="unfav/{{ $receta->id }}"><i class="fas fa fa-star fa-lg" title="Votar-" style="color: red;"></i> </a>
+                                    <a href="unfav/{{ $receta->id }}"><i class="fas fa fa-star fa-lg" title="Quitar Voto" style="color: red;"></i> </a>
                                 @else {{-- si no la tiene en favoritos --}}
-                                    <a href="fav/{{ $receta->id }}"><i class="fas fa-star fa-lg" title="Votar+"></i> </a>
+                                    <a href="fav/{{ $receta->id }}"><i class="fas fa-star fa-lg" title="Añadir Voto"></i> </a>
                                 @endif
 
                             @else
