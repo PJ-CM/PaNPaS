@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 //Ruta(s) registrada(s) para API(s)
 Route::apiResources([
     'users' => 'API\UserController',
+    'contacts' => 'API\ContactController',
 ]);
 // -------------------------------------------------------------------------------
 //Buscador para filtrar resultados en el listado
@@ -42,3 +43,9 @@ Route::get('/users/prof-data-resum/{id}', 'API\UserController@profileDataResume'
 //Carga de actividad en perfil completo de usuario
 Route::get('/users/prof-activity/{id}', 'API\UserController@profileActivity')
 ->name('user.prof-activity');
+
+
+// -------------------------------------------------------------------------------
+//Enviar Email de respuesta de mensaje de contacto
+Route::post('/contacts/send-response', 'API\ContactController@sendContactResponse')
+->name('contact_msg.send_response');
