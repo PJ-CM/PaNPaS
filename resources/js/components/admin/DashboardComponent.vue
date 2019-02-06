@@ -29,66 +29,66 @@
                             <div class="col-lg-3 col-6">
                                 <!-- small box -->
                                 <div class="small-box bg-tot_users">
-                                <div class="inner">
-                                    <h3>{{ objTotRecursos.tot_users }}</h3>
+                                    <div class="inner">
+                                        <h3>{{ objTotRecursos.tot_users }}</h3>
 
-                                    <p>Usuarios</p>
-                                </div>
-                                <div class="icon">
-                                    <!-- <i class="ion ion-bag"></i> -->
-                                    <i class="fa fa-users fa-1x"></i>
-                                </div>
-                                <router-link to="/admin/users" class="small-box-footer" title="Ir a Usuarios">Más info <i class="fa fa-arrow-circle-right"></i></router-link>
+                                        <p>Usuarios</p>
+                                    </div>
+                                    <div class="icon">
+                                        <!-- <i class="ion ion-bag"></i> -->
+                                        <i class="fa fa-users fa-1x"></i>
+                                    </div>
+                                    <router-link to="/admin/users" class="small-box-footer" title="Ir a Usuarios">Más info <i class="fa fa-arrow-circle-right"></i></router-link>
                                 </div>
                             </div>
                             <!-- ./col -->
                             <div class="col-lg-3 col-6">
                                 <!-- small box -->
                                 <div class="small-box bg-tot_recetas">
-                                <div class="inner">
-                                    <h3>{{ objTotRecursos.tot_recetas }}</h3>
+                                    <div class="inner">
+                                        <h3>{{ objTotRecursos.tot_recetas }}</h3>
 
-                                    <p>Recetas</p>
-                                </div>
-                                <div class="icon">
-                                    <!-- <i class="ion ion-stats-bars"></i> -->
-                                    <i class="fas fa-book-open fa-1x"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">Más info <i class="fa fa-arrow-circle-right"></i></a>
+                                        <p>Recetas</p>
+                                    </div>
+                                    <div class="icon">
+                                        <!-- <i class="ion ion-stats-bars"></i> -->
+                                        <i class="fas fa-book-open fa-1x"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">Más info <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->
                             <div class="col-lg-3 col-6">
                                 <!-- small box -->
                                 <div class="small-box bg-tot_comentarios">
-                                <div class="inner">
-                                    <h3>{{ objTotRecursos.tot_comentarios }}</h3>
+                                    <div class="inner">
+                                        <h3>{{ objTotRecursos.tot_comentarios }}</h3>
 
-                                    <p>Comentarios</p>
-                                </div>
-                                <div class="icon">
-                                    <!-- <i class="ion ion-person-add"></i> -->
-                                    <i class="fa fa-comments fa-1x"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">Más info <i class="fa fa-arrow-circle-right"></i></a>
+                                        <p>Comentarios</p>
+                                    </div>
+                                    <div class="icon">
+                                        <!-- <i class="ion ion-person-add"></i> -->
+                                        <i class="fa fa-comments fa-1x"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">Más info <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->
                             <div class="col-lg-3 col-6">
                                 <!-- small box -->
                                 <div class="small-box bg-tot_mens_contacto">
-                                <div class="inner">
-                                    <h3>{{ objTotRecursos.tot_mens_contacto }}</h3>
+                                    <div class="inner">
+                                        <h3>{{ objTotRecursos.tot_mens_contacto }}</h3>
 
-                                    <p>Mensajes</p>
-                                </div>
-                                <div class="icon">
-                                    <!-- <i class="ion ion-pie-graph"></i>
-                                    <i class="fa fa-support fa-1x"></i>
-                                    <i class="fas fa-question-circle fa-1x"></i> -->
-                                    <i class="fas fa-envelope fa-1x"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">Más info <i class="fa fa-arrow-circle-right"></i></a>
+                                        <p>Mensajes</p>
+                                    </div>
+                                    <div class="icon">
+                                        <!-- <i class="ion ion-pie-graph"></i>
+                                        <i class="fa fa-support fa-1x"></i>
+                                        <i class="fas fa-question-circle fa-1x"></i> -->
+                                        <i class="fas fa-envelope fa-1x"></i>
+                                    </div>
+                                    <router-link to="/admin/contacts" class="small-box-footer" title="Ir a Contactos">Más info <i class="fa fa-arrow-circle-right"></i></router-link>
                                 </div>
                             </div>
                             <!-- ./col -->

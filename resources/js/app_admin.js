@@ -56,11 +56,17 @@ let patron = '/admin';
 // ----------------------------------------------------
 //Forma 2d2 :. en un solo paso
 let routes = [
+    //  =>> :: DASHBOARD ::
     { path: patron + '/dashboard', name: 'dashboard', component: require('./components' + patron + '/DashboardComponent.vue').default },
+    // ----------------------------------------------------
+    //  =>> :: USUARIOS ::
     { path: patron + '/users', name: 'users_list', component: require('./components' + patron + '/UsersComponent.vue').default },
     //{ path: patron + '/profile', name: 'profile', component: require('./components' + patron + '/ProfileComponent.vue').default },
     //Ruta dinámica pasándole un parámetro ID
     { path: patron + '/users/:id', name: 'user_profile', component: require('./components' + patron + '/UserProfileComponent.vue').default },
+    // ----------------------------------------------------
+    //  =>> :: CONTACTOS ::
+    { path: patron + '/contacts', name: 'contacts_list', component: require('./components' + patron + '/ContactsComponent.vue').default },
 ]
 
 //Instancia de VueRouter y asignación de rutas

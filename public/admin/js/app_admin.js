@@ -1804,6 +1804,446 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ContactsComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  created: function created() {
+    var _this = this;
+
+    //console.log('Component mounted.')
+    //para cargar el listado de usuarios al llegar al componente
+    this.getUsers(); //para volverlo a cargar en cada intervalo de X tiempo
+    //aunque esta forma de recarga va en contra del rendimiento
+    ////setInterval(() => this.getUsers(), 3000);
+    //Lanzando notificación de borrado emitida por UserProfEditComponent
+
+    BusEvent.$on('notifDelRegEvent', function (userDelID) {
+      _this.notifDelReg(userDelID);
+    });
+  },
+  //datos devueltos por el componente:
+  data: function data() {
+    return {
+      //Puede ser también     >>      users: [],
+      users: {},
+      //variable contenedora de los registros a listar
+      term: '' //término por el que filtrar resultados
+
+    };
+  },
+  //propiedades computadas
+
+  /**
+   * Servirán para establecer el estilo adecuado:
+   *    => cuando se esté o no en la página actual.
+   *    => a las diferentes opciones de paginado:
+   *      >> números, siguiente, anterior, ...
+  */
+  computed: {//
+  },
+  methods: {
+    /**
+     * Obteniendo listado de registros
+    */
+    getUsers: function getUsers() {
+      var _this2 = this;
+
+      //URL hacia la ruta del listado de registros
+      //  >> SIN paginación
+      var url = '/api/users'; //Empleado el método GET de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+      //  -> Si es correcto, se recogen los datos
+      //  dentro del contenedor definido
+
+      axios.get(url).then(function (response) {
+        ////console.log(response.data)
+        _this2.users = response.data;
+      });
+    },
+
+    /**
+     * Obteniendo listado de registros filtrados por término de búsqueda
+    */
+    search: function search() {
+      var _this3 = this;
+
+      console.log('Enviando filtrado de búsqueda...por [' + this.term + ']'); //URL hacia la ruta del listado de registros
+      //  >> SIN paginación
+
+      var url = '/api/users/search'; //Empleado el método POST de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+      //  -> Si es correcto, se recogen los datos
+      //  dentro del contenedor definido
+      //  -> IMPORTANTE
+      //  Todo lo que se manda como parámetro debe ser dentro de un OBJETO
+      //  El término de búsqueda se debe mandar dentro de un objeto
+
+      axios.post(url, {
+        term: this.term
+      }).then(function (response) {
+        //SI TODO OK
+        ////console.log(response.data)
+        _this3.users = response.data;
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+    },
+
+    /**
+     * Abriendo ventana modal para crear registro
+    */
+    regInsModal: function regInsModal() {
+      //Emitiendo evento global para cargar, en el componente hijo,
+      //la ventana de edición
+      //  >> con el objeto pasado
+      //  >> deshabilitando el insMode
+      BusEvent.$emit('insModeChangeEvent', true); //Abriendo modal para la creación de registro
+
+      $('#regInsEditModal').modal('show');
+    },
+
+    /**
+     * Abriendo ventana modal para editar registro
+    */
+    regEditModal: function regEditModal(reg) {
+      console.log('Abriendo MODAL para editar registro [' + reg + ', ' + false + '].'); //Emitiendo evento global para cargar, en el componente hijo,
+      //la ventana de edición
+      //  >> con el objeto pasado
+      //  >> deshabilitando el insMode
+
+      BusEvent.$emit('fillFormEvent', reg, false); //Abriendo modal con los datos cargados para su edición
+
+      $('#regInsEditModal').modal('show');
+    },
+
+    /**
+     * Editando registro
+    */
+    editUser: function editUser(user) {//
+    },
+
+    /**
+     * Mandar a papelera / Borrado definitivo del registro
+    */
+    trashDeleteUser: function trashDeleteUser(id) {
+      var _this4 = this;
+
+      /* BORRADO SIN CONFIRMACIÓN */
+
+      /*
+      //URL hacia la ruta de borrado de registro
+      var url = '/api/users/' + id;
+      //Empleado el método DELETE de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+      axios.delete(url).then(response => {
+          //tras borrado, si todo OK, se muestra el listado tras recargarlo
+          this.getUsers();
+           //Lanzando notificación satisfactoria
+          toast({
+              type: 'success',
+              title: 'Eliminado, correctamente, registro con ID [' + id + ']'
+          });
+      });*/
+
+      /*
+          ¡¡ATENCIÓN!!
+          Es preciso capturar el elemento pulsado, si se quiere asociar alguna
+          acción al CancelButton diferente de la predeterminada de cerrar la
+          ventana.
+          Si no es así, y se considera todo lo que no sea ConfirmButton, en el
+          mismo ELSE, entonces, todo ello se vinculará a lo que se asocie al
+          CancelButton.
+          De asociar la acción de eliminar registro a todo el ELSE, incluso,
+          cancelando la acción, pulsando en el icono de cerrar, pulsando en ESC
+          o fuera de la ventana, el registro terminará siendo eliminado aunque
+          no sea la acción que se eligió.
+          Para evitar esto, se captura uno de los posibles eventos de dissMissals
+          de esta librería.
+          En estos casos, se emplea la captura de pulsar el CancelButton:
+              result.dismiss === Swal.DismissReason.cancel
+      */
+
+      /* BORRADO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: 'Elección de Borrado',
+        text: 'El ELIMINAR no es reversible',
+        ////type: 'warning',
+        type: 'question',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#f6993f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'A papelera',
+        cancelButtonText: 'Eliminar'
+      }).then(function (result) {
+        //Pulsando el botón equivalente a CONFIRMAR la acción
+        if (result.value) {
+          /**/
+          console.log('Se efectuará un Soft Delete...'); //URL hacia la ruta de borrado temporal de registro
+
+          var url = '/api/users/' + id; //Empleado el método DELETE de Axios, el cliente AJAX,
+          //que es el método referido a la ruta llamada
+
+          axios.delete(url).then(function (response) {
+            //SI TODO OK
+            //tras borrado temporal, si todo OK, se muestra
+            //el listado tras recargarlo
+            _this4.getUsers();
+
+            var server_msg_del = response.data.message;
+            console.log(server_msg_del); //Lanzando notificación satisfactoria
+
+            Swal.fire('¡A la papelera!', 'El registro con ID [' + id + '] fue mandado a la papelera correctamente.', 'success');
+          }).catch(function (error) {
+            //SI HAY ALGÚN ERROR
+            //Lanzando notificación errónea
+            toast({
+              type: 'warning',
+              title: 'ERROR al querer mandar a la papelera el registro con ID [' + id + ']'
+            });
+          }); //Pulsando el botón equivalente a CANCELAR la acción
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          //Borrado definitivo del registro
+          _this4.deleteTotalUser(id); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+
+        } else {
+          console.log('Acción cancelada');
+        }
+      });
+    },
+
+    /**
+     * Restaurar / Borrado definitivo del registro
+    */
+    restoreDeleteUser: function restoreDeleteUser(id) {
+      var _this5 = this;
+
+      /* BORRADO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: 'Eliminar o Restaurar',
+        text: 'El ELIMINAR no es reversible',
+        type: 'question',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#3490dc',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Restaurar',
+        cancelButtonText: 'Eliminar'
+      }).then(function (result) {
+        //Pulsando el botón equivalente a CONFIRMAR la acción
+        if (result.value) {
+          /**/
+          //URL hacia la ruta de restaurar de la papelera el registro
+          var url = '/api/users/restore-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
+          //que es el método referido a la ruta llamada
+
+          axios.get(url).then(function (response) {
+            //SI TODO OK
+            //tras restaurar de la papelera, si todo OK, se muestra
+            //el listado tras recargarlo
+            _this5.getUsers();
+
+            var server_msg_del = response.data.message;
+            console.log(server_msg_del); //Lanzando notificación satisfactoria
+
+            Swal.fire('¡Activado!', 'El registro con ID [' + id + '] fue restaurado de la papelera correctamente.', 'success');
+          }).catch(function (error) {
+            //SI HAY ALGÚN ERROR
+            //Lanzando notificación errónea
+            toast({
+              type: 'warning',
+              title: 'ERROR al querer restaurar de la papelera el registro con ID [' + id + ']'
+            });
+          }); //Pulsando el botón equivalente a CANCELAR la acción
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          //Borrado definitivo del registro
+          _this5.deleteTotalUser(id); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+
+        } else {
+          console.log('Acción cancelada');
+        }
+      });
+    },
+
+    /**
+     * Borrado definitivo del registro
+    */
+    deleteTotalUser: function deleteTotalUser(id) {
+      var _this6 = this;
+
+      //URL hacia la ruta de borrado definitivo de registro
+      var url = '/api/users/force-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+
+      axios.get(url).then(function (response) {
+        //SI TODO OK
+        //tras borrado definitivo, si todo OK, se muestra
+        //el listado tras recargarlo
+        _this6.getUsers();
+
+        var server_msg_del = response.data.message;
+        console.log(server_msg_del); //Lanzando notificación satisfactoria
+
+        Swal.fire('¡Borrado!', 'El registro con ID [' + id + '] fue eliminado correctamente.', 'success');
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        //Lanzando notificación errónea
+        toast({
+          type: 'warning',
+          title: 'ERROR al querer eliminar totalmente el registro con ID [' + id + ']'
+        });
+      });
+    },
+
+    /**
+     * Notificando borrado definitivo desde la ficha de perfil completo
+    */
+    notifDelReg: function notifDelReg(id) {
+      //Lanzando notificación satisfactoria
+      Swal.fire('¡Borrado!', 'El registro con ID [' + id + '] fue eliminado correctamente.', 'success');
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/DashboardComponent.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/DashboardComponent.vue?vue&type=script&lang=js& ***!
@@ -61965,6 +62405,419 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsComponent.vue?vue&type=template&id=6f552d8f&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ContactsComponent.vue?vue&type=template&id=6f552d8f& ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "content-header" }, [
+        _c("div", { staticClass: "container-fluid" }, [
+          _c("div", { staticClass: "row mb-2" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-6" }, [
+              _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
+                _c(
+                  "li",
+                  { staticClass: "breadcrumb-item" },
+                  [
+                    _c(
+                      "router-link",
+                      {
+                        attrs: {
+                          to: "/admin/dashboard",
+                          title: "Ir al Dashboard"
+                        }
+                      },
+                      [_vm._v("Dashboard")]
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("li", { staticClass: "breadcrumb-item active" }, [
+                  _vm._v("Contactos")
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "content" }, [
+        _c("div", { staticClass: "container-fluid" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("section", { staticClass: "col-lg-12" }, [
+              _c("div", { staticClass: "card" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "card-header d-flex justify-content-between align-middle p-0"
+                  },
+                  [
+                    _c("h3", { staticClass: "card-title p-3" }, [
+                      _c("i", {
+                        staticClass: "fas fa-users mr-1",
+                        attrs: { title: "Icono de usuarios" }
+                      }),
+                      _vm._v(" "),
+                      _vm._v("\n                                        ["),
+                      _c("strong", [_vm._v(_vm._s(_vm.users.length))]),
+                      _vm._v(
+                        " disponible(s)]\n                                        "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "form",
+                      {
+                        staticClass: "form-inline ml-5",
+                        attrs: { method: "post" },
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            _vm.search()
+                          }
+                        }
+                      },
+                      [
+                        _c(
+                          "div",
+                          { staticClass: "input-group input-group-sm" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.term,
+                                  expression: "term"
+                                }
+                              ],
+                              staticClass: "form-control form-control-navbar",
+                              attrs: {
+                                type: "text",
+                                name: "term",
+                                placeholder: "Término...",
+                                "aria-label": "Search"
+                              },
+                              domProps: { value: _vm.term },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.term = $event.target.value
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(1)
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("ul", { staticClass: "nav ml-auto p-2" }, [
+                      _c("li", { staticClass: "nav-item" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "nav-link btn btn-primary txt_blanco",
+                            attrs: {
+                              type: "button",
+                              title: "Insertar registro"
+                            },
+                            on: { click: _vm.regInsModal }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-user-plus" }),
+                            _vm._v(" Nuevo")
+                          ]
+                        )
+                      ])
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-body table-responsive p-0" }, [
+                  _c("table", { staticClass: "table table-hover" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      _vm._l(_vm.users, function(user, index) {
+                        return _c(
+                          "tr",
+                          {
+                            key: user.id,
+                            staticClass: "lista-usuarios",
+                            staticStyle: { "vertical-align": "middle" }
+                          },
+                          [
+                            _c(
+                              "td",
+                              { staticClass: "lista_indice text-center" },
+                              [
+                                user.deleted_at == null
+                                  ? _c("span", { staticClass: "reg-activo" }, [
+                                      _vm._v(_vm._s(_vm.users.length - index))
+                                    ])
+                                  : _c("span", { staticClass: "reg-trashed" }, [
+                                      _vm._v(_vm._s(_vm.users.length - index))
+                                    ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "negrita",
+                                  attrs: {
+                                    href: "/admin/users/" + user.id,
+                                    title: [
+                                      user.isOnline
+                                        ? "Ir al detalle::ON"
+                                        : "Ir al detalle::OFF"
+                                    ]
+                                  }
+                                },
+                                [
+                                  _c("img", {
+                                    staticClass: "avatar",
+                                    class: [
+                                      user.isOnline
+                                        ? "marco-useron-list"
+                                        : "marco-useroff-list"
+                                    ],
+                                    attrs: {
+                                      src: user.avatar,
+                                      alt: "Avatar del usuario"
+                                    }
+                                  })
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            user.name == ""
+                              ? _c("td", [
+                                  _c("small", [_vm._v("Sin detallar")])
+                                ])
+                              : user.name == null
+                                ? _c("td", [
+                                    _c("small", [_vm._v("Sin detallar")])
+                                  ])
+                                : _c("td", {
+                                    domProps: { textContent: _vm._s(user.name) }
+                                  }),
+                            _vm._v(" "),
+                            user.lastname == ""
+                              ? _c("td", [
+                                  _c("small", [_vm._v("Sin detallar")])
+                                ])
+                              : user.lastname == null
+                                ? _c("td", [
+                                    _c("small", [_vm._v("Sin detallar")])
+                                  ])
+                                : _c("td", {
+                                    domProps: {
+                                      textContent: _vm._s(user.lastname)
+                                    }
+                                  }),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(user.username))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(user.email))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(user.perfil.nombre))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "small",
+                                { attrs: { title: user.created_at } },
+                                [_vm._v(_vm._s(user.created_at))]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              { staticClass: "text-center" },
+                              [
+                                _c(
+                                  "router-link",
+                                  {
+                                    staticClass: "text-success",
+                                    attrs: {
+                                      to: {
+                                        name: "user_profile",
+                                        params: { id: user.id }
+                                      },
+                                      title: "Perfil completo [" + user.id + "]"
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fas fa-user-circle"
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "text-primary",
+                                    attrs: {
+                                      href: "javascript: void(0);",
+                                      title: "Editar registro [" + user.id + "]"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        _vm.regEditModal(user)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fas fa-edit" })]
+                                ),
+                                _vm._v(" "),
+                                user.deleted_at == null
+                                  ? _c(
+                                      "a",
+                                      {
+                                        staticClass: "text-danger",
+                                        attrs: {
+                                          href: "javascript: void(0);",
+                                          title:
+                                            "A papelera / Borrar registro [" +
+                                            user.id +
+                                            "]"
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            _vm.trashDeleteUser(user.id)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "fas fa-trash-alt"
+                                        })
+                                      ]
+                                    )
+                                  : _c(
+                                      "a",
+                                      {
+                                        staticClass: "text-warning-trash",
+                                        attrs: {
+                                          href: "javascript: void(0);",
+                                          title:
+                                            "Restaurar / Borrar registro [" +
+                                            user.id +
+                                            "]"
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            _vm.restoreDeleteUser(user.id)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "fas fa-sync-alt"
+                                        })
+                                      ]
+                                    )
+                              ],
+                              1
+                            )
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("user-ins-edit-component", { on: { insModifUserEvent: _vm.getUsers } })
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Contactos")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-navbar", attrs: { type: "submit" } },
+        [_c("i", { staticClass: "fa fa-search", attrs: { title: "Buscar" } })]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { staticClass: "text-center" }, [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Avatar")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Nombre")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Apellido")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("NICK")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Perfil")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Registro")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Modificar")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/DashboardComponent.vue?vue&type=template&id=6522ea74&":
 /*!***************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/DashboardComponent.vue?vue&type=template&id=6522ea74& ***!
@@ -62044,28 +62897,43 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "col-lg-3 col-6" }, [
-            _c("div", { staticClass: "small-box bg-tot_mens_contacto" }, [
-              _c("div", { staticClass: "inner" }, [
-                _c("h3", [
-                  _vm._v(_vm._s(_vm.objTotRecursos.tot_mens_contacto))
+            _c(
+              "div",
+              { staticClass: "small-box bg-tot_mens_contacto" },
+              [
+                _c("div", { staticClass: "inner" }, [
+                  _c("h3", [
+                    _vm._v(_vm._s(_vm.objTotRecursos.tot_mens_contacto))
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [_vm._v("Mensajes")])
                 ]),
                 _vm._v(" "),
-                _c("p", [_vm._v("Mensajes")])
-              ]),
-              _vm._v(" "),
-              _vm._m(6),
-              _vm._v(" "),
-              _vm._m(7)
-            ])
+                _vm._m(6),
+                _vm._v(" "),
+                _c(
+                  "router-link",
+                  {
+                    staticClass: "small-box-footer",
+                    attrs: { to: "/admin/contacts", title: "Ir a Contactos" }
+                  },
+                  [
+                    _vm._v("Más info "),
+                    _c("i", { staticClass: "fa fa-arrow-circle-right" })
+                  ]
+                )
+              ],
+              1
+            )
           ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "row" }, [
-          _vm._m(8),
+          _vm._m(7),
           _vm._v(" "),
           _c("div", { staticClass: "col-lg-6" }, [
             _c("div", { staticClass: "card" }, [
-              _vm._m(9),
+              _vm._m(8),
               _vm._v(" "),
               _c(
                 "div",
@@ -62142,7 +63010,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._m(10)
+            _vm._m(9)
           ])
         ])
       ])
@@ -62220,15 +63088,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "icon" }, [
       _c("i", { staticClass: "fas fa-envelope fa-1x" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("a", { staticClass: "small-box-footer", attrs: { href: "#" } }, [
-      _vm._v("Más info "),
-      _c("i", { staticClass: "fa fa-arrow-circle-right" })
     ])
   },
   function() {
@@ -78603,6 +79462,40 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js sync recursive ^\\.\\/components.*\\/ContactsComponent\\.vue$":
+/*!**********************************************************************!*\
+  !*** ./resources/js sync ^\.\/components.*\/ContactsComponent\.vue$ ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./components/admin/ContactsComponent.vue": "./resources/js/components/admin/ContactsComponent.vue"
+};
+
+
+function webpackContext(req) {
+	var id = webpackContextResolve(req);
+	return __webpack_require__(id);
+}
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) { // check for number or string
+		var e = new Error("Cannot find module '" + req + "'");
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
+	return id;
+}
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = "./resources/js sync recursive ^\\.\\/components.*\\/ContactsComponent\\.vue$";
+
+/***/ }),
+
 /***/ "./resources/js sync recursive ^\\.\\/components.*\\/DashboardComponent\\.vue$":
 /*!***********************************************************************!*\
   !*** ./resources/js sync ^\.\/components.*\/DashboardComponent\.vue$ ***!
@@ -78907,11 +79800,14 @@ var patron = '/admin'; //Forma 1d2 :. en dos pasos
 // ----------------------------------------------------
 //Forma 2d2 :. en un solo paso
 
-var routes = [{
+var routes = [//  =>> :: DASHBOARD ::
+{
   path: patron + '/dashboard',
   name: 'dashboard',
   component: __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/DashboardComponent\\.vue$")("./components" + patron + "/DashboardComponent.vue").default
-}, {
+}, // ----------------------------------------------------
+//  =>> :: USUARIOS ::
+{
   path: patron + '/users',
   name: 'users_list',
   component: __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/UsersComponent\\.vue$")("./components" + patron + "/UsersComponent.vue").default
@@ -78921,6 +79817,12 @@ var routes = [{
   path: patron + '/users/:id',
   name: 'user_profile',
   component: __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/UserProfileComponent\\.vue$")("./components" + patron + "/UserProfileComponent.vue").default
+}, // ----------------------------------------------------
+//  =>> :: CONTACTOS ::
+{
+  path: patron + '/contacts',
+  name: 'contacts_list',
+  component: __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/ContactsComponent\\.vue$")("./components" + patron + "/ContactsComponent.vue").default
 }]; //Instancia de VueRouter y asignación de rutas
 
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_4__["default"]({
@@ -79107,6 +80009,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsComponent.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsComponent.vue ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ContactsComponent_vue_vue_type_template_id_6f552d8f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContactsComponent.vue?vue&type=template&id=6f552d8f& */ "./resources/js/components/admin/ContactsComponent.vue?vue&type=template&id=6f552d8f&");
+/* harmony import */ var _ContactsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ContactsComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/ContactsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ContactsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ContactsComponent_vue_vue_type_template_id_6f552d8f___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ContactsComponent_vue_vue_type_template_id_6f552d8f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/ContactsComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsComponent.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsComponent.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactsComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsComponent.vue?vue&type=template&id=6f552d8f&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsComponent.vue?vue&type=template&id=6f552d8f& ***!
+  \********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsComponent_vue_vue_type_template_id_6f552d8f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactsComponent.vue?vue&type=template&id=6f552d8f& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsComponent.vue?vue&type=template&id=6f552d8f&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsComponent_vue_vue_type_template_id_6f552d8f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsComponent_vue_vue_type_template_id_6f552d8f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
