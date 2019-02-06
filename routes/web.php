@@ -30,6 +30,9 @@ Route::get ('/receta/{id}/{toast?}', 'RecetaController@mostrar')->name('receta')
 Route::post ('/insertarComentario', 'RecetaController@insertarComentario');
 
 //Panel de Usuarios
+Route::get('/users/eliminarCuenta', 'UserPanelController@eliminarCuenta')
+    ->name('user_eliminar_cuenta');
+
 Route::get('/users/{username?}', 'UserPanelController@index')
     ->name('user_panel_index');
 
@@ -107,6 +110,11 @@ Route::post ('/ajax/getUsuarios', 'AjaxController@getUsuarios');
 Route::post ('/ajax/getSearchUsuarios/{termino}', 'AjaxController@getSearchUsuarios');
 Route::post ('/ajax/follow/{id}', 'AjaxController@follow');
 Route::post ('/ajax/unfollow/{id}', 'AjaxController@unfollow');
+Route::post ('/ajax/getSearchRecetas/{termino}', 'AjaxController@getSearchRecetas');
+Route::post ('/ajax/getRecetas', 'AjaxController@getRecetas');
+Route::post ('/ajax/fav/{id}', 'AjaxController@fav');
+Route::post ('/ajax/unfav/{id}', 'AjaxController@unfav');
+
 
 
 

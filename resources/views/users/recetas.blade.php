@@ -22,7 +22,175 @@
 
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/app.css') }}">
 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
         <title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
+
+
+        <script type="text/javascript">
+
+                 var listaFavs = {!!json_encode(Auth::user()->favoritos)!!};
+
+                $(document).ready(function(){
+                    searchRecetas();
+                });
+
+
+
+
+
+             function searchRecetas(){
+                var buscador = $("input[name=buscador]");
+
+                if(buscador.val().length > 0){ //si el buscador está relleno
+                    $.ajax({
+ 
+                    type:"post",
+                    url:"/ajax/getSearchRecetas/" + buscador.val(),
+                    dataType: "json",
+                    success: function(recetas){
+                        console.log(recetas);
+                        listarRecetas(recetas);
+                    }
+                    });               
+                } else { //si el buscador está vacío
+                    $.ajax({
+ 
+                    type:"POST",
+                    url:"/ajax/getRecetas",
+                    dataType: "json",
+                    success: function(recetas){
+                        console.log(recetas);
+                        listarRecetas(recetas);
+
+                    }    
+
+                });
+                }
+            }
+
+
+            function fav (id)  {
+
+                var url = "/ajax/fav/" + id;
+
+                $.ajax({
+ 
+                    type:"POST",
+                    url: url,
+                    dataType: "json",
+                    success: function(favoritos){
+                        listaFavs = favoritos;
+                        console.log(favoritos);
+                        searchRecetas();
+
+                    }    
+            });
+            }
+            
+
+
+
+            function unfav (id)  {
+
+                var url = "/ajax/unfav/" + id;
+
+                $.ajax({
+ 
+                    type:"POST",
+                    url: url,
+                    dataType: "json",
+                    success: function(favoritos){
+                        //listaFavs = favoritos;
+                        listaFavs = {!!Auth::user()->favoritos!!};
+                        console.log(favoritos);
+                        searchRecetas();
+
+                    }    
+            });
+            }
+
+
+
+
+           function listarRecetas(recetas){
+
+                $("#listaRecetas").html("");
+
+                for(var i=0; i < recetas.length; i++ ){
+
+                    if(tieneFav(recetas[i].id)){ // si está en favs
+                        $("#listaRecetas").html( $("#listaRecetas").html() + '\
+                         <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 ranking-item"> \
+                        <a class="ranking-link" href="/receta/' + recetas[i].titulo + '"> \
+                            <div class="ranking-hover" title="Preparar ' + recetas[i].titulo + '"> \
+                                <div class="ranking-hover-content">\
+                                    <i class="fas fa-plus fa-3x"></i>\
+                                </div>\
+                            </div>\
+                            <img class="img-fluid" src="' + recetas[i].imagen + '" title="' + recetas[i].titulo + '">\
+                        </a>\
+                        <div class="ranking-caption">\
+                            <h4>\
+                                ' + recetas[i].titulo + '\
+                            </h4>\
+                            <p class="text-muted">por <a href="/' + recetas[i].user.username +'" title="Ver perfil de ' + recetas[i].user.username + '" class="link-marco">' + recetas[i].user.username + '</a></p>\
+                            <h5 class="stars-votos" title="' + recetas[i].titulo +' tiene ' + recetas[i].users.length + ' votos">\
+                                {{-- Si el usuario no coincide con el de la receta --}}\
+                                    <a onclick="unfav(' + recetas[i].id + ');"><i class="fas fa-star fa-lg" title="Quitar Voto" style="color: red; cursor: pointer;"></i> </a>\
+                                    ' + recetas[i].users.length +'\
+                            </h5>\
+                        </div>\
+                    </div>\
+                        ');
+                    } else { // si no está en favs
+                        $("#listaRecetas").html( $("#listaRecetas").html() + '\
+                         <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 ranking-item"> \
+                        <a class="ranking-link" href="/receta/' + recetas[i].titulo + '"> \
+                            <div class="ranking-hover" title="Preparar ' + recetas[i].titulo + '"> \
+                                <div class="ranking-hover-content">\
+                                    <i class="fas fa-plus fa-3x"></i>\
+                                </div>\
+                            </div>\
+                            <img class="img-fluid" src="' + recetas[i].imagen + '" title="' + recetas[i].titulo + '">\
+                        </a>\
+                        <div class="ranking-caption">\
+                            <h4>\
+                                ' + recetas[i].titulo + '\
+                            </h4>\
+                            <p class="text-muted">por <a href="/' + recetas[i].user.username +'" title="Ver perfil de ' + recetas[i].user.username + '" class="link-marco">' + recetas[i].user.username + '</a></p>\
+                            <h5 class="stars-votos" title="' + recetas[i].titulo +' tiene ' + recetas[i].users.length + ' votos">\
+                                {{-- Si el usuario no coincide con el de la receta --}}\
+                                    <a onclick="fav(' + recetas[i].id + ');"><i class="fas fa-star fa-lg" title="Añadir Voto" style="color: #e3ca33; cursor: pointer;"></i> </a>\
+                                    ' + recetas[i].users.length +'\
+                            </h5>\
+                        </div>\
+                    </div>\
+                        ');
+                    }
+
+
+                }
+
+            }
+
+
+
+            function tieneFav (id){ //devuelve true si lo tienes en favoritos
+                
+              
+                
+                for (var i = 0; i < listaFavs.length; i++){
+                   
+                    if (listaFavs[i].id == id){
+                        return true;
+                    } 
+                }
+                return false;
+            }
+
+        </script>
+
 @endsection
 
 @section('content')
@@ -55,10 +223,8 @@
                             <div class="d-flex justify-content-between m-1">
                                 <h1 class="p-2">Recetas</h1>
                                 <div class="p-2">
-                                    <form class="form-inline mt-2" action="/buscarReceta" method="post">
-                                        <input class="form-control mr-sm-2" type="text" placeholder="Término..." name="buscador">
-                                        <button class="btn btn-info" type="submit" name="buscadorSubmit">Buscar</button>
-                                    </form>
+                                   
+                                        <input class="form-control mr-sm-2" type="text" placeholder="Término..." name="buscador" oninput="searchRecetas();">
                                 </div>
                                 <div class="p-2"><button class="btn btn-info mt-2" data-toggle="modal" data-target="#recetaInsModal" title="Registrar una receta">Nueva</button></div>
                             </div>
@@ -75,45 +241,7 @@
                 </div>
                 @endif
 
-                <div class="row">
-
-                @foreach($recetas as $receta)
-
-                    <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 ranking-item">
-                        <a class="ranking-link" href="/receta/{{$receta->titulo}}">
-                            <div class="ranking-hover" title="Preparar {{ $receta->titulo }}">
-                                <div class="ranking-hover-content">
-                                    <i class="fas fa-plus fa-3x"></i>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="{{ $receta->imagen }}" title="{{ $receta->titulo }}">
-                        </a>
-                        <div class="ranking-caption">
-                            <h4>
-                                {{ $receta->titulo }}
-                            </h4>
-                            {{--<p><small>({{ ucfirst($receta->categoria) }})</small></p>--}}
-                            <p class="text-muted">por <a href="/{{ $receta->user->username }}" title="Ver perfil de {{ $receta->user->username }}" class="link-marco">{{ $receta->user->username }}</a></p>
-                            <h5 class="stars-votos" title="{{ $receta->titulo }} tiene {{ $receta->votos }} votos">
-
-                            @if (Auth::user()->username != $receta->user->username)
-                                {{-- Si el usuario no coincide con el de la receta --}}
-
-                                @if(Auth::user()->favoritos->contains('id', $receta->id)) {{-- si ya la tiene en favoritos --}}
-                                    <a href="unfav/{{ $receta->id }}"><i class="fas fa fa-star fa-lg" title="Quitar Voto" style="color: red;"></i> </a>
-                                @else {{-- si no la tiene en favoritos --}}
-                                    <a href="fav/{{ $receta->id }}"><i class="fas fa-star fa-lg" title="Añadir Voto"></i> </a>
-                                @endif
-
-                            @else
-                                    <i class="fas fa-star fa-lg" title="No puedes votar una receta tuya"></i>
-                            @endif
-                                    {{ $receta->votos }}
-                            </h5>
-                        </div>
-                    </div>
-
-                @endforeach
+                <div class="row" id="listaRecetas">
 
                 </div>
             </div>
@@ -209,5 +337,5 @@
                     @endif
                 });
         </script>
-        {{-- Librería de Notificaciones de alerta - JS :: fin --}}
+       
 @endsection
