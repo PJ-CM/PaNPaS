@@ -13,7 +13,7 @@ $(function() {
             // get values from FORM
             var name = $('input#nombre').val();
             var email = $('input#correo').val();
-            ////var phone = $("input#phone").val();
+            var subject = $("input#asunto").val();
             var message = $('textarea#mensaje').val();
             var firstName = name; // For Success/Failure Message
 
@@ -30,8 +30,8 @@ $(function() {
                 type: 'POST',
                 data: {
                     nombre: name,
-                    ////phone: phone,
                     correo: email,
+                    asunto: subject,
                     mensaje: message
                 },
                 cache: false,

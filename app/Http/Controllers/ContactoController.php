@@ -24,7 +24,8 @@ class ContactoController extends Controller
         $reglas = [
             'nombre' => 'required|string|max:50',
             'correo' => 'required|string|email|max:100',
-            'mensaje' => 'required|string|max:250',
+            'asunto' => 'required|string|max:250',
+            'mensaje' => 'required|string|max:400',
             //'leido' => 'required|in:0,1',
         ];
         //Validando petición

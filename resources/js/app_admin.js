@@ -56,11 +56,17 @@ let patron = '/admin';
 // ----------------------------------------------------
 //Forma 2d2 :. en un solo paso
 let routes = [
+    //  =>> :: DASHBOARD ::
     { path: patron + '/dashboard', name: 'dashboard', component: require('./components' + patron + '/DashboardComponent.vue').default },
+    // ----------------------------------------------------
+    //  =>> :: USUARIOS ::
     { path: patron + '/users', name: 'users_list', component: require('./components' + patron + '/UsersComponent.vue').default },
     //{ path: patron + '/profile', name: 'profile', component: require('./components' + patron + '/ProfileComponent.vue').default },
     //Ruta dinámica pasándole un parámetro ID
     { path: patron + '/users/:id', name: 'user_profile', component: require('./components' + patron + '/UserProfileComponent.vue').default },
+    // ----------------------------------------------------
+    //  =>> :: CONTACTOS ::
+    { path: patron + '/contacts', name: 'contacts_list', component: require('./components' + patron + '/ContactsComponent.vue').default },
 ]
 
 //Instancia de VueRouter y asignación de rutas
@@ -71,6 +77,29 @@ const router = new VueRouter({
 
     routes // forma corta cuando coinciden tanto el nombre del par de variables,  " routes: routes "
 })
+
+//Filtros de Vue
+//----------------------------------------------------------
+//Para poner un txt en mayúsculas
+Vue.filter('resumenTxt', function (value) {
+    if (!value) return '-'
+    let maxChar = 50;
+    if(value.length > maxChar) {
+        value = value.substring(0, maxChar).trim() + '...';
+    }
+    return value;
+})
+
+//Para formatear fecha/hora en formato "hace tanto-tiempo"
+//moment().format('MMMM Do YYYY, hh:mm:ss a'); // December 20th 2018, 01:00:59 am
+Vue.filter('formatFHHaceTanto', function (value) {
+    if (!value) return '-'
+    //para definir el idioma del formateo
+    moment.locale('es');
+    //return moment(value).format('MMMM Do YYYY, hh:mm:ss a');
+    return moment(value).fromNow();
+})
+//----------------------------------------------------------
 
 
 /**
