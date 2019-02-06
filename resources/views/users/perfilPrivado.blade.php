@@ -6,6 +6,17 @@
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/app.css') }}">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
+        <!-- CSS -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/alertify.min.css"/>
+        <!-- Default theme -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/default.min.css"/>
+        <!-- Semantic UI theme -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/semantic.min.css"/>
+        {{-- El tema de Bootstrap no es necesario porque ya está incluido en la hoja de estilos principal (css/app.css) --}}
+        {{--
+        <!-- Bootstrap theme -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/bootstrap.min.css"/>--}}
+
 
 
         <title>{{ config('app.name', 'PaNPaS') }} - Mi cuenta</title>
@@ -40,10 +51,10 @@
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header">Perfil Privado</div>
+                            <div class="card-header"><h1 style="float: left;">Perfil Privado</h1> <div class="btn btn-danger right" onclick="confirmaciónEliminarCuenta();">Eliminar Cuenta</div></div>
 
                             <div class="card-body">
-                                <h1>Modificar Avatar:</h1>
+                                <h2>Modificar Avatar:</h2>
                                 <form action="/user/guardarFotoPerfil" method="post" enctype="multipart/form-data" class="centrado">
                                 	<img src="{{$user->avatar}}" class="avatar">
                                     <canvas id="graph_recetas" style="float: right; max-width: 390px; display: inline-block;"></canvas>
@@ -51,7 +62,7 @@
                                 </form>
 
 
-                                <h1>Modificar Datos:</h1>
+                                <h2>Modificar Datos:</h2>
                                 <form action="/user/actualizarDatos" method="post" enctype="multipart/form-data">
                                     <p class="col-lg-5 col-md-9">
                                         <label>Nombre de usuario:</label>   <input type="text" name="username" value="{{$user->username}}" class="w3-input">
@@ -136,6 +147,22 @@
                     }
                 }
             });
+        </script>
+
+        {{-- Librería de Notificaciones de alerta - JS :: ini --}}
+        <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+
+        <script type="text/javascript">
+            function confirmaciónEliminarCuenta(){
+                alertify.confirm('¿Seguro que quieres eliminar tu cuenta?', '', function(){ eliminarCuenta() }, 
+                    function(){ alertify.error('CANCELADO')});
+            }
+
+            function eliminarCuenta(){
+                    window.location.href = '{{url("/users/eliminarCuenta")}}';
+            }
+                    
+                
         </script>
 
 @endsection

@@ -19,10 +19,10 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript">
         
-             var listaFollows = {!!json_encode(Auth::user()->follows)!!};
+             var listaFollows = {!!Auth::user()->follows!!};
 
             $(document).ready(function(){
-
+                listaFollows = {!!Auth::user()->follows!!};
                 searchUsuarios();
             });
 
@@ -66,6 +66,9 @@
                     url: url,
                     success: function(newFollows){
                         listaFollows = newFollows;
+
+
+
                         searchUsuarios();
                     }
                     });   
@@ -79,7 +82,10 @@
                     type:"post",
                     url: url,
                     success: function(newFollows){
-                        listaFollows = newFollows;
+                        //listaFollows = newFollows;
+                        listaFollows = {!!Auth::user()->follows!!};
+
+
                         searchUsuarios();
                     }
                     });   
@@ -89,6 +95,8 @@
             
             function listarUsuarios(users){
                 $("#ListaUsuario").html("");
+                $("#nav_seguidos").html("");
+                $("#nav_seguidos").html(listaFollows.length);
               
                 for (var i = 0; i < users.length; i++){
 
@@ -146,8 +154,7 @@
 
             //lista de los usuarios que sigues, nombre del usuario
             function siguiendo (nombre){ //devuelve true si lo estás siguiendo o false si no
-                
-              
+
                 
                 for (var i = 0; i < listaFollows.length; i++){
                    

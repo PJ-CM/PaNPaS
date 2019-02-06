@@ -80,7 +80,7 @@
                 <div class="row">
                     <div class="col-lg-12 text-center">
                         <h2 class="section-heading text-uppercase">Ranking</h2>
-                        <h3 class="section-subheading text-muted">Visualiza las 3 recetas más destacadas de entre un total de {{ $totalRecetas }}</h3>
+                        <h3 class="section-subheading text-muted">Visualiza las 3 recetas más destacadas entre un total de {{ $totalRecetas }}</h3>
                     </div>
                 </div>
 
@@ -349,34 +349,34 @@
                             <div class="col-lg-8 mx-auto">
                                 <div class="modal-body">
                                     {{-- Detalles de la receta --}}
-                                    <h2 class="text-uppercase">{{ $receta->titulo }}</h2>
+                                    <h2 class="text-uppercase" alt="Nombre de la receta: {{$receta->titulo}}">{{ $receta->titulo }}</h2>
                                     <p class="item-intro text-muted">
                                         por
                                         @if (Auth::user() != null)
-                                            <a href="/{{ $receta->user->username }}" title="Ver perfil de este usuario o listado de recetas" class="link-marco">{{ $receta->user->username }}</a>
+                                            <a href="/{{ $receta->user->username }}" title="Ver perfil de {{$receta->user->username}}" alt="Ver perfil de {{$receta->user->username}}" class="link-marco">{{ $receta->user->username }}</a>
                                         @else
                                             <span>{{ $receta->user->username }}</span>
                                         @endif
                                     </p>
-                                    <img class="img-fluid d-block mx-auto" src="{{ $receta->imagen }}" alt="{{ $receta->titulo }}">
-                                    <p>{{ $receta->descripcion }}</p>
+                                    <img class="img-fluid d-block mx-auto" src="{{ $receta->imagen }}" alt="Foto de la receta: {{ $receta->titulo }}">
+                                    <p alt="Descripción: {{$receta->descripcion}}">{{ $receta->descripcion }}</p>
 
                                     <table class="mx-auto mb-5">
                                         <tr>
                                             <td style="width: 50%;" class="text-right px-2">Fecha de Creación:</td>
-                                            <td style="width: 50%;" class="text-left px-2"> {{ $receta->created_at->format('d-m-Y') }}</td>
+                                            <td style="width: 50%;" class="text-left px-2" alt="Fecha de Creación: {{$receta->created_at}}" title="Fecha de Creación: {{$receta->created_at}}"> {{ $receta->created_at->format('d-m-Y') }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-right px-2">Categoría:</td>
-                                            <td class="text-left px-2"><a href="#" title="Ver otras recetas de esta categoría" class="link-marco">Pastelería</a></td>
+                                            <td class="text-left px-2"><a href="#" alt="Esta receta es de la Categoría {{$receta->categoria}}" title="Esta receta es de la Categoría {{$receta->categoria}}" class="link-marco">Pastelería</a></td>
                                         </tr>
                                         <tr>
                                             <td class="text-right px-2">Votos:</td>
-                                            <td class="text-left px-2">{{ $receta->votos }}</td>
+                                            <td class="text-left px-2" alt="Esta receta es de la Categoría {{$receta->categoria}}" title="{{$receta->titulo}} tiene {{$receta->votos}} voto(s)">{{ $receta->votos }}</td>
                                         </tr>
                                     </table>
 
-                                    <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana">
+                                    <button class="btn btn-primary" data-dismiss="modal" type="button" title="Cerrar ventana" alt="Cerrar Ventana">
                                         <i class="fas fa-times" title="Icono de Cerrar"></i>
                                         Cerrar
                                     </button>

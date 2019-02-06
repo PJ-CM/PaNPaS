@@ -163,4 +163,10 @@ class UserPanelController extends Controller
         }
     }
 
+    public function eliminarCuenta () {
+        Auth::user()->delete();
+        Auth::logout();
+        return redirect("/");
+    }
+
 }

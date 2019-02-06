@@ -25,7 +25,7 @@ class recetas_seeder extends Seeder
         $users = User::where('perfil_id', '<>', $id_no)->get();
         $users_tot = count($users);
 
-        $recetas_faker_tot = 69;
+        $recetas_faker_tot = 20;
         $_arr_categoria = ['panadería', 'pastelería'];
 
         $faker = Factory::create();
@@ -40,7 +40,8 @@ class recetas_seeder extends Seeder
                 ////'user_id' => random_int(1, 9),
                 //  >> Aleatorio entre los IDs resultantes de la consulta
                 'user_id' => $users->random()->id,
-                'votos' => random_int(0, $users_tot),
+                //'votos' => random_int(0, $users_tot),
+                'votos' => random_int(0, 0),
                 'categoria' => $faker->randomElement($_arr_categoria),
                 ////'created_at' => $faker->date($format = 'Y-m-d H:i:s', $max = 'now'),
                 'created_at' => $faker->dateTimeBetween($startDate = '-5 years', $endDate = 'now'),
