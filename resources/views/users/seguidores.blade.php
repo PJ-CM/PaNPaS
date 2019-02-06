@@ -84,9 +84,9 @@
                                 <a href="/{{ $user_f->username }}" class="link-marco" title="Acceder al perfil de {{ $user_f->username }}">{{ $user_f->username }}</a>
                             </h4>
                             <h5 class="stars-votos">
-                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{ $user_f->username }} está siguiendo a {{ count ($user_f->follows) }} usuarios" style="color: green;"></i > {{ count($user_f->follows) }}
+                                <i class="fas fa-lg fas fa-sign-out-alt" title="{{ $user_f->username }} está siguiendo a {{ count ($user_f->follows) }} usuarios" style="color: grey;"></i > {{ count($user_f->follows) }}
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <i class="fas fa-lg fas fa-sign-in-alt" title="{{ $user_f->username }} tiene {{ count($user_f->followers) }} seguidores" style="color: blue;"></i > {{ count($user_f->followers) }}
+                                <i class="fas fa-lg fas fa-sign-in-alt" title="{{ $user_f->username }} tiene {{ count($user_f->followers) }} seguidores" style="color: grey;"></i > {{ count($user_f->followers) }}
                             </h5>
                         </div>
                     </div>
