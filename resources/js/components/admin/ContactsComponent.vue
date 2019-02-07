@@ -40,10 +40,10 @@
                                     <div class="card-body p-0">
                                         <ul class="nav nav-pills flex-column">
                                             <li class="nav-item active">
-                                                <a href="#" class="nav-link">
+                                                <div class="nav-link text-info">
                                                     <i class="fas fa-inbox"></i> Bandeja de entrada
                                                     <span v-if="elems_no_papelera_leido_no_tot > 0" class="badge bg-primary float-right" title="Mensaje(s) sin leer">{{ elems_no_papelera_leido_no_tot }}</span>
-                                                </a>
+                                                </div>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="#" class="nav-link">
@@ -102,7 +102,11 @@
                                                                 <i class="fas fa-circle i_mens_contacto_leidoNOK"></i>
                                                             </a>
                                                         </td>
-                                                        <td class="mailbox-name"><a :href="'/admin/contacts/' + elem.id" :title="'Ver mensaje de ' + elem.correo">{{ elem.nombre }}</a></td>
+                                                        <td class="mailbox-name">
+                                                            <router-link :to="{ name: 'contact_msg', params: {id: elem.id} }" :title="'Ver mensaje de ' + elem.correo">
+                                                                {{ elem.nombre }}
+                                                            </router-link>
+                                                        </td>
                                                         <td class="mailbox-subject"><strong>{{ elem.asunto }}</strong><br>{{ elem.mensaje | resumenTxt }}</td>
                                                         <td class="mailbox-date">{{ elem.created_at | formatFHHaceTanto }}</td>
                                                         <td class="mailbox-attachment">
@@ -143,7 +147,7 @@
         created() {
             //console.log('Component mounted.')
 
-            //para cargar el listado de usuarios al llegar al componente
+            //para cargar el listado de registros al llegar al componente
             this.getElems();
             //para volverlo a cargar en cada intervalo de X tiempo
             //aunque esta forma de recarga va en contra del rendimiento
@@ -227,7 +231,7 @@
             },
 
             /**
-             * Actualizando registro
+             * Actualizando campo
             */
             updateField(id, field, newValue) {
                 let msg_success = 'Mensaje marcado como ';
@@ -457,10 +461,10 @@
                 //Lanzando notificación satisfactoria
                 Swal.fire(
                     '¡Borrado!',
-                    'El registro con ID [' + id + '] fue eliminado correctamente.',
+                    'El registro con ID [' + id + '] fue mandado a la papelera correctamente.',
                     'success'
                 )
-            }
+            },
 
         },
     }

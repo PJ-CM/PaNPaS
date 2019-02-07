@@ -67,6 +67,7 @@ let routes = [
     // ----------------------------------------------------
     //  =>> :: CONTACTOS ::
     { path: patron + '/contacts', name: 'contacts_list', component: require('./components' + patron + '/ContactsComponent.vue').default },
+    { path: patron + '/contacts/:id', name: 'contact_msg', component: require('./components' + patron + '/ContactMsgComponent.vue').default },
 ]
 
 //Instancia de VueRouter y asignación de rutas
@@ -91,13 +92,21 @@ Vue.filter('resumenTxt', function (value) {
 })
 
 //Para formatear fecha/hora en formato "hace tanto-tiempo"
-//moment().format('MMMM Do YYYY, hh:mm:ss a'); // December 20th 2018, 01:00:59 am
 Vue.filter('formatFHHaceTanto', function (value) {
     if (!value) return '-'
     //para definir el idioma del formateo
     moment.locale('es');
     //return moment(value).format('MMMM Do YYYY, hh:mm:ss a');
     return moment(value).fromNow();
+})
+
+//Para formatear fecha/hora
+//moment().format('MMMM Do YYYY, hh:mm:ss a'); // December 20th 2018, 01:00:59 am
+Vue.filter('formatFechaHoraTxt', function (value) {
+    if (!value) return '-'
+    //para definir el idioma del formateo
+    moment.locale('es');
+    return moment(value).format('DD MMMM YYYY, hh:mm:ss a');
 })
 //----------------------------------------------------------
 

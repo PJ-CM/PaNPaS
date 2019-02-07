@@ -215,11 +215,16 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function sendContactResponse(Request $request, $id)
+    public function sendContactResponse(Request $request)
     {
         //validar que se mandó TXT de respuesta...
+        $reglas = [
+            'mensaje' => 'required|string|max:400',
+        ];
+        //Validando petición
+        $request->validate($reglas);
 
-        $contacto = Contacto::findOrFail($id);
+        $contacto = Contacto::findOrFail($request->id);
 
         $objResponseData = new \stdClass();
         $objResponseData->to_nombre = $contacto->nombre;

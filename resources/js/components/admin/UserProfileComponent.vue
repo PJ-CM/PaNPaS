@@ -90,7 +90,6 @@
         //datos devueltos por el componente:
         data() {
             return {
-                //Puede ser también     >>      users: [],
                 user_id: '',  //variable contenedora del registro a detallar
             }
         },
