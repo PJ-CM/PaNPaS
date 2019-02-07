@@ -58,7 +58,7 @@
                                 <form action="/user/guardarFotoPerfil" method="post" enctype="multipart/form-data" class="centrado">
                                 	<img src="{{$user->avatar}}" class="avatar">
                                     <canvas id="graph_recetas" style="float: right; max-width: 390px; display: inline-block;"></canvas>
-                                	<input type="file" name="newAvatar" class="btn btn-secondary"><input type="submit" name="sub_avatar" value="Cambiar" class="btn btn-primary">
+                                	<input type="file" name="newAvatar" class="btn btn-secondary" required><input type="submit" name="sub_avatar" value="Cambiar" class="btn btn-primary">
                                 </form>
 
 
