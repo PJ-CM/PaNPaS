@@ -99,7 +99,7 @@
                                                         </a> <a v-if="user.deleted_at == null" href="javascript: void(0);" @click.prevent="trashDeleteUser(user.id)" class="text-danger" :title="'A papelera / Borrar registro [' + user.id + ']'">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a><a v-else href="javascript: void(0);" @click.prevent="restoreDeleteUser(user.id)" class="text-warning-trash" :title="'Restaurar / Borrar registro [' + user.id + ']'">
-                                                            <i class="fas fa-sync-alt"></i>
+                                                            <i class="fas fa-trash-restore-alt"></i>
                                                         </a>
                                                     </td>
                                                 </tr>

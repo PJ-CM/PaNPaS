@@ -78,6 +78,29 @@ const router = new VueRouter({
     routes // forma corta cuando coinciden tanto el nombre del par de variables,  " routes: routes "
 })
 
+//Filtros de Vue
+//----------------------------------------------------------
+//Para poner un txt en mayúsculas
+Vue.filter('resumenTxt', function (value) {
+    if (!value) return '-'
+    let maxChar = 50;
+    if(value.length > maxChar) {
+        value = value.substring(0, maxChar).trim() + '...';
+    }
+    return value;
+})
+
+//Para formatear fecha/hora en formato "hace tanto-tiempo"
+//moment().format('MMMM Do YYYY, hh:mm:ss a'); // December 20th 2018, 01:00:59 am
+Vue.filter('formatFHHaceTanto', function (value) {
+    if (!value) return '-'
+    //para definir el idioma del formateo
+    moment.locale('es');
+    //return moment(value).format('MMMM Do YYYY, hh:mm:ss a');
+    return moment(value).fromNow();
+})
+//----------------------------------------------------------
+
 
 /**
  * The following block of code may be used to automatically register your

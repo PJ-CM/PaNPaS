@@ -88,7 +88,7 @@
                                         <i class="fas fa-question-circle fa-1x"></i> -->
                                         <i class="fas fa-envelope fa-1x"></i>
                                     </div>
-                                    <router-link to="/admin/contacts" class="small-box-footer" title="Ir a Contactos">Más info <i class="fa fa-arrow-circle-right"></i></router-link>
+                                    <router-link to="/admin/contacts" class="small-box-footer" title="Ir a Mensajes">Más info <i class="fa fa-arrow-circle-right"></i></router-link>
                                 </div>
                             </div>
                             <!-- ./col -->

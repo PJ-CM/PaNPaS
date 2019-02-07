@@ -51,9 +51,6 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * $termino => opcional, para filtrar resultados
-     *          => buscando por nombre, apellido, username, email
-     *
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -372,7 +369,6 @@ class UserController extends Controller
 
     /**
      * Filtrar altas de recetas por un rango de fechas
-     *
      *
      * @param Request $request
      * @return void

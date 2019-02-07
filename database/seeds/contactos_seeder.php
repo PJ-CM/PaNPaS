@@ -21,7 +21,8 @@ class contactos_seeder extends Seeder
             DB::table('contactos')->insert([
                 'nombre' => $faker->firstname,
                 'correo' => $faker->safeEmail,
-                'mensaje' => $faker->sentence(mt_rand(2,4)),
+                'asunto' => $faker->sentence(mt_rand(2, 5)),//frase de 2 a 5 palabras
+                'mensaje' => $faker->paragraph(mt_rand(2, 5)),//párrafo de 2 a 5 frases
                 'leido' => $faker->numberBetween(0,1),
                 'created_at' => $randomDate,
                 'updated_at' => $randomDate,

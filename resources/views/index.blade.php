@@ -312,6 +312,10 @@
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div class="form-group">
+                                        <input class="form-control" name="asunto" id="asunto" type="text" placeholder="El Asunto *" data-validation-required-message="Por favor, teclea el asunto." required>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="form-group">
                                         <textarea class="form-control" name="mensaje" id="mensaje" placeholder="Tu Mensaje *" data-validation-required-message="Por favor, teclea tu mensaje." required></textarea>
                                         <p class="help-block text-danger"></p>
                                     </div>

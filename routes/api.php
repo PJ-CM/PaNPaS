@@ -28,7 +28,7 @@ Route::apiResources([
 //Buscador para filtrar resultados en el listado
 //  >> término que buscar
 Route::post('/users/search', 'API\UserController@search')
-->name('user.search');
+    ->name('user.search');
 //Con el Soft Delete activado, esta ruta es:
 //  >> para forzar el borrado definitivo
 Route::get('/users/force-delete/{id}', 'API\UserController@forceDelete')
@@ -39,13 +39,27 @@ Route::get('/users/restore-delete/{id}', 'API\UserController@restoreDelete')
 // -------------------------------------------------------------------------------
 //Carga de datos resumen en perfil completo de usuario
 Route::get('/users/prof-data-resum/{id}', 'API\UserController@profileDataResume')
-->name('user.prof-data-resum');
+    ->name('user.prof-data-resum');
 //Carga de actividad en perfil completo de usuario
 Route::get('/users/prof-activity/{id}', 'API\UserController@profileActivity')
-->name('user.prof-activity');
+    ->name('user.prof-activity');
 
 
 // -------------------------------------------------------------------------------
+//Marcar como leido Si/NO
+Route::get('/contacts/editar/{id}/{campo}/{valor}', 'API\ContactController@update_campo')
+->name('users_editar_campo');
+//Buscador para filtrar resultados en el listado
+//  >> término que buscar
+Route::post('/contacts/search', 'API\ContactController@search')
+    ->name('user.search');
+//Con el Soft Delete activado, esta ruta es:
+//  >> para forzar el borrado definitivo
+Route::get('/contacts/force-delete/{id}', 'API\ContactController@forceDelete')
+    ->name('user.force-delete');
+//  >> para restaurar usuario en papelera
+Route::get('/contacts/restore-delete/{id}', 'API\ContactController@restoreDelete')
+    ->name('user.restore-delete');
 //Enviar Email de respuesta de mensaje de contacto
 Route::post('/contacts/send-response', 'API\ContactController@sendContactResponse')
-->name('contact_msg.send_response');
+    ->name('contact_msg.send_response');

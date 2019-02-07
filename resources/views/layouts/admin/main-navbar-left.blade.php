@@ -30,9 +30,9 @@
                                         </router-link>
                                     </li>
                                     <li class="nav-item">
-                                        <router-link to="/admin/contacts" class="nav-link" title="Ir a Contactos">
+                                        <router-link to="/admin/contacts" class="nav-link" title="Ir a Mensajes">
                                             <i class="fas fa-envelope nav-icon"></i>
-                                            <p>Contactos</p>
+                                            <p>Mensajes</p>
                                         </router-link>
                                     </li>
                                     <li class="nav-item">
