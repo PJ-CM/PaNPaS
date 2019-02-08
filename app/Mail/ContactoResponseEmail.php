@@ -35,8 +35,12 @@ class ContactoResponseEmail extends Mailable
      */
     public function build()
     {
-        return $this->from($this->objResponseData->from_email)
-                    ->view('admin.emails.contacto-respuesta')
+        ////return $this->from($this->objResponseData->from_email)
+        ////            ->view('admin.emails.contacto-respuesta')
+        ////            ->text('admin.emails.contacto-respuesta_plain');
+        //Dejando de especificar un FROM desde aquí para que se añada el FROM global
+        //configurado dentro de "/config/mail.php". Lo mismo para el REPLY_TO
+        return $this->view('admin.emails.contacto-respuesta')
                     ->text('admin.emails.contacto-respuesta_plain');
     }
 }

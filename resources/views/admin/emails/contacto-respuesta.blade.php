@@ -7,18 +7,18 @@
     <title>{{ config('app.name', 'PaNPaS') }} :: Respuesta de Contacto</title>
 </head>
 <body>
-    Hello <i>{{ $objResponseData->to_nombre }}</i>,
+    [v.v] :: Aloha!! <i>{{ $objResponseData->to_nombre }}</i>,
     <p>Te respondemos a tu consulta efectuada el [ {{ $objResponseData->to_fecha }} ].</p>
 
     <p><u>Respuesta:</u></p>
 
     <div>
         <p>
-            {{ $objResponseData->respuesta }}
+            {{ $objResponseData->msg_respuesta }}
         <p>
     </div>
 
-    Gracias,
+    Gracias. Hasta la próxima,
     <br/>
     <i>{{ $objResponseData->from_nombre }}</i>
 </body>

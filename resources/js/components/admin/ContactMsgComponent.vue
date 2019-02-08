@@ -80,10 +80,10 @@
                                         <!-- /.mailbox-read-info -->
                                         <div class="mailbox-controls with-border text-center">
                                             <div class="btn-group">
-                                                <button type="button" @click="trashReg()" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Mandar a la papelera">
+                                                <button type="button" @click="trashElem()" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Mandar a la papelera">
                                                 <i class="fas fa-trash-alt"></i></button>
-                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Responder">
-                                                <i class="fa fa-reply"></i></button>
+                                                <a href="#txt-msg-resp" data-toggle="collapse" class="btn btn-default btn-sm" data-container="body" title="Responder">
+                                                <i class="fa fa-reply"></i></a>
                                                 <!--<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Reenviar">
                                                 <i class="fa fa-share"></i></button>-->
                                             </div>
@@ -98,12 +98,31 @@
                                         <!-- /.mailbox-read-message -->
                                     </div>
                                     <!-- /.card-body -->
+
+                                    <!-- LISTADO DE POSIBLE(S) RESPUESTA(S) YA EXISTENTE(S) -->
+                                    <div v-for="(elemResp, indexResp) in objRegResps" :key="indexResp" class="card-body p-0">
+                                        <a :href="'#txt-msg-resps-' + elemResp.id" data-toggle="collapse">
+                                        <div class="mailbox-read-info">
+                                            <h5><strong>{{ elemResp.asunto }}</strong></h5>
+                                            <h6>de: {{ elemResp.nombre }} &lt;{{ elemResp.correo }}&gt;
+                                            <span class="mailbox-read-time float-right">{{ elemResp.created_at | formatFechaHoraTxt }}</span></h6>
+                                        </div>
+                                        </a>
+                                        <!-- /.mailbox-read-info -->
+                                        <div :id="'txt-msg-resps-' + elemResp.id" class="mailbox-read-message collapse">
+                                            <textarea class="col-12" disabled v-model="elemResp.mensaje"></textarea>
+                                        </div>
+                                        <!-- /.mailbox-read-message -->
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <!-- LISTADO DE POSIBLE(S) RESPUESTA(S) YA EXISTENTE(S) -->
+
                                     <div id="accordion-msg-resp">
                                         <div class="callout callout-primary ml-2 mr-2 p-0">
                                             <div id="txt-msg-resp" class="collapse" data-parent="#accordion-msg-resp">
                                                 <form @submit.prevent="sendResponse()" class="form-horizontal" novalidate>
-                                                <textarea class="col-12" v-model="objRegResp.mensaje"></textarea>
-                                                <span v-if="errors.has('mensaje')" class="block text-sm text-danger mt-2">{{ errors.get('mensaje') }}</span>
+                                                <textarea class="col-12" v-model="objRegResp.msg_respuesta"></textarea>
+                                                <span v-if="errors.has('msg_respuesta')" class="block text-sm text-danger mt-2">{{ errors.get('msg_respuesta') }}</span>
                                                 <div class="col-12">
                                                     <button type="submit" class="btn btn-primary float-right m-2" title="Enviar respuesta">Enviar</button>
                                                 </div>
@@ -116,7 +135,7 @@
                                             <a href="#txt-msg-resp" data-toggle="collapse" class="btn btn-default"><i class="fa fa-reply"></i> Responder</a>
                                             <!--<button type="button" class="btn btn-default"><i class="fa fa-share"></i> Reenviar</button>-->
                                         </div>
-                                        <button type="button" @click="trashReg()" class="btn btn-default" title="Mandar a la papelera"><i class="fas fa-trash-alt"></i> A papelera</button>
+                                        <button type="button" @click="trashElem()" class="btn btn-default" title="Mandar a la papelera"><i class="fas fa-trash-alt"></i> A papelera</button>
                                         <!--<button type="button" class="btn btn-default"><i class="fa fa-print"></i> Imprimir</button>-->
                                     </div>
                                     <!-- /.card-footer -->
@@ -159,8 +178,12 @@
                 urlBase: '/api/contacts',
                 //variable para almacenar los datos del registro a mostrar
                 objReg: {},
-                //variable para almacenar los datos del correo a enviar
+                //variable para almacenar los datos de posible(s) respuesta(s) que ya tenga
+                objRegResps: {},
+                //variable para almacenar los datos del correo de respuesta a enviar
                 objRegResp: {},
+                //variable para registrar la respesta enviada
+                objNewElem: {},
                 //posibles errores
                 errors: new Errors(),
                 elems_no_papelera_leido_no_tot: 0,
@@ -194,18 +217,60 @@
                 //Marcar como leido el mensaje mostrado...
                 this.updateFieldALeido(regID, 'leido', 1);
 
+                //Emitiendo evento de recarga de total
+                BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+
                 //Cargando datos del registro correspondiente
                 //URL hacia la ruta de obtener datos del registro
                 let url = this.urlBase + '/' + regID;
-                //Empleado el método DELETE de Axios, el cliente AJAX,
+                //Empleado el método GET de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 axios.get(url)
                 .then(response => {       //SI TODO OK
                     console.log(response.data)
                     this.objReg = response.data
+
+                    //Capturando posble(s) respuesta(s) existente(s)
+                    this.getElemsResps();
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR
                     console.log(error.response.data.errors);
+                });
+            },
+
+            /**
+             * Obteniendo listado de registros respuesta
+             * referidos al registro consultado
+            */
+            getElemsResps() {
+                //URL hacia la ruta del listado de registros
+                //  >> SIN paginación
+                let url = this.urlBase + '/get-responses/' + this.elem_id;
+                //Empleado el método GET de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
+                //  -> Si es correcto, se recogen los datos
+                //  dentro del contenedor definido
+                axios.get(url).then( response => {
+                    ////console.log(response.data)
+                    this.objRegResps = response.data
+                });
+            },
+
+            /**
+             * Obteniendo listado de registros
+             * para contar los no leidos
+            */
+            getElems() {
+                //URL hacia la ruta del listado de registros
+                //  >> SIN paginación
+                let url = this.urlBase;
+                //Empleado el método GET de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
+                //  -> Si es correcto, se recogen los datos
+                //  dentro del contenedor definido
+                axios.get(url).then( response => {
+                    ////console.log(response.data)
+                    this.elems_no_papelera_leido_no_tot = response.data.elems_no_papelera_leido_no_tot
                 });
             },
 
@@ -228,31 +293,14 @@
             },
 
             /**
-             * Obteniendo listado de registros
-            */
-            getElems() {
-                //URL hacia la ruta del listado de registros
-                //  >> SIN paginación
-                let url = this.urlBase;
-                //Empleado el método GET de Axios, el cliente AJAX,
-                //que es el método referido a la ruta llamada
-                //  -> Si es correcto, se recogen los datos
-                //  dentro del contenedor definido
-                axios.get(url).then( response => {
-                    ////console.log(response.data)
-                    this.elems_no_papelera_leido_no_tot = response.data.elems_no_papelera_leido_no_tot
-                });
-            },/**/
-
-            /**
              * Mandando registro a la papelera
             */
-            trashReg() {
+            trashElem() {
                 /* BORRADO-TEMPORAL CON CONFIRMACIÓN */
                 /**/
                 Swal.fire({
                     title: 'A la papelera',
-                    text: '¿Mandar este mensaje a la papelera?',
+                    text: '¿Mandar el mensaje a la papelera?',
                     type: 'question',
                     showCloseButton: true,
                     showCancelButton: true,
@@ -262,17 +310,15 @@
                     cancelButtonText: 'A papelera',
                 }).then((result) => {
 
-                    //Pulsando el botón equivalente a CONFIRMAR la acción
+                    //Pulsando el botón equivalente a CANCELAR la acción
                     if ( result.dismiss === Swal.DismissReason.cancel ) {
 
                         /**/
                         console.log('Se efectuará un Soft Delete...');
                         //URL hacia la ruta de borrado temporal de registro
                         let url = this.urlBase + '/' + this.objReg.id;
-                        //Según la acción a aplicar:
-                        //Empleado el método DELETE/GET de Axios, el cliente AJAX,
+                        //Empleado el método DELETE de Axios, el cliente AJAX,
                         //que es el método referido a la ruta llamada
-
                         axios.delete(url)
                         .then(response => {       //SI TODO OK
                             //Emitiendo evento global para cargar notificación de mandar a papelera
@@ -280,7 +326,11 @@
                             //  >> con el ID pasado
                             //Y volviendo al listado
                             BusEvent.$emit('notifContactDelRegEvent', this.objReg.id);
+                            //Emitiendo evento de recarga de total
+                            BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+
                             this.$router.push('/admin/contacts');
+
                         })
                         .catch(error => {           //SI HAY ALGÚN ERROR
                             console.log(error.response.data.errors);
@@ -295,7 +345,7 @@
                     } else {
                         console.log('Acción cancelada');
                     }
-                })//fin cnfirmación
+                })//fin confirmación
             },
 
             /**
@@ -308,11 +358,26 @@
                 axios.post(url, this.objRegResp)
                 .then((response) => {       //SI TODO OK
 
+                    //vaciando los posibles errores que se produjeron
+                    this.errors.clear();
+
                     //Lanzando notificación satisfactoria
                     toast({
                         type: 'success',
                         title: 'Enviada respuesta'
                     });
+
+                    //registro de envío de respuesta...
+                    this.objNewElem = {
+                        //-----------------------------------------------------
+                        'nombre': 'PaNPaS',
+                        'correo': 'panpas.zm@gmail.com',
+                        //-----------------------------------------------------
+                        'asunto': 'Respuesta a - ' + this.objReg.asunto,
+                        'mensaje': this.objRegResp.msg_respuesta,
+                        'msg_origen': this.objReg.id,
+                    };
+                    this.storeResponse(this.objNewElem);
 
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR
@@ -320,6 +385,36 @@
                     this.errors.record(error.response.data.errors);
                 });
             },
+
+            /**
+             * Enviar correo de respuesta
+            */
+            storeResponse(objNewElem) {
+                console.log('Registrando nuevo registro...');
+                let url = this.urlBase;
+                console.log('URL: ' + url);
+                console.log('objNewElem: ' + objNewElem);/**/
+
+                axios.post(url, objNewElem)
+                .then((response) => {       //SI TODO OK
+                    ////document.location = '/';
+
+                    //Lanzando notificación satisfactoria
+                    toast({
+                        type: 'success',
+                        title: 'La respuesta quedó almacenada'
+                    });
+                })
+                .catch(error => {           //SI HAY ALGÚN ERROR
+                    //registrando los errores recibidos
+                    console.log(error.response.data.errors);
+                    //Lanzando notificación errónea
+                    toast({
+                        type: 'warning',
+                        title: 'ERROR al querer registrar la respuesta enviada'
+                    });
+                });
+            }
 
         },
     }

@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
+    //Email remitente de respuesta
+    protected $app_email;
+
     /**
      * Create a new controller instance.
      *
@@ -20,6 +23,8 @@ class ContactController extends Controller
     {
         //Exigiendo: autenticarse
         $this->middleware('auth:api');
+
+        $this->app_email = config('mail.from.address', 'panpas.zm@gmail.com');
     }
 
     /**
@@ -31,7 +36,7 @@ class ContactController extends Controller
     {
         //  >>CON Soft Delete activado
         //      -> pero los registros en papelera se mostrarán en otra vista
-        $elems_no_papelera = Contacto::where('correo', '!=', Auth::user()->email)
+        $elems_no_papelera = Contacto::where('correo', '!=', $this->app_email)
                         ->orderBy('created_at', 'desc')->get();
 
         $elems_no_papelera_leido_no_tot = $this->getTotLeidoNo();
@@ -45,13 +50,30 @@ class ContactController extends Controller
     }
 
     /**
+     * Display a listing of the resource's responses.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getResponses($id)
+    {
+        //  >>CON Soft Delete activado
+        //      -> pero los registros en papelera se mostrarán en otra vista
+        $elems_responses = Contacto::where('msg_origen', $id)
+                        ->where('correo', $this->app_email)
+                        ->orderBy('created_at', 'desc')->get();
+
+        return $elems_responses;
+    }
+
+    /**
      * Tot no leido(s) fuena de la papelera.
      *
      * @return int
      */
     public function getTotLeidoNo()
     {
-        return Contacto::where('correo', '!=', Auth::user()->email)
+        return Contacto::where('correo', '!=', $this->app_email)
                         ->where('leido', 0)
                         ->count();
     }
@@ -83,7 +105,22 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Estableciendo reglas de validación
+        $reglas = [
+            'nombre' => 'required|string|max:50',
+            'correo' => 'required|string|email|max:100',
+            'asunto' => 'required|string|max:250',
+            'mensaje' => 'required|string|max:400',
+            //'leido' => 'required|in:0,1',
+        ];
+        //Validando petición
+        $request->validate($reglas);
+
+        //Insertando nuevo registro
+        //------------------------------------------------
+        Contacto::create($request->all());
+        //Como es petición AJAX, se deja el RETURN vacío
+        return;
     }
 
     /**
@@ -219,7 +256,7 @@ class ContactController extends Controller
     {
         //validar que se mandó TXT de respuesta...
         $reglas = [
-            'mensaje' => 'required|string|max:400',
+            'msg_respuesta' => 'required|string|max:400',
         ];
         //Validando petición
         $request->validate($reglas);
@@ -229,7 +266,7 @@ class ContactController extends Controller
         $objResponseData = new \stdClass();
         $objResponseData->to_nombre = $contacto->nombre;
         $objResponseData->to_fecha = $contacto->created_at;
-        $objResponseData->respuesta = $request->respuesta;
+        $objResponseData->msg_respuesta = $request->msg_respuesta;
         ////$objResponseData->from_nombre = 'PaNPaS';
         $objResponseData->from_nombre = env('APP_NAME', 'PaNPaS');
         $objResponseData->from_email = env('MAIL_FROM_ADDRESS', 'panpas.zm@gmail.com');

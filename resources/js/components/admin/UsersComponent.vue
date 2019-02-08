@@ -134,7 +134,7 @@
             //aunque esta forma de recarga va en contra del rendimiento
             ////setInterval(() => this.getUsers(), 3000);
 
-            //Lanzando notificación de borrado emitida por UserProfEditComponent
+            //Recibiendo notificación de borrado emitida por UserProfEditComponent
             BusEvent.$on('notifDelRegEvent', (userDelID) => {
                 this.notifDelReg(userDelID);
             });

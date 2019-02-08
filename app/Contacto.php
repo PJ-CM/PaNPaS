@@ -23,7 +23,7 @@ class Contacto extends Model
      * @var array
      */
     protected $fillable = [
-        'nombre', 'correo', 'asunto', 'mensaje', 'leido',
+        'nombre', 'correo', 'asunto', 'mensaje', 'msg_origen', 'leido',
     ];
 
     /**
