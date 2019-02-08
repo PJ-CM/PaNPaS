@@ -29,7 +29,7 @@
                         <div class="card">
                             <div class="card-header"><h1>{{$user->username}} @if (Auth::user()->follows->contains('username', $user->username))<a class="btn btn-primary right" href="/unfollow/{{$user->id}}">Dejar de Seguir</a> @else <a class="btn btn-primary right" href="/follow/{{$user->id}}">Seguir</a> @endif </h1></div>
 
-                            <div class="card-body" style="float: left;">
+                            <div class="card-body">
                                 @if (session('status'))
                                     <div class="alert alert-success" role="alert">
                                         {{ session('status') }}
@@ -37,7 +37,7 @@
                                 @endif
 
                                <img src="{{$user->avatar}}" id="avatar" class="img">
-                              <canvas id="graph_recetas" style="max-width: 60%; max-height: auto; display: inline-block;float: right;"></canvas>
+                              <canvas id="graph_recetas" style="max-width: 60%; max-height: auto; display: inline-block; float: right;"></canvas>
 
                                <!-- Recetas del Usuario Seleccionado -->
                                <br>

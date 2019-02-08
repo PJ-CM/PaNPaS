@@ -51,12 +51,13 @@
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header"><h1 style=";">Perfil Privado</h1> <div class="btn btn-danger right" onclick="confirmaciónEliminarCuenta();">Eliminar Cuenta</div></div>
+                            <div class="card-header"><h1 style=";">Perfil Privado</h1> 
 
                             <div class="card-body">
                                 <h2>Modificar Avatar:</h2>
-                                <input type="file" name="newAvatar" class="btn btn-secondary col-12" required><input type="submit" name="sub_avatar" value="Cambiar" class="btn btn-primary">
                                 <form action="/user/guardarFotoPerfil" method="post" enctype="multipart/form-data" class="centrado">
+                                <div><input type="file" name="newAvatar" class="btn btn-secondary col-12" required><input type="submit" name="sub_avatar" value="Cambiar" class="btn btn-primary"></div>
+                                
                                 	<img src="{{$user->avatar}}" class="avatar">
                                     <div class="col-12" style="max-width: 390px; float: right;">
                                          <canvas id="graph_recetas"></canvas>
@@ -88,6 +89,7 @@
                             </div>
                         </div>
                     </div>
+                      <div class="btn btn-danger col-xs-1" style="margin-top: 50px;" onclick="confirmaciónEliminarCuenta();">Eliminar Cuenta</div></div>
                 </div>
             </div>
         </section>
