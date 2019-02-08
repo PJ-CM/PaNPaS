@@ -25,44 +25,8 @@
                 <div class="content">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-3">
-                                <router-link :to="{ name: 'contacts_list' }" title="Volver a la Bandeja de entrada" class="btn btn-primary btn-block mb-3">
-                                    Volver a la Bandeja de entrada
-                                </router-link>
-
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Carpetas</h3>
-
-                                        <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="card-body p-0">
-                                        <ul class="nav nav-pills flex-column">
-                                            <li class="nav-item">
-                                                <router-link :to="{ name: 'contacts_list' }" title="Abrir la Bandeja de entrada" class="nav-link">
-                                                    <i class="fas fa-inbox"></i> Bandeja de entrada
-                                                    <span v-if="elems_no_papelera_leido_no_tot > 0" class="badge bg-primary float-right" title="Mensaje(s) sin leer">{{ elems_no_papelera_leido_no_tot }}</span>
-                                                </router-link>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="#" class="nav-link disabled">
-                                                    <i class="far fa-envelope"></i> Enviados
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="#" class="nav-link disabled">
-                                                    <i class="far fa-trash-alt"></i> Papelera
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                                <!-- /. box -->
-                            </div>
+                            <!-- Barra de Carpetas -->
+                            <contacts-navbar-folders-component></contacts-navbar-folders-component>
                             <!-- /.col -->
 
                             <div class="col-md-9">
@@ -120,6 +84,7 @@
                                     <div id="accordion-msg-resp">
                                         <div class="callout callout-primary ml-2 mr-2 p-0">
                                             <div id="txt-msg-resp" class="collapse" data-parent="#accordion-msg-resp">
+                                                <h6>Respuesta:</h6>
                                                 <form @submit.prevent="sendResponse()" class="form-horizontal" novalidate>
                                                 <textarea class="col-12" v-model="objRegResp.msg_respuesta"></textarea>
                                                 <span v-if="errors.has('msg_respuesta')" class="block text-sm text-danger mt-2">{{ errors.get('msg_respuesta') }}</span>

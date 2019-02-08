@@ -48,7 +48,7 @@ Route::get('/users/prof-activity/{id}', 'API\UserController@profileActivity')
 // -------------------------------------------------------------------------------
 //Marcar como leido Si/NO
 Route::get('/contacts/editar/{id}/{campo}/{valor}', 'API\ContactController@update_campo')
-->name('contact_editar_campo');
+    ->name('contact_editar_campo');
 //Buscador para filtrar resultados en el listado
 //  >> término que buscar
 Route::post('/contacts/search', 'API\ContactController@search')
@@ -57,7 +57,7 @@ Route::post('/contacts/search', 'API\ContactController@search')
 //  >> para forzar el borrado definitivo
 Route::get('/contacts/force-delete/{id}', 'API\ContactController@forceDelete')
     ->name('contact.force-delete');
-//  >> para restaurar usuario en papelera
+//  >> para restaurar registro en papelera
 Route::get('/contacts/restore-delete/{id}', 'API\ContactController@restoreDelete')
     ->name('contact.restore-delete');
 //Enviar Email de respuesta de mensaje de contacto
@@ -66,3 +66,9 @@ Route::post('/contacts/send-response', 'API\ContactController@sendContactRespons
 //Listar posible(s) respuesta(s) del mensaje relacionado
 Route::get('/contacts/get-responses/{id}', 'API\ContactController@getResponses')
     ->name('contact_msg.get_responses');
+//Listar mensaje(s) enviado(s)
+Route::get('/contacts/sended', 'API\ContactController@sended')
+    ->name('contact_sended');
+//Listar mensaje(s) en papelera
+Route::get('/contacts/trashed', 'API\ContactController@trashed')
+    ->name('contact_trashed');

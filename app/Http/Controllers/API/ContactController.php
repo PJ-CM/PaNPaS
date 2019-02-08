@@ -30,6 +30,8 @@ class ContactController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * Buzón del ADMIN
+     *
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -67,7 +69,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Tot no leido(s) fuena de la papelera.
+     * Tot no leido(s) fuera de la papelera.
      *
      * @return int
      */
@@ -76,6 +78,30 @@ class ContactController extends Controller
         return Contacto::where('correo', '!=', $this->app_email)
                         ->where('leido', 0)
                         ->count();
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * Mensajes enviados
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sended()
+    {
+        //  >>CON Soft Delete activado
+        //      -> pero los registros en papelera se mostrarán en otra vista
+        $elems_no_papelera = Contacto::where('correo', $this->app_email)
+                        ->orderBy('created_at', 'desc')->get();
+
+        $elems_no_papelera_leido_no_tot = $this->getTotLeidoNo();
+
+        $_arr_detalle = [];
+
+        $_arr_detalle['elems_no_papelera'] = $elems_no_papelera;
+        $_arr_detalle['elems_no_papelera_leido_no_tot'] = $elems_no_papelera_leido_no_tot;
+
+        return $_arr_detalle;
     }
 
     /**
