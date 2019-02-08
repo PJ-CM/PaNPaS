@@ -1955,22 +1955,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //librería para tratar los errores capturados en el servidor
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1979,9 +1963,7 @@ __webpack_require__.r(__webpack_exports__);
     //llamar a almacenar el parámetro recibido
     this.getParam(); //carga de datos
 
-    this.fillEditFormReg(this.elem_id); //para cargar el listado de registros y obtener el total de no leidos
-
-    this.getElems();
+    this.fillEditFormReg(this.elem_id);
   },
   //datos devueltos por el componente:
   data: function data() {
@@ -1992,15 +1974,14 @@ __webpack_require__.r(__webpack_exports__);
       urlBase: '/api/contacts',
       //variable para almacenar los datos del registro a mostrar
       objReg: {},
-      //variable para almacenar los datos de posible(s) respuesta(s) que ya tenga
-      objRegResps: {},
       //variable para almacenar los datos del correo de respuesta a enviar
       objRegResp: {},
-      //variable para registrar la respesta enviada
+      //variable para registrar la respuesta enviada
       objNewElem: {},
       //posibles errores
       errors: new _libs_errors__WEBPACK_IMPORTED_MODULE_0__["Errors"](),
-      elems_no_papelera_leido_no_tot: 0
+      //valor mandado al componente hijo ContactsNavbarFoldersComponent
+      elems_no_papelera_leido_no_tot_var: 0
     };
   },
   //propiedades computadas
@@ -2039,9 +2020,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(url).then(function (response) {
         //SI TODO OK
         console.log(response.data);
-        _this.objReg = response.data; //Capturando posble(s) respuesta(s) existente(s)
-
-        _this.getElemsResps();
+        _this.objReg = response.data;
       }).catch(function (error) {
         //SI HAY ALGÚN ERROR
         console.log(error.response.data.errors);
@@ -2049,42 +2028,21 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /**
-     * Obteniendo listado de registros respuesta
-     * referidos al registro consultado
+     * Obteniendo TOT de los no leidos
     */
-    getElemsResps: function getElemsResps() {
+    getElemsTotNoLeidos: function getElemsTotNoLeidos() {
       var _this2 = this;
 
       //URL hacia la ruta del listado de registros
       //  >> SIN paginación
-      var url = this.urlBase + '/get-responses/' + this.elem_id; //Empleado el método GET de Axios, el cliente AJAX,
+      var url = this.urlBase + '/no-readed/tot'; //Empleado el método GET de Axios, el cliente AJAX,
       //que es el método referido a la ruta llamada
       //  -> Si es correcto, se recogen los datos
       //  dentro del contenedor definido
 
       axios.get(url).then(function (response) {
         ////console.log(response.data)
-        _this2.objRegResps = response.data;
-      });
-    },
-
-    /**
-     * Obteniendo listado de registros
-     * para contar los no leidos
-    */
-    getElems: function getElems() {
-      var _this3 = this;
-
-      //URL hacia la ruta del listado de registros
-      //  >> SIN paginación
-      var url = this.urlBase; //Empleado el método GET de Axios, el cliente AJAX,
-      //que es el método referido a la ruta llamada
-      //  -> Si es correcto, se recogen los datos
-      //  dentro del contenedor definido
-
-      axios.get(url).then(function (response) {
-        ////console.log(response.data)
-        _this3.elems_no_papelera_leido_no_tot = response.data.elems_no_papelera_leido_no_tot;
+        _this2.elems_no_papelera_leido_no_tot_var = response.data;
       });
     },
 
@@ -2092,11 +2050,15 @@ __webpack_require__.r(__webpack_exports__);
      * Actualizando campo
     */
     updateFieldALeido: function updateFieldALeido(id, field, newValue) {
+      var _this3 = this;
+
       var msg_success = 'Mensaje marcado como LEIDO';
       var url = this.urlBase + '/editar/' + id + '/' + field + '/' + newValue;
       axios.get(url).then(function (response) {
         //SI TODO OK
         console.log(msg_success);
+
+        _this3.getElemsTotNoLeidos();
       }).catch(function (error) {
         //SI HAY ALGÚN ERROR
         console.log(error.response.data.errors);
@@ -2356,31 +2318,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     var _this = this;
@@ -2390,7 +2327,7 @@ __webpack_require__.r(__webpack_exports__);
     this.getElems(); //para volverlo a cargar en cada intervalo de X tiempo
     //aunque esta forma de recarga va en contra del rendimiento
     ////setInterval(() => this.getElems(), 3000);
-    //Recibiendo notificación de borrado emitida por ContactDetailComponent
+    //Recibiendo notificación de borrado emitida por ContactMsgComponent
 
     BusEvent.$on('notifContactDelRegEvent', function (elemDelID) {
       _this.notifDelReg(elemDelID);
@@ -2404,7 +2341,8 @@ __webpack_require__.r(__webpack_exports__);
       elems: {},
       //variable contenedora de los registros a listar
       elems_no_papelera_tot: 0,
-      elems_no_papelera_leido_no_tot: 0,
+      //valor mandado al componente hijo ContactsNavbarFoldersComponent
+      elems_no_papelera_leido_no_tot_var: 0,
       term: '' //término por el que filtrar resultados
 
     };
@@ -2420,6 +2358,13 @@ __webpack_require__.r(__webpack_exports__);
   computed: {//
   },
   methods: {
+    /**
+     * Recargando página
+    */
+    recargaPag: function recargaPag() {
+      this.$router.go(this.$router.currentRoute);
+    },
+
     /**
      * Obteniendo listado de registros
     */
@@ -2437,37 +2382,44 @@ __webpack_require__.r(__webpack_exports__);
         ////console.log(response.data)
         _this2.elems = response.data.elems_no_papelera;
         _this2.elems_no_papelera_tot = _this2.elems.length;
-        _this2.elems_no_papelera_leido_no_tot = response.data.elems_no_papelera_leido_no_tot;
+        _this2.elems_no_papelera_leido_no_tot_var = response.data.elems_no_papelera_leido_no_tot;
       });
     },
 
     /**
-     * Obteniendo listado de registros filtrados por término de búsqueda
+     * Enviando término de búsqueda para filtrar registros
     */
     search: function search() {
-      var _this3 = this;
-
       console.log('Enviando filtrado de búsqueda...por [' + this.term + ']'); //URL hacia la ruta del listado de registros
       //  >> SIN paginación
 
-      var url = this.urlBase + '/search'; //Empleado el método POST de Axios, el cliente AJAX,
+      /*// BUSCADOR-versión.anterior-ini
+      let url = this.urlBase + '/search';
+      //Empleado el método POST de Axios, el cliente AJAX,
       //que es el método referido a la ruta llamada
       //  -> Si es correcto, se recogen los datos
       //  dentro del contenedor definido
       //  -> IMPORTANTE
       //  Todo lo que se manda como parámetro debe ser dentro de un OBJETO
       //  El término de búsqueda se debe mandar dentro de un objeto
-
       axios.post(url, {
-        term: this.term
-      }).then(function (response) {
-        //SI TODO OK
-        ////console.log(response.data)
-        _this3.elems = response.data;
-        _this3.elems_no_papelera_tot = _this3.elems.length;
-      }).catch(function (error) {
-        //SI HAY ALGÚN ERROR
-        console.log(error.response.data.errors);
+          term: this.term
+      }).then( response => {  //SI TODO OK
+          ////console.log(response.data)
+          this.elems = response.data
+          this.elems_no_papelera_tot = this.elems.length
+      })
+      .catch(error => {           //SI HAY ALGÚN ERROR
+          console.log(error.response.data.errors);
+      });
+      // BUSCADOR-versión.anterior-fin
+      */
+
+      this.$router.push({
+        name: 'contacts_search',
+        params: {
+          term: this.term
+        }
       });
     },
 
@@ -2475,7 +2427,7 @@ __webpack_require__.r(__webpack_exports__);
      * Actualizando campo
     */
     updateField: function updateField(id, field, newValue) {
-      var _this4 = this;
+      var _this3 = this;
 
       var msg_success = 'Mensaje marcado como ';
       if (newValue == 0) msg_success += 'NO LEIDO';else msg_success += 'LEIDO';
@@ -2484,7 +2436,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(url).then(function (response) {
         //SI TODO OK
         //refrescando listado
-        _this4.getElems(); //Lanzando notificación satisfactoria
+        _this3.getElems(); //Lanzando notificación satisfactoria
 
 
         toast({
@@ -2501,45 +2453,10 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /**
-     * Mandar a papelera / Borrado definitivo del registro
+     * Mandar a papelera el registro
     */
     trashElem: function trashElem(id) {
-      var _this5 = this;
-
-      /* BORRADO SIN CONFIRMACIÓN */
-
-      /*
-      //URL hacia la ruta de borrado de registro
-      var url = this.urlBase + '/' + id;
-      //Empleado el método DELETE de Axios, el cliente AJAX,
-      //que es el método referido a la ruta llamada
-      axios.delete(url).then(response => {
-          //tras borrado, si todo OK, se muestra el listado tras recargarlo
-          this.getElems();
-           //Lanzando notificación satisfactoria
-          toast({
-              type: 'success',
-              title: 'Eliminado, correctamente, registro con ID [' + id + ']'
-          });
-      });*/
-
-      /*
-          ¡¡ATENCIÓN!!
-          Es preciso capturar el elemento pulsado, si se quiere asociar alguna
-          acción al CancelButton diferente de la predeterminada de cerrar la
-          ventana.
-          Si no es así, y se considera todo lo que no sea ConfirmButton, en el
-          mismo ELSE, entonces, todo ello se vinculará a lo que se asocie al
-          CancelButton.
-          De asociar la acción de eliminar registro a todo el ELSE, incluso,
-          cancelando la acción, pulsando en el icono de cerrar, pulsando en ESC
-          o fuera de la ventana, el registro terminará siendo eliminado aunque
-          no sea la acción que se eligió.
-          Para evitar esto, se captura uno de los posibles eventos de dissMissals
-          de esta librería.
-          En estos casos, se emplea la captura de pulsar el CancelButton:
-              result.dismiss === Swal.DismissReason.cancel
-      */
+      var _this4 = this;
 
       /* BORRADO CON CONFIRMACIÓN */
 
@@ -2560,14 +2477,14 @@ __webpack_require__.r(__webpack_exports__);
           /**/
           console.log('Se efectuará un Soft Delete...'); //URL hacia la ruta de borrado temporal de registro
 
-          var url = _this5.urlBase + '/' + id; //Empleado el método DELETE de Axios, el cliente AJAX,
+          var url = _this4.urlBase + '/' + id; //Empleado el método DELETE de Axios, el cliente AJAX,
           //que es el método referido a la ruta llamada
 
           axios.delete(url).then(function (response) {
             //SI TODO OK
             //tras borrado temporal, si todo OK, se muestra
             //el listado tras recargarlo
-            _this5.getElems();
+            _this4.getElems();
 
             var server_msg_del = response.data.message;
             console.log(server_msg_del); //Lanzando notificación satisfactoria
@@ -2596,6 +2513,1158 @@ __webpack_require__.r(__webpack_exports__);
     notifDelReg: function notifDelReg(id) {
       //Lanzando notificación satisfactoria
       Swal.fire('¡Borrado!', 'El registro con ID [' + id + '] fue mandado a la papelera correctamente.', 'success');
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    //o created()
+    console.log('Component mounted.'); //para cargar el listado de registros al llegar al componente
+    ////this.getElemsTot();
+    //Recibiendo notificación de todo evento que cambie el total de correos no leidos
+    ////BusEvent.$on('notifRecargaLeidosNoTotEvent', () => {
+    ////    this.notifRecargaLeidosNoTot();
+    ////});
+  },
+  props: ['elems_no_papelera_leido_no_tot'],
+  // declarando PROPS
+  //datos devueltos por el componente:
+  data: function data() {
+    return {////urlBase: '/api/contacts',
+      ////elems_no_papelera_leido_no_tot: 0,
+    };
+  },
+  methods: {
+    /**
+     * Obteniendo listado de registros
+     * para contar los no leidos
+    */
+    ////getElemsTot() {
+    ////    //URL hacia la ruta del listado de registros
+    ////    //  >> SIN paginación
+    ////    let url = this.urlBase + '/no-readed/tot';
+    ////    //Empleado el método GET de Axios, el cliente AJAX,
+    ////    //que es el método referido a la ruta llamada
+    ////    //  -> Si es correcto, se recogen los datos
+    ////    //  dentro del contenedor definido
+    ////    axios.get(url).then( response => {
+    ////        ////console.log(response.data)
+    ////        this.elems_no_papelera_leido_no_tot = response.data
+    ////    });
+    ////},
+
+    /**
+     * Recarga de total de mensajes no leidos
+    */
+    ////notifRecargaLeidosNoTot() {
+    ////    this.getElemsTot();
+    ////},
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  created: function created() {
+    //console.log('Component mounted.')
+    //llamar a almacenar el parámetro recibido
+    this.getParam(); //lanzar búsqueda
+
+    this.search();
+  },
+  //datos devueltos por el componente:
+  data: function data() {
+    return {
+      urlBase: '/api/contacts',
+      //Puede ser también     >>      elems: [],
+      elems: {},
+      //variable contenedora de los registros a listar
+      elems_no_papelera_tot: 0,
+      //valor mandado al componente hijo ContactsNavbarFoldersComponent
+      elems_no_papelera_leido_no_tot_var: 0,
+      term: '' //término por el que filtrar resultados
+
+    };
+  },
+  //propiedades computadas
+
+  /**
+   * Servirán para establecer el estilo adecuado:
+   *    => cuando se esté o no en la página actual.
+   *    => a las diferentes opciones de paginado:
+   *      >> números, siguiente, anterior, ...
+  */
+  computed: {//
+  },
+  methods: {
+    /**
+     * Obteniendo listado de registros
+    */
+    getParam: function getParam() {
+      this.term = this.$route.params.term;
+    },
+
+    /**
+     * Obteniendo listado de registros filtrados por término de búsqueda
+    */
+    search: function search() {
+      var _this = this;
+
+      console.log('Enviando filtrado de búsqueda...por [' + this.term + ']'); //URL hacia la ruta del listado de registros
+      //  >> SIN paginación
+
+      var url = this.urlBase + '/search'; //Empleado el método POST de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+      //  -> Si es correcto, se recogen los datos
+      //  dentro del contenedor definido
+      //  -> IMPORTANTE
+      //  Todo lo que se manda como parámetro debe ser dentro de un OBJETO
+      //  El término de búsqueda se debe mandar dentro de un objeto
+
+      axios.post(url, {
+        term: this.term
+      }).then(function (response) {
+        //SI TODO OK
+        ////console.log(response.data)
+        _this.elems = response.data;
+        _this.elems_no_papelera_tot = _this.elems.length; //Y obteniendo TOT de no leidos
+
+        _this.getElemsTotNoLeidos();
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+    },
+
+    /**
+     * Obteniendo TOT de los no leidos
+    */
+    getElemsTotNoLeidos: function getElemsTotNoLeidos() {
+      var _this2 = this;
+
+      //URL hacia la ruta del listado de registros
+      //  >> SIN paginación
+      var url = this.urlBase + '/no-readed/tot'; //Empleado el método GET de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+      //  -> Si es correcto, se recogen los datos
+      //  dentro del contenedor definido
+
+      axios.get(url).then(function (response) {
+        ////console.log(response.data)
+        _this2.elems_no_papelera_leido_no_tot_var = response.data;
+      });
+    },
+
+    /**
+     * Actualizando campo
+    */
+    updateField: function updateField(id, field, newValue) {
+      var _this3 = this;
+
+      var msg_success = 'Mensaje marcado como ';
+      if (newValue == 0) msg_success += 'NO LEIDO';else msg_success += 'LEIDO';
+      console.log('Actualizando campo del registro... [' + id + ']');
+      var url = this.urlBase + '/editar/' + id + '/' + field + '/' + newValue;
+      axios.get(url).then(function (response) {
+        //SI TODO OK
+        //refrescando listado de resultados
+        _this3.search(); //Lanzando notificación satisfactoria
+
+
+        toast({
+          type: 'success',
+          title: msg_success
+        }); //Emitiendo evento de recarga de total
+
+        BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+      /**/
+    },
+
+    /**
+     * Mandar a papelera el registro
+    */
+    trashElem: function trashElem(id) {
+      var _this4 = this;
+
+      /* BORRADO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: 'A la papelera',
+        text: '¿Mandar este mensaje a la papelera?',
+        type: 'question',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#6c757d',
+        cancelButtonColor: '#f6993f',
+        confirmButtonText: 'Cancelar',
+        cancelButtonText: 'A papelera'
+      }).then(function (result) {
+        //Pulsando el botón equivalente a CANCELAR la acción
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          /**/
+          console.log('Se efectuará un Soft Delete...'); //URL hacia la ruta de borrado temporal de registro
+
+          var url = _this4.urlBase + '/' + id; //Empleado el método DELETE de Axios, el cliente AJAX,
+          //que es el método referido a la ruta llamada
+
+          axios.delete(url).then(function (response) {
+            //SI TODO OK
+            //tras borrado temporal, si todo OK,
+            //se actualizan resultados
+            _this4.search(); //this.$router.go(this.$router.currentRoute)
+
+
+            var server_msg_del = response.data.message;
+            console.log(server_msg_del); //Lanzando notificación satisfactoria
+
+            Swal.fire('¡A la papelera!', 'El registro con ID [' + id + '] fue mandado a la papelera correctamente.', 'success'); //Emitiendo evento de recarga de total
+
+            BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+          }).catch(function (error) {
+            //SI HAY ALGÚN ERROR
+            console.log(error.response.data.errors); //Lanzando notificación errónea
+
+            toast({
+              type: 'warning',
+              title: 'ERROR al querer mandar a la papelera el registro con ID [' + id + ']'
+            });
+          }); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+        } else {
+          console.log('Acción cancelada');
+        }
+      }); //fin confirmación
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  created: function created() {
+    //console.log('Component mounted.')
+    //para cargar el listado de registros al llegar al componente
+    this.getElems();
+  },
+  //datos devueltos por el componente:
+  data: function data() {
+    return {
+      urlBase: '/api/contacts',
+      //Puede ser también     >>      elems: [],
+      elems: {},
+      //variable contenedora de los registros a listar
+      elems_no_papelera_tot: 0,
+      //valor mandado al componente hijo ContactsNavbarFoldersComponent
+      elems_no_papelera_leido_no_tot_var: 0,
+      term: '' //término por el que filtrar resultados
+
+    };
+  },
+  //propiedades computadas
+
+  /**
+   * Servirán para establecer el estilo adecuado:
+   *    => cuando se esté o no en la página actual.
+   *    => a las diferentes opciones de paginado:
+   *      >> números, siguiente, anterior, ...
+  */
+  computed: {//
+  },
+  methods: {
+    /**
+     * Recargando página
+    */
+    recargaPag: function recargaPag() {
+      this.$router.go(this.$router.currentRoute);
+    },
+
+    /**
+     * Obteniendo listado de registros
+    */
+    getElems: function getElems() {
+      var _this = this;
+
+      //URL hacia la ruta del listado de registros
+      //  >> SIN paginación
+      var url = this.urlBase + '/sended/list'; //Empleado el método GET de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+      //  -> Si es correcto, se recogen los datos
+      //  dentro del contenedor definido
+
+      axios.get(url).then(function (response) {
+        ////console.log(response.data)
+        _this.elems = response.data.elems_no_papelera;
+        _this.elems_no_papelera_tot = _this.elems.length;
+        _this.elems_no_papelera_leido_no_tot_var = response.data.elems_no_papelera_leido_no_tot;
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+    },
+
+    /**
+     * Enviando término de búsqueda para filtrar registros
+    */
+    search: function search() {
+      console.log('Enviando filtrado de búsqueda...por [' + this.term + ']');
+      this.$router.push({
+        name: 'contacts_search',
+        params: {
+          term: this.term
+        }
+      });
+    },
+
+    /**
+     * Actualizando campo
+    */
+    updateField: function updateField(id, field, newValue) {
+      var _this2 = this;
+
+      var msg_success = 'Mensaje marcado como ';
+      if (newValue == 0) msg_success += 'NO LEIDO';else msg_success += 'LEIDO';
+      console.log('Actualizando campo del registro... [' + id + ']');
+      var url = this.urlBase + '/editar/' + id + '/' + field + '/' + newValue;
+      axios.get(url).then(function (response) {
+        //SI TODO OK
+        //refrescando listado
+        _this2.getElems(); //Lanzando notificación satisfactoria
+
+
+        toast({
+          type: 'success',
+          title: msg_success
+        }); //Emitiendo evento de recarga de total
+
+        BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+      /**/
+    },
+
+    /**
+     * Mandar a papelera el registro
+    */
+    trashElem: function trashElem(id) {
+      var _this3 = this;
+
+      /* BORRADO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: 'A la papelera',
+        text: '¿Mandar este mensaje a la papelera?',
+        type: 'question',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#6c757d',
+        cancelButtonColor: '#f6993f',
+        confirmButtonText: 'Cancelar',
+        cancelButtonText: 'A papelera'
+      }).then(function (result) {
+        //Pulsando el botón equivalente a CANCELAR la acción
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          /**/
+          console.log('Se efectuará un Soft Delete...'); //URL hacia la ruta de borrado temporal de registro
+
+          var url = _this3.urlBase + '/' + id; //Empleado el método DELETE de Axios, el cliente AJAX,
+          //que es el método referido a la ruta llamada
+
+          axios.delete(url).then(function (response) {
+            //SI TODO OK
+            //tras borrado temporal, si todo OK, se muestra
+            //el listado tras recargarlo
+            _this3.getElems();
+
+            var server_msg_del = response.data.message;
+            console.log(server_msg_del); //Lanzando notificación satisfactoria
+
+            Swal.fire('¡A la papelera!', 'El registro con ID [' + id + '] fue mandado a la papelera correctamente.', 'success'); //Emitiendo evento de recarga de total
+
+            BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+          }).catch(function (error) {
+            //SI HAY ALGÚN ERROR
+            console.log(error.response.data.errors); //Lanzando notificación errónea
+
+            toast({
+              type: 'warning',
+              title: 'ERROR al querer mandar a la papelera el registro con ID [' + id + ']'
+            });
+          }); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+        } else {
+          console.log('Acción cancelada');
+        }
+      }); //fin confirmación
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  created: function created() {
+    //console.log('Component mounted.')
+    //para cargar el listado de registros al llegar al componente
+    this.getElems();
+  },
+  //datos devueltos por el componente:
+  data: function data() {
+    return {
+      urlBase: '/api/contacts',
+      //Puede ser también     >>      elems: [],
+      elems: {},
+      //variable contenedora de los registros a listar
+      elems_en_papelera_tot: 0,
+      //valor mandado al componente hijo ContactsNavbarFoldersComponent
+      elems_no_papelera_leido_no_tot_var: 0,
+      term: '' //término por el que filtrar resultados
+
+    };
+  },
+  //propiedades computadas
+
+  /**
+   * Servirán para establecer el estilo adecuado:
+   *    => cuando se esté o no en la página actual.
+   *    => a las diferentes opciones de paginado:
+   *      >> números, siguiente, anterior, ...
+  */
+  computed: {//
+  },
+  methods: {
+    /**
+     * Recargando página
+    */
+    recargaPag: function recargaPag() {
+      this.$router.go(this.$router.currentRoute);
+    },
+
+    /**
+     * Obteniendo listado de registros
+    */
+    getElems: function getElems() {
+      var _this = this;
+
+      //URL hacia la ruta del listado de registros
+      //  >> SIN paginación
+      var url = this.urlBase + '/trashed/list'; //Empleado el método GET de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+      //  -> Si es correcto, se recogen los datos
+      //  dentro del contenedor definido
+
+      axios.get(url).then(function (response) {
+        ////console.log(response.data)
+        ////console.log(response.data.message)
+
+        /**/
+        _this.elems = response.data.elems_en_papelera;
+        _this.elems_en_papelera_tot = _this.elems.length;
+        _this.elems_no_papelera_leido_no_tot_var = response.data.elems_no_papelera_leido_no_tot;
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+    },
+
+    /**
+     * Enviando término de búsqueda para filtrar registros
+    */
+    search: function search() {
+      console.log('Enviando filtrado de búsqueda...por [' + this.term + ']');
+      this.$router.push({
+        name: 'contacts_search',
+        params: {
+          term: this.term
+        }
+      });
+    },
+
+    /**
+     * Actualizando campo
+    */
+    updateField: function updateField(id, field, newValue) {
+      var _this2 = this;
+
+      var msg_success = 'Mensaje marcado como ';
+      if (newValue == 0) msg_success += 'NO LEIDO';else msg_success += 'LEIDO';
+      console.log('Actualizando campo del registro... [' + id + ']');
+      var url = this.urlBase + '/editar/' + id + '/' + field + '/' + newValue;
+      axios.get(url).then(function (response) {
+        //SI TODO OK
+        //refrescando listado
+        _this2.getElems(); //Lanzando notificación satisfactoria
+
+
+        toast({
+          type: 'success',
+          title: msg_success
+        }); //Emitiendo evento de recarga de total
+
+        BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        console.log(error.response.data.errors);
+      });
+      /**/
+    },
+
+    /**
+     * Restaurar / Borrado definitivo del registro
+    */
+    restoreDeleteElem: function restoreDeleteElem(id) {
+      var _this3 = this;
+
+      /* BORRADO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: 'Eliminar o Restaurar',
+        text: 'El ELIMINAR no es reversible',
+        type: 'question',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#3490dc',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Restaurar',
+        cancelButtonText: 'Eliminar'
+      }).then(function (result) {
+        //Pulsando el botón equivalente a CONFIRMAR la acción
+        if (result.value) {
+          /**/
+          //URL hacia la ruta de restaurar de la papelera el registro
+          var url = _this3.urlBase + '/restore-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
+          //que es el método referido a la ruta llamada
+
+          axios.get(url).then(function (response) {
+            //SI TODO OK
+            //tras restaurar de la papelera, si todo OK, se muestra
+            //el listado tras recargarlo
+            _this3.getElems();
+
+            var server_msg = response.data.message;
+            console.log(server_msg); //Lanzando notificación satisfactoria
+
+            Swal.fire('¡Activado!', 'El registro con ID [' + id + '] fue restaurado de la papelera correctamente.', 'success'); //Emitiendo evento de recarga de total
+
+            BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+          }).catch(function (error) {
+            //SI HAY ALGÚN ERROR
+            //Lanzando notificación errónea
+            toast({
+              type: 'warning',
+              title: 'ERROR al querer restaurar de la papelera el registro con ID [' + id + ']'
+            });
+          }); //Pulsando el botón equivalente a CANCELAR la acción
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          //Borrado definitivo del registro
+          _this3.deleteTotalElem(id); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+
+        } else {
+          console.log('Acción cancelada');
+        }
+      });
+    },
+
+    /**
+     * Borrado definitivo del registro
+    */
+    deleteTotalElem: function deleteTotalElem(id) {
+      var _this4 = this;
+
+      //URL hacia la ruta de borrado definitivo de registro
+      var url = this.urlBase + '/force-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+
+      axios.get(url).then(function (response) {
+        //SI TODO OK
+        //tras borrado definitivo, si todo OK, se muestra
+        //el listado tras recargarlo
+        _this4.getElems();
+
+        var server_msg_del = response.data.message;
+        console.log(server_msg_del); //Lanzando notificación satisfactoria
+
+        Swal.fire('¡Borrado!', 'El registro con ID [' + id + '] fue eliminado correctamente.', 'success');
+      }).catch(function (error) {
+        //SI HAY ALGÚN ERROR
+        //Lanzando notificación errónea
+        toast({
+          type: 'warning',
+          title: 'ERROR al querer eliminar totalmente el registro con ID [' + id + ']'
+        });
+      });
+    },
+
+    /**
+     * Restaurar todos los registros de la papelera
+    */
+    restoreAll: function restoreAll() {
+      var _this5 = this;
+
+      /* BORRADO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: 'Restaurar',
+        text: '¿Restaurar todos los mensajes?',
+        type: 'question',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#6c757d',
+        cancelButtonColor: '#3490dc',
+        confirmButtonText: 'Cancelar',
+        cancelButtonText: 'Restaurar'
+      }).then(function (result) {
+        //Pulsando el botón equivalente a CANCELAR la acción
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          /**/
+          console.log('Se efectuará una Restauración total...');
+          var url = _this5.urlBase + '/restore-delete/all';
+          axios.get(url).then(function (response) {
+            //SI TODO OK
+            //tras restauración total, si todo OK, se muestra
+            //el listado tras recargarlo
+            _this5.getElems();
+
+            var server_msg = response.data.message;
+            console.log(server_msg); //Lanzando notificación satisfactoria
+
+            Swal.fire('Restaurar', 'Todos los registros de la papelera fueron restaurados correctamente.', 'success'); //Emitiendo evento de recarga de total
+
+            BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+          }).catch(function (error) {
+            //SI HAY ALGÚN ERROR
+            console.log(error.response.data.errors); //Lanzando notificación errónea
+
+            toast({
+              type: 'warning',
+              title: 'ERROR al querer restaurar todos los registros'
+            });
+          }); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+        } else {
+          console.log('Acción cancelada');
+        }
+      }); //fin confirmación
+    },
+
+    /**
+     * Vaciar la papelera - Forzar el borrado de todos los registros de la papelera
+    */
+    forceDeleteAll: function forceDeleteAll() {
+      var _this6 = this;
+
+      /* BORRADO CON CONFIRMACIÓN */
+
+      /**/
+      Swal.fire({
+        title: 'Borrado Total',
+        text: 'Eliminar definitivamente todos los mensajes?',
+        type: 'question',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#6c757d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Cancelar',
+        cancelButtonText: 'Eliminar'
+      }).then(function (result) {
+        //Pulsando el botón equivalente a CANCELAR la acción
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          /**/
+          console.log('Se efectuará un Borrado total...');
+          var url = _this6.urlBase + '/force-delete/all';
+          axios.get(url).then(function (response) {
+            //SI TODO OK
+            //tras borrado total, si todo OK, se muestra
+            //el listado tras recargarlo
+            _this6.getElems();
+
+            var server_msg = response.data.message;
+            console.log(server_msg); //Lanzando notificación satisfactoria
+
+            Swal.fire('Eliminar', 'Todos los registros de la papelera fueron eliminados correctamente.', 'success'); //Emitiendo evento de recarga de total
+
+            BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+          }).catch(function (error) {
+            //SI HAY ALGÚN ERROR
+            console.log(error.response.data.errors); //Lanzando notificación errónea
+
+            toast({
+              type: 'warning',
+              title: 'ERROR al querer eliminar todos los registros'
+            });
+          }); //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+        } else {
+          console.log('Acción cancelada');
+        }
+      }); //fin confirmación
     }
   }
 });
@@ -2974,36 +4043,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var _this = this;
 
     //o created()
-    console.log('Component mounted.'); //para cargar el listado de registros al llegar al componente
+    console.log('Component mounted.'); //para cargar el listado de registros no leidos al llegar al componente
 
-    this.getElems(); //Recibiendo notificación de todo evento que cambie el total de correos no leidos
+    this.getElemsTotNoLeidos(); //Recibiendo notificación de todo evento que cambie el total de correos no leidos
 
     BusEvent.$on('notifRecargaLeidosNoTotEvent', function () {
       _this.notifRecargaLeidosNoTot();
@@ -3013,38 +4060,62 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       urlBase: '/api/contacts',
-      //Puede ser también     >>      elems: [],
-      elemsTop: {},
-      //variable contenedora de los registros a listar
-      elemsTop_no_papelera_leido_no_tot: 0
+      elemsTop_no_papelera_leido_no_tot: 0,
+      //Puede ser también     >>      elemsTop3_LeidoNo: [],
+      elems_Top3LeidoNo: {} //variable contenedora de los registros a listar
+
     };
   },
   methods: {
     /**
-     * Obteniendo listado de registros
-     * para contar los no leidos
+     * Obteniendo TOT de los no leidos
     */
-    getElems: function getElems() {
+    getElemsTotNoLeidos: function getElemsTotNoLeidos() {
       var _this2 = this;
 
       //URL hacia la ruta del listado de registros
       //  >> SIN paginación
-      var url = this.urlBase; //Empleado el método GET de Axios, el cliente AJAX,
+      var url = this.urlBase + '/no-readed/tot'; //Empleado el método GET de Axios, el cliente AJAX,
       //que es el método referido a la ruta llamada
       //  -> Si es correcto, se recogen los datos
       //  dentro del contenedor definido
 
       axios.get(url).then(function (response) {
         ////console.log(response.data)
-        _this2.elemsTop_no_papelera_leido_no_tot = response.data.elems_no_papelera_leido_no_tot;
+        _this2.elemsTop_no_papelera_leido_no_tot = response.data; //Habiendo algún mensaje no leido fuera de la papelera...
+
+        if (_this2.elemsTop_no_papelera_leido_no_tot > 0) {
+          _this2.getElemsTop3NoLeidos();
+        }
       });
     },
 
     /**
-     * Recarga de total de mensajes no leidos
+     * Obteniendo TOP3 de los no leidos
+    */
+    getElemsTop3NoLeidos: function getElemsTop3NoLeidos() {
+      var _this3 = this;
+
+      //URL hacia la ruta del listado de registros
+      //  >> SIN paginación
+      var url = this.urlBase + '/no-readed/top3'; //Empleado el método GET de Axios, el cliente AJAX,
+      //que es el método referido a la ruta llamada
+      //  -> Si es correcto, se recogen los datos
+      //  dentro del contenedor definido
+
+      axios.get(url).then(function (response) {
+        ////console.log(response.data)
+        _this3.elems_Top3LeidoNo = response.data;
+      });
+    },
+
+    /**
+     * Recarga de:
+     *      >> total de mensajes no leidos
+     *          => top3 de mensajes no leidos
     */
     notifRecargaLeidosNoTot: function notifRecargaLeidosNoTot() {
-      this.getElems();
+      this.getElemsTotNoLeidos();
     }
   }
 });
@@ -3215,6 +4286,7 @@ __webpack_require__.r(__webpack_exports__);
   //datos devueltos por el componente:
   data: function data() {
     return {
+      urlBase: '/api/users',
       //variable que guarda el archivo seleccionado
       avatarSelecc: null,
       //variable para almacenar los datos del registro a almacenar
@@ -3259,7 +4331,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       console.log('Registrando nuevo registro...');
-      var url = '/api/users';
+      var url = this.urlBase;
       axios.post(url, this.objUser).then(function (response) {
         //SI TODO OK
         ////document.location = '/';
@@ -3311,7 +4383,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       console.log('Actualizando registro... [' + this.objUser.id + ']');
-      var url = '/api/users/' + this.objUser.id;
+      var url = this.urlBase + '/' + this.objUser.id;
       axios.put(url, this.objUser).then(function (response) {
         //SI TODO OK
         //reseteando panel
@@ -3482,6 +4554,7 @@ __webpack_require__.r(__webpack_exports__);
   //datos devueltos por el componente:
   data: function data() {
     return {
+      urlBase: '/api/users',
       //variable para almacenar los datos del registro a almacenar
       objActivReg: {},
       element: '',
@@ -3589,7 +4662,7 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log('Cargando datos de actividad del registro [' + regID + ']'); //Haciendo la petición de datos
 
-      var url = '/api/users/prof-activity/' + regID;
+      var url = this.urlBase + '/prof-activity/' + regID;
       axios.get(url).then(function (response) {
         //SI TODO OK
         console.log('Top Últimas recetas:' + response.data);
@@ -3736,6 +4809,7 @@ __webpack_require__.r(__webpack_exports__);
   //datos devueltos por el componente:
   data: function data() {
     return {
+      urlBase: '/api/users',
       //variable que guarda el archivo seleccionado
       avatarSelecc: null,
       //variable para almacenar los datos del registro a almacenar
@@ -3786,7 +4860,7 @@ __webpack_require__.r(__webpack_exports__);
 
       //Cargando datos del registro correspondiente
       //URL hacia la ruta de obtener datos del registro
-      var url = '/api/users/' + regID; //Empleado el método DELETE de Axios, el cliente AJAX,
+      var url = this.urlBase + '/' + regID; //Empleado el método DELETE de Axios, el cliente AJAX,
       //que es el método referido a la ruta llamada
 
       axios.get(url).then(function (response) {
@@ -3806,7 +4880,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       console.log('Actualizando registro... [' + this.objReg.id + ']');
-      var url = '/api/users/' + this.objReg.id;
+      var url = this.urlBase + '/' + this.objReg.id;
       axios.put(url, this.objReg).then(function (response) {
         //SI TODO OK
         //vaciando los posibles errores que se produjeron
@@ -3932,7 +5006,7 @@ __webpack_require__.r(__webpack_exports__);
         if (result.dismiss === Swal.DismissReason.cancel) {
           //Borrado definitivo del registro
           //URL hacia la ruta de borrado definitivo de registro
-          var url = '/api/users/force-delete/' + _this5.objReg.id; //Empleado el método GET de Axios, el cliente AJAX,
+          var url = _this5.urlBase + '/force-delete/' + _this5.objReg.id; //Empleado el método GET de Axios, el cliente AJAX,
           //que es el método referido a la ruta llamada
 
           axios.get(url).then(function (response) {
@@ -4019,6 +5093,7 @@ __webpack_require__.r(__webpack_exports__);
   //datos devueltos por el componente:
   data: function data() {
     return {
+      urlBase: '/api/users',
       //variable para almacenar los datos del registro a almacenar
       objDataResReg: {}
     };
@@ -4032,7 +5107,7 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log('Cargando datos resumen del registro [' + regID + ']'); //Haciendo la petición de datos
 
-      var url = '/api/users/prof-data-resum/' + regID;
+      var url = this.urlBase + '/prof-data-resum/' + regID;
       axios.get(url).then(function (response) {
         //SI TODO OK
         console.log(response.data);
@@ -4309,6 +5384,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     var _this = this;
@@ -4327,6 +5407,7 @@ __webpack_require__.r(__webpack_exports__);
   //datos devueltos por el componente:
   data: function data() {
     return {
+      urlBase: '/api/users',
       //Puede ser también     >>      users: [],
       users: {},
       //variable contenedora de los registros a listar
@@ -4353,7 +5434,7 @@ __webpack_require__.r(__webpack_exports__);
 
       //URL hacia la ruta del listado de registros
       //  >> SIN paginación
-      var url = '/api/users'; //Empleado el método GET de Axios, el cliente AJAX,
+      var url = this.urlBase; //Empleado el método GET de Axios, el cliente AJAX,
       //que es el método referido a la ruta llamada
       //  -> Si es correcto, se recogen los datos
       //  dentro del contenedor definido
@@ -4373,7 +5454,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log('Enviando filtrado de búsqueda...por [' + this.term + ']'); //URL hacia la ruta del listado de registros
       //  >> SIN paginación
 
-      var url = '/api/users/search'; //Empleado el método POST de Axios, el cliente AJAX,
+      var url = this.urlBase + '/search'; //Empleado el método POST de Axios, el cliente AJAX,
       //que es el método referido a la ruta llamada
       //  -> Si es correcto, se recogen los datos
       //  dentro del contenedor definido
@@ -4421,12 +5502,6 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /**
-     * Editando registro
-    */
-    editUser: function editUser(user) {//
-    },
-
-    /**
      * Mandar a papelera / Borrado definitivo del registro
     */
     trashDeleteUser: function trashDeleteUser(id) {
@@ -4436,7 +5511,7 @@ __webpack_require__.r(__webpack_exports__);
 
       /*
       //URL hacia la ruta de borrado de registro
-      var url = '/api/users/' + id;
+      var url = this.urlBase + '/' + id;
       //Empleado el método DELETE de Axios, el cliente AJAX,
       //que es el método referido a la ruta llamada
       axios.delete(url).then(response => {
@@ -4487,7 +5562,7 @@ __webpack_require__.r(__webpack_exports__);
           /**/
           console.log('Se efectuará un Soft Delete...'); //URL hacia la ruta de borrado temporal de registro
 
-          var url = '/api/users/' + id; //Empleado el método DELETE de Axios, el cliente AJAX,
+          var url = _this4.urlBase + '/' + id; //Empleado el método DELETE de Axios, el cliente AJAX,
           //que es el método referido a la ruta llamada
 
           axios.delete(url).then(function (response) {
@@ -4542,7 +5617,7 @@ __webpack_require__.r(__webpack_exports__);
         if (result.value) {
           /**/
           //URL hacia la ruta de restaurar de la papelera el registro
-          var url = '/api/users/restore-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
+          var url = _this5.urlBase + '/restore-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
           //que es el método referido a la ruta llamada
 
           axios.get(url).then(function (response) {
@@ -4580,7 +5655,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this6 = this;
 
       //URL hacia la ruta de borrado definitivo de registro
-      var url = '/api/users/force-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
+      var url = this.urlBase + '/force-delete/' + id; //Empleado el método GET de Axios, el cliente AJAX,
       //que es el método referido a la ruta llamada
 
       axios.get(url).then(function (response) {
@@ -63008,132 +64083,358 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "content" }, [
       _c("div", { staticClass: "container-fluid" }, [
-        _c("div", { staticClass: "row" }, [
-          _c(
-            "div",
-            { staticClass: "col-md-3" },
-            [
+        _c(
+          "div",
+          { staticClass: "row" },
+          [
+            _c("contacts-navbar-folders-component", {
+              attrs: {
+                elems_no_papelera_leido_no_tot:
+                  _vm.elems_no_papelera_leido_no_tot_var
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-9" }, [
               _c(
-                "router-link",
+                "div",
                 {
-                  staticClass: "btn btn-primary btn-block mb-3",
-                  attrs: {
-                    to: { name: "contacts_list" },
-                    title: "Volver a la Bandeja de entrada"
-                  }
+                  staticClass:
+                    "card card-primary card-outline borde-inf-primary"
                 },
                 [
-                  _vm._v(
-                    "\n                                Volver a la Bandeja de entrada\n                            "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "card" }, [
-                _vm._m(1),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-body p-0" }, [
-                  _c("ul", { staticClass: "nav nav-pills flex-column" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body p-0" }, [
+                    _c("div", { staticClass: "mailbox-read-info" }, [
+                      _c("h5", { attrs: { title: _vm.objReg.asunto } }, [
+                        _c("strong", [
+                          _vm._v(
+                            _vm._s(_vm._f("resumenTxt")(_vm.objReg.asunto))
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _vm.objReg.respuestas_count > 0
+                        ? _c(
+                            "span",
+                            {
+                              staticClass: "badge bg-primary",
+                              attrs: { title: "Cantidad de respuestas" }
+                            },
+                            [_vm._v(_vm._s(_vm.objReg.respuestas_count))]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c("h6", [
+                        _vm._v(
+                          "de: " +
+                            _vm._s(_vm.objReg.nombre) +
+                            " <" +
+                            _vm._s(_vm.objReg.correo) +
+                            ">\n                                        "
+                        ),
+                        _c(
+                          "span",
+                          { staticClass: "mailbox-read-time float-right" },
+                          [
+                            _vm._v(
+                              _vm._s(
+                                _vm._f("formatFechaHoraTxt")(
+                                  _vm.objReg.created_at
+                                )
+                              )
+                            )
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
                     _c(
-                      "li",
-                      { staticClass: "nav-item" },
+                      "div",
+                      {
+                        staticClass: "mailbox-controls with-border text-center"
+                      },
+                      [
+                        _c("div", { staticClass: "btn-group" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-default btn-sm",
+                              attrs: {
+                                type: "button",
+                                "data-toggle": "tooltip",
+                                "data-container": "body",
+                                title: "Mandar a la papelera"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.trashElem()
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fas fa-trash-alt" })]
+                          ),
+                          _vm._v(" "),
+                          _vm.objReg.msg_origen == 0
+                            ? _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-default btn-sm",
+                                  attrs: {
+                                    href: "#txt-msg-resp",
+                                    "data-toggle": "collapse",
+                                    "data-container": "body",
+                                    title: "Responder"
+                                  }
+                                },
+                                [_c("i", { staticClass: "fa fa-reply" })]
+                              )
+                            : _vm._e()
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "mailbox-read-message" }, [
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.objReg.mensaje,
+                            expression: "objReg.mensaje"
+                          }
+                        ],
+                        staticClass: "col-12",
+                        attrs: { disabled: "" },
+                        domProps: { value: _vm.objReg.mensaje },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.objReg, "mensaje", $event.target.value)
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _vm.objReg.msg_origen != 0
+                      ? _c("div", { staticClass: "float-right" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-default",
+                              attrs: {
+                                href: "javascript: void(0);",
+                                title: "Ver conversación"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.fillEditFormReg(
+                                    _vm.objReg.msg_origen
+                                  )
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fas fa-mail-bulk" }),
+                              _vm._v(
+                                " Ver conversación\n                                        "
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.objReg.respuestas, function(elemResp, indexResp) {
+                    return _c(
+                      "div",
+                      { key: indexResp, staticClass: "card-body p-0" },
                       [
                         _c(
-                          "router-link",
+                          "a",
                           {
-                            staticClass: "nav-link",
                             attrs: {
-                              to: { name: "contacts_list" },
-                              title: "Abrir la Bandeja de entrada"
+                              href: "#txt-msg-resps-" + elemResp.id,
+                              "data-toggle": "collapse"
                             }
                           },
                           [
-                            _c("i", { staticClass: "fas fa-inbox" }),
-                            _vm._v(
-                              " Bandeja de entrada\n                                                "
-                            ),
-                            _vm.elems_no_papelera_leido_no_tot > 0
-                              ? _c(
+                            _c("div", { staticClass: "mailbox-read-info" }, [
+                              _c("h5", [
+                                _c("strong", [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm._f("resumenTxt")(elemResp.asunto)
+                                    )
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("h6", [
+                                _vm._v(
+                                  "de: " +
+                                    _vm._s(elemResp.nombre) +
+                                    " <" +
+                                    _vm._s(elemResp.correo) +
+                                    ">\n                                        "
+                                ),
+                                _c(
                                   "span",
                                   {
-                                    staticClass: "badge bg-primary float-right",
-                                    attrs: { title: "Mensaje(s) sin leer" }
+                                    staticClass: "mailbox-read-time float-right"
                                   },
                                   [
                                     _vm._v(
-                                      _vm._s(_vm.elems_no_papelera_leido_no_tot)
+                                      _vm._s(
+                                        _vm._f("formatFechaHoraTxt")(
+                                          elemResp.created_at
+                                        )
+                                      )
                                     )
                                   ]
                                 )
-                              : _vm._e()
+                              ])
+                            ])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "mailbox-read-message collapse",
+                            attrs: { id: "txt-msg-resps-" + elemResp.id }
+                          },
+                          [
+                            _c("textarea", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: elemResp.mensaje,
+                                  expression: "elemResp.mensaje"
+                                }
+                              ],
+                              staticClass: "col-12",
+                              attrs: { disabled: "" },
+                              domProps: { value: elemResp.mensaje },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    elemResp,
+                                    "mensaje",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
                           ]
                         )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _vm._m(2),
-                    _vm._v(" "),
-                    _vm._m(3)
-                  ])
-                ])
-              ])
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-9" }, [
-            _c(
-              "div",
-              {
-                staticClass: "card card-primary card-outline borde-inf-primary"
-              },
-              [
-                _vm._m(4),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-body p-0" }, [
-                  _c("div", { staticClass: "mailbox-read-info" }, [
-                    _c("h5", [
-                      _c("strong", [_vm._v(_vm._s(_vm.objReg.asunto))])
-                    ]),
-                    _vm._v(" "),
-                    _c("h6", [
-                      _vm._v(
-                        "de: " +
-                          _vm._s(_vm.objReg.nombre) +
-                          " <" +
-                          _vm._s(_vm.objReg.correo) +
-                          ">\n                                        "
-                      ),
-                      _c(
-                        "span",
-                        { staticClass: "mailbox-read-time float-right" },
-                        [
-                          _vm._v(
-                            _vm._s(
-                              _vm._f("formatFechaHoraTxt")(
-                                _vm.objReg.created_at
-                              )
-                            )
-                          )
-                        ]
-                      )
-                    ])
-                  ]),
+                      ]
+                    )
+                  }),
                   _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "mailbox-controls with-border text-center" },
-                    [
-                      _c("div", { staticClass: "btn-group" }, [
+                  _vm.objReg.msg_origen == 0
+                    ? _c("div", { attrs: { id: "accordion-msg-resp" } }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "callout callout-primary ml-2 mr-2 p-0"
+                          },
+                          [
+                            _c(
+                              "div",
+                              {
+                                staticClass: "collapse",
+                                attrs: {
+                                  id: "txt-msg-resp",
+                                  "data-parent": "#accordion-msg-resp"
+                                }
+                              },
+                              [
+                                _c("h6", [_vm._v("Respuesta:")]),
+                                _vm._v(" "),
+                                _c(
+                                  "form",
+                                  {
+                                    staticClass: "form-horizontal",
+                                    attrs: { novalidate: "" },
+                                    on: {
+                                      submit: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.sendResponse()
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("textarea", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.objRegResp.msg_respuesta,
+                                          expression: "objRegResp.msg_respuesta"
+                                        }
+                                      ],
+                                      staticClass: "col-12",
+                                      domProps: {
+                                        value: _vm.objRegResp.msg_respuesta
+                                      },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            _vm.objRegResp,
+                                            "msg_respuesta",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm.errors.has("msg_respuesta")
+                                      ? _c(
+                                          "span",
+                                          {
+                                            staticClass:
+                                              "block text-sm text-danger mt-2"
+                                          },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.errors.get("msg_respuesta")
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    _vm._m(2)
+                                  ]
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.objReg.msg_origen == 0
+                    ? _c("div", { staticClass: "card-footer" }, [
+                        _vm._m(3),
+                        _vm._v(" "),
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-default btn-sm",
+                            staticClass: "btn btn-default",
                             attrs: {
                               type: "button",
-                              "data-toggle": "tooltip",
-                              "data-container": "body",
                               title: "Mandar a la papelera"
                             },
                             on: {
@@ -63142,228 +64443,40 @@ var render = function() {
                               }
                             }
                           },
-                          [_c("i", { staticClass: "fas fa-trash-alt" })]
-                        ),
-                        _vm._v(" "),
-                        _vm._m(5)
+                          [
+                            _c("i", { staticClass: "fas fa-trash-alt" }),
+                            _vm._v(" A papelera")
+                          ]
+                        )
                       ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "mailbox-read-message" }, [
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.objReg.mensaje,
-                          expression: "objReg.mensaje"
-                        }
-                      ],
-                      staticClass: "col-12",
-                      attrs: { disabled: "" },
-                      domProps: { value: _vm.objReg.mensaje },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.objReg, "mensaje", $event.target.value)
-                        }
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.objRegResps, function(elemResp, indexResp) {
-                  return _c(
-                    "div",
-                    { key: indexResp, staticClass: "card-body p-0" },
-                    [
-                      _c(
-                        "a",
-                        {
-                          attrs: {
-                            href: "#txt-msg-resps-" + elemResp.id,
-                            "data-toggle": "collapse"
-                          }
-                        },
-                        [
-                          _c("div", { staticClass: "mailbox-read-info" }, [
-                            _c("h5", [
-                              _c("strong", [_vm._v(_vm._s(elemResp.asunto))])
-                            ]),
-                            _vm._v(" "),
-                            _c("h6", [
-                              _vm._v(
-                                "de: " +
-                                  _vm._s(elemResp.nombre) +
-                                  " <" +
-                                  _vm._s(elemResp.correo) +
-                                  ">\n                                        "
-                              ),
-                              _c(
-                                "span",
-                                {
-                                  staticClass: "mailbox-read-time float-right"
-                                },
-                                [
-                                  _vm._v(
-                                    _vm._s(
-                                      _vm._f("formatFechaHoraTxt")(
-                                        elemResp.created_at
-                                      )
-                                    )
-                                  )
-                                ]
-                              )
-                            ])
-                          ])
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "mailbox-read-message collapse",
-                          attrs: { id: "txt-msg-resps-" + elemResp.id }
-                        },
-                        [
-                          _c("textarea", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: elemResp.mensaje,
-                                expression: "elemResp.mensaje"
-                              }
-                            ],
-                            staticClass: "col-12",
-                            attrs: { disabled: "" },
-                            domProps: { value: elemResp.mensaje },
+                    : _c("div", { staticClass: "card-footer text-center" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-default",
+                            attrs: {
+                              type: "button",
+                              title: "Mandar a la papelera"
+                            },
                             on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  elemResp,
-                                  "mensaje",
-                                  $event.target.value
-                                )
+                              click: function($event) {
+                                return _vm.trashElem()
                               }
                             }
-                          })
-                        ]
-                      )
-                    ]
-                  )
-                }),
-                _vm._v(" "),
-                _c("div", { attrs: { id: "accordion-msg-resp" } }, [
-                  _c(
-                    "div",
-                    { staticClass: "callout callout-primary ml-2 mr-2 p-0" },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "collapse",
-                          attrs: {
-                            id: "txt-msg-resp",
-                            "data-parent": "#accordion-msg-resp"
-                          }
-                        },
-                        [
-                          _c(
-                            "form",
-                            {
-                              staticClass: "form-horizontal",
-                              attrs: { novalidate: "" },
-                              on: {
-                                submit: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.sendResponse()
-                                }
-                              }
-                            },
-                            [
-                              _c("textarea", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.objRegResp.msg_respuesta,
-                                    expression: "objRegResp.msg_respuesta"
-                                  }
-                                ],
-                                staticClass: "col-12",
-                                domProps: {
-                                  value: _vm.objRegResp.msg_respuesta
-                                },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.objRegResp,
-                                      "msg_respuesta",
-                                      $event.target.value
-                                    )
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _vm.errors.has("msg_respuesta")
-                                ? _c(
-                                    "span",
-                                    {
-                                      staticClass:
-                                        "block text-sm text-danger mt-2"
-                                    },
-                                    [
-                                      _vm._v(
-                                        _vm._s(_vm.errors.get("msg_respuesta"))
-                                      )
-                                    ]
-                                  )
-                                : _vm._e(),
-                              _vm._v(" "),
-                              _vm._m(6)
-                            ]
-                          )
-                        ]
-                      )
-                    ]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-footer" }, [
-                  _vm._m(7),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-default",
-                      attrs: { type: "button", title: "Mandar a la papelera" },
-                      on: {
-                        click: function($event) {
-                          return _vm.trashElem()
-                        }
-                      }
-                    },
-                    [
-                      _c("i", { staticClass: "fas fa-trash-alt" }),
-                      _vm._v(" A papelera")
-                    ]
-                  )
-                ])
-              ],
-              2
-            )
-          ])
-        ])
+                          },
+                          [
+                            _c("i", { staticClass: "fas fa-trash-alt" }),
+                            _vm._v(" A papelera")
+                          ]
+                        )
+                      ])
+                ],
+                2
+              )
+            ])
+          ],
+          1
+        )
       ])
     ])
   ])
@@ -63382,67 +64495,8 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
-      _c("h3", { staticClass: "card-title" }, [_vm._v("Carpetas")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-tools" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-tool",
-            attrs: { type: "button", "data-widget": "collapse" }
-          },
-          [_c("i", { staticClass: "fa fa-minus" })]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "nav-item" }, [
-      _c("a", { staticClass: "nav-link disabled", attrs: { href: "#" } }, [
-        _c("i", { staticClass: "far fa-envelope" }),
-        _vm._v(" Enviados\n                                            ")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "nav-item" }, [
-      _c("a", { staticClass: "nav-link disabled", attrs: { href: "#" } }, [
-        _c("i", { staticClass: "far fa-trash-alt" }),
-        _vm._v(" Papelera\n                                            ")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
       _c("h3", { staticClass: "card-title" }, [_vm._v("Mensaje")])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn btn-default btn-sm",
-        attrs: {
-          href: "#txt-msg-resp",
-          "data-toggle": "collapse",
-          "data-container": "body",
-          title: "Responder"
-        }
-      },
-      [_c("i", { staticClass: "fa fa-reply" })]
-    )
   },
   function() {
     var _vm = this
@@ -63533,125 +64587,89 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "content" }, [
       _c("div", { staticClass: "container-fluid" }, [
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-md-3" }, [
-            _c(
-              "a",
-              {
-                staticClass: "btn btn-primary btn-block mb-3 disabled",
-                attrs: { href: "#" }
-              },
-              [_vm._v("Redactar")]
-            ),
+        _c(
+          "div",
+          { staticClass: "row" },
+          [
+            _c("contacts-navbar-folders-component", {
+              attrs: {
+                elems_no_papelera_leido_no_tot:
+                  _vm.elems_no_papelera_leido_no_tot_var
+              }
+            }),
             _vm._v(" "),
-            _c("div", { staticClass: "card" }, [
-              _vm._m(1),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-body p-0" }, [
-                _c("ul", { staticClass: "nav nav-pills flex-column" }, [
-                  _c("li", { staticClass: "nav-item active" }, [
-                    _c("div", { staticClass: "nav-link text-info" }, [
-                      _c("i", { staticClass: "fas fa-inbox" }),
-                      _vm._v(
-                        " Bandeja de entrada\n                                                "
-                      ),
-                      _vm.elems_no_papelera_leido_no_tot > 0
-                        ? _c(
-                            "span",
-                            {
-                              staticClass: "badge bg-primary float-right",
-                              attrs: { title: "Mensaje(s) sin leer" }
-                            },
-                            [_vm._v(_vm._s(_vm.elems_no_papelera_leido_no_tot))]
+            _c("div", { staticClass: "col-md-9" }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "card card-primary card-outline borde-inf-primary"
+                },
+                [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h3", { staticClass: "card-title" }, [
+                      _vm._v("Bandeja de entrada")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-tools" }, [
+                      _c(
+                        "form",
+                        {
+                          staticClass: "form-inline ml-5",
+                          attrs: { method: "post" },
+                          on: {
+                            submit: function($event) {
+                              $event.preventDefault()
+                              return _vm.search()
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "input-group input-group-sm" },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.term,
+                                    expression: "term"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  placeholder: "Buscar mensajes"
+                                },
+                                domProps: { value: _vm.term },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.term = $event.target.value
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm._m(1)
+                            ]
                           )
-                        : _vm._e()
+                        ]
+                      )
                     ])
                   ]),
                   _vm._v(" "),
-                  _vm._m(2),
-                  _vm._v(" "),
-                  _vm._m(3)
-                ])
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-9" }, [
-            _c(
-              "div",
-              {
-                staticClass: "card card-primary card-outline borde-inf-primary"
-              },
-              [
-                _c("div", { staticClass: "card-header" }, [
-                  _c("h3", { staticClass: "card-title" }, [
-                    _vm._v("Bandeja de entrada")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "card-tools" }, [
-                    _c(
-                      "form",
-                      {
-                        staticClass: "form-inline ml-5",
-                        attrs: { method: "post" },
-                        on: {
-                          submit: function($event) {
-                            $event.preventDefault()
-                            return _vm.search()
-                          }
-                        }
-                      },
-                      [
-                        _c(
-                          "div",
-                          { staticClass: "input-group input-group-sm" },
-                          [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.term,
-                                  expression: "term"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                type: "text",
-                                placeholder: "Buscar mensajes"
-                              },
-                              domProps: { value: _vm.term },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.term = $event.target.value
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _vm._m(4)
-                          ]
-                        )
-                      ]
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-body p-0" }, [
-                  _c(
-                    "div",
-                    { staticClass: "mailbox-controls" },
-                    [
+                  _c("div", { staticClass: "card-body p-0" }, [
+                    _c("div", { staticClass: "mailbox-controls" }, [
                       _c(
-                        "router-link",
+                        "button",
                         {
                           staticClass: "btn btn-default btn-sm",
-                          attrs: {
-                            to: "/admin/contacts",
-                            title: "Actualizar lista"
-                          }
+                          attrs: { title: "Actualizar lista" },
+                          on: { click: _vm.recargaPag }
                         },
                         [_c("i", { staticClass: "fas fa-sync-alt" })]
                       ),
@@ -63664,167 +64682,211 @@ var render = function() {
                             " disponible(s)\n                                        "
                         )
                       ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "table-responsive mailbox-messages" },
-                    [
-                      _c(
-                        "table",
-                        { staticClass: "table table-hover table-striped" },
-                        [
-                          _c(
-                            "tbody",
-                            _vm._l(_vm.elems, function(elem, index) {
-                              return _c("tr", { key: index }, [
-                                _c("td", [
-                                  elem.leido
-                                    ? _c(
-                                        "a",
-                                        {
-                                          staticClass: "text-primary",
-                                          attrs: {
-                                            href: "javascript: void(0);",
-                                            title:
-                                              "Leido - Marcar como NO LEIDO"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.updateField(
-                                                elem.id,
-                                                "leido",
-                                                0
-                                              )
-                                            }
-                                          }
-                                        },
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "table-responsive mailbox-messages" },
+                      [
+                        _c(
+                          "table",
+                          { staticClass: "table table-hover table-striped" },
+                          [
+                            _vm.elems.length == 0
+                              ? _c("tbody", [_vm._m(2)])
+                              : _c(
+                                  "tbody",
+                                  _vm._l(_vm.elems, function(elem, index) {
+                                    return _c("tr", { key: index }, [
+                                      _c("td", [
+                                        elem.leido
+                                          ? _c(
+                                              "a",
+                                              {
+                                                staticClass: "text-primary",
+                                                attrs: {
+                                                  href: "javascript: void(0);",
+                                                  title:
+                                                    "Leido - Marcar como NO LEIDO"
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.updateField(
+                                                      elem.id,
+                                                      "leido",
+                                                      0
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "fas fa-circle i_mens_contacto_leidoOK"
+                                                })
+                                              ]
+                                            )
+                                          : _c(
+                                              "a",
+                                              {
+                                                staticClass: "text-primary",
+                                                attrs: {
+                                                  href: "javascript: void(0);",
+                                                  title:
+                                                    "Sin leer - Marcar como LEIDO"
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.updateField(
+                                                      elem.id,
+                                                      "leido",
+                                                      1
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "fas fa-circle i_mens_contacto_leidoNOK"
+                                                })
+                                              ]
+                                            )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-name" },
                                         [
-                                          _c("i", {
-                                            staticClass:
-                                              "fas fa-circle i_mens_contacto_leidoOK"
-                                          })
+                                          _c(
+                                            "router-link",
+                                            {
+                                              attrs: {
+                                                to: {
+                                                  name: "contact_msg",
+                                                  params: { id: elem.id }
+                                                },
+                                                title:
+                                                  "Ver mensaje de " +
+                                                  elem.correo
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                                            " +
+                                                  _vm._s(elem.nombre) +
+                                                  "\n                                                        "
+                                              )
+                                            ]
+                                          )
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-subject" },
+                                        [
+                                          _c("strong", [
+                                            _vm._v(_vm._s(elem.asunto))
+                                          ]),
+                                          _vm._v(" "),
+                                          elem.respuestas_count > 0
+                                            ? _c(
+                                                "span",
+                                                {
+                                                  staticClass:
+                                                    "badge badge-primary",
+                                                  staticStyle: {
+                                                    position: "relative",
+                                                    top: "-7px",
+                                                    left: "-2px"
+                                                  },
+                                                  attrs: {
+                                                    title:
+                                                      "Respuesta(s) asociada(s)"
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      elem.respuestas_count
+                                                    )
+                                                  )
+                                                ]
+                                              )
+                                            : _vm._e(),
+                                          _vm._v(" "),
+                                          _c("br"),
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm._f("resumenTxt")(elem.mensaje)
+                                            ) +
+                                              "\n                                                    "
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-date" },
+                                        [
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm._f("formatFHHaceTanto")(
+                                                elem.created_at
+                                              )
+                                            )
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-attachment" },
+                                        [
+                                          _c(
+                                            "a",
+                                            {
+                                              attrs: {
+                                                href: "javascript: void(0);",
+                                                title:
+                                                  "A papelera / Borrar registro [" +
+                                                  elem.id +
+                                                  "]"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.trashElem(elem.id)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("i", {
+                                                staticClass: "fas fa-trash-alt"
+                                              })
+                                            ]
+                                          )
                                         ]
                                       )
-                                    : _c(
-                                        "a",
-                                        {
-                                          staticClass: "text-primary",
-                                          attrs: {
-                                            href: "javascript: void(0);",
-                                            title:
-                                              "Sin leer - Marcar como LEIDO"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.updateField(
-                                                elem.id,
-                                                "leido",
-                                                1
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass:
-                                              "fas fa-circle i_mens_contacto_leidoNOK"
-                                          })
-                                        ]
-                                      )
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  { staticClass: "mailbox-name" },
-                                  [
-                                    _c(
-                                      "router-link",
-                                      {
-                                        attrs: {
-                                          to: {
-                                            name: "contact_msg",
-                                            params: { id: elem.id }
-                                          },
-                                          title: "Ver mensaje de " + elem.correo
-                                        }
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\n                                                            " +
-                                            _vm._s(elem.nombre) +
-                                            "\n                                                        "
-                                        )
-                                      ]
-                                    )
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "mailbox-subject" }, [
-                                  _c("strong", [_vm._v(_vm._s(elem.asunto))]),
-                                  _c("br"),
-                                  _vm._v(
-                                    _vm._s(_vm._f("resumenTxt")(elem.mensaje))
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "mailbox-date" }, [
-                                  _vm._v(
-                                    _vm._s(
-                                      _vm._f("formatFHHaceTanto")(
-                                        elem.created_at
-                                      )
-                                    )
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  { staticClass: "mailbox-attachment" },
-                                  [
-                                    _c(
-                                      "a",
-                                      {
-                                        attrs: {
-                                          href: "javascript: void(0);",
-                                          title:
-                                            "A papelera / Borrar registro [" +
-                                            elem.id +
-                                            "]"
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            $event.preventDefault()
-                                            return _vm.trashElem(elem.id)
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("i", {
-                                          staticClass: "fas fa-trash-alt"
-                                        })
-                                      ]
-                                    )
-                                  ]
+                                    ])
+                                  }),
+                                  0
                                 )
-                              ])
-                            }),
-                            0
-                          )
-                        ]
-                      )
-                    ]
-                  )
-                ]),
-                _vm._v(" "),
-                _vm._m(5)
-              ]
-            )
-          ])
-        ])
+                          ]
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(3)
+                ]
+              )
+            ])
+          ],
+          1
+        )
       ])
     ])
   ])
@@ -63838,6 +64900,190 @@ var staticRenderFns = [
       _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Contactos")])
     ])
   },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_c("i", { staticClass: "fa fa-search", attrs: { title: "Buscar" } })]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { staticClass: "text-muted text-center" }, [
+        _vm._v("Carpeta vacía actualmente")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-footer p-0" }, [
+      _c("div", { staticClass: "mailbox-controls" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=template&id=0fb7a946&":
+/*!***************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=template&id=0fb7a946& ***!
+  \***************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "col-md-3" }, [
+    _c("a", {
+      staticClass: "btn btn-primary btn-block mb-3 p-4 disabled",
+      attrs: { href: "#" }
+    }),
+    _vm._v(" "),
+    _c("div", { staticClass: "card" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-body p-0" }, [
+        _c(
+          "ul",
+          {
+            staticClass: "nav nav-pills flex-column",
+            attrs: { id: "contacts-folders-menu" }
+          },
+          [
+            _vm.$route.name == "contacts_list"
+              ? _c("li", { staticClass: "nav-item active" }, [
+                  _c("div", { staticClass: "nav-link text-info" }, [
+                    _c("i", { staticClass: "fas fa-inbox" }),
+                    _vm._v(" Bandeja de entrada\n                        "),
+                    _vm.elems_no_papelera_leido_no_tot > 0
+                      ? _c(
+                          "span",
+                          {
+                            staticClass: "badge bg-primary float-right",
+                            attrs: { title: "Mensaje(s) sin leer" }
+                          },
+                          [_vm._v(_vm._s(_vm.elems_no_papelera_leido_no_tot))]
+                        )
+                      : _vm._e()
+                  ])
+                ])
+              : _c("li", { staticClass: "nav-item" }, [
+                  _c(
+                    "div",
+                    { staticClass: "nav-link" },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "nav-link menu-item",
+                          attrs: {
+                            to: { name: "contacts_list" },
+                            title: "Abrir la Bandeja de entrada"
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fas fa-inbox" }),
+                          _vm._v(
+                            " Bandeja de entrada\n                            "
+                          ),
+                          _vm.elems_no_papelera_leido_no_tot > 0
+                            ? _c(
+                                "span",
+                                {
+                                  staticClass: "badge bg-primary float-right",
+                                  attrs: { title: "Mensaje(s) sin leer" }
+                                },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.elems_no_papelera_leido_no_tot)
+                                  )
+                                ]
+                              )
+                            : _vm._e()
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ]),
+            _vm._v(" "),
+            _vm.$route.name == "contacts_sended_list"
+              ? _c("li", { staticClass: "nav-item active" }, [_vm._m(1)])
+              : _c("li", { staticClass: "nav-item" }, [
+                  _c(
+                    "div",
+                    { staticClass: "nav-link" },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "nav-link menu-item",
+                          attrs: {
+                            to: { name: "contacts_sended_list" },
+                            title: "Abrir Enviados"
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "far fa-envelope" }),
+                          _vm._v(" Enviados\n                        ")
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ]),
+            _vm._v(" "),
+            _vm.$route.name == "contacts_trashed_list"
+              ? _c("li", { staticClass: "nav-item active" }, [_vm._m(2)])
+              : _c("li", { staticClass: "nav-item" }, [
+                  _c(
+                    "div",
+                    { staticClass: "nav-link" },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "nav-link menu-item",
+                          attrs: {
+                            to: { name: "contacts_trashed_list" },
+                            title: "Abrir Papelera"
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "far fa-trash-alt" }),
+                          _vm._v(" Papelera\n                        ")
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ])
+          ]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -63861,22 +65107,483 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "nav-item" }, [
-      _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
-        _c("i", { staticClass: "far fa-envelope" }),
-        _vm._v(" Enviados\n                                            ")
-      ])
+    return _c("div", { staticClass: "nav-link text-info" }, [
+      _c("i", { staticClass: "far fa-envelope" }),
+      _vm._v(" Enviados\n                    ")
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "nav-item" }, [
-      _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
-        _c("i", { staticClass: "far fa-trash-alt" }),
-        _vm._v(" Papelera\n                                            ")
+    return _c("div", { staticClass: "nav-link text-info" }, [
+      _c("i", { staticClass: "far fa-trash-alt" }),
+      _vm._v(" Papelera\n                    ")
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=template&id=b140b572&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=template&id=b140b572& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "content-header" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c("div", { staticClass: "row mb-2" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-6" }, [
+            _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
+              _c(
+                "li",
+                { staticClass: "breadcrumb-item" },
+                [
+                  _c(
+                    "router-link",
+                    {
+                      attrs: {
+                        to: "/admin/dashboard",
+                        title: "Ir al Dashboard"
+                      }
+                    },
+                    [_vm._v("Dashboard")]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Contactos")
+              ])
+            ])
+          ])
+        ])
       ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "content" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c(
+          "div",
+          { staticClass: "row" },
+          [
+            _c("contacts-navbar-folders-component", {
+              attrs: {
+                elems_no_papelera_leido_no_tot:
+                  _vm.elems_no_papelera_leido_no_tot_var
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-9" }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "card card-primary card-outline borde-inf-primary"
+                },
+                [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h3", { staticClass: "card-title" }, [
+                      _vm._v("Resultados")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-tools" }, [
+                      _c(
+                        "form",
+                        {
+                          staticClass: "form-inline ml-5",
+                          attrs: { method: "post" },
+                          on: {
+                            submit: function($event) {
+                              $event.preventDefault()
+                              return _vm.search()
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "input-group input-group-sm" },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.term,
+                                    expression: "term"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  placeholder: "Buscar mensajes"
+                                },
+                                domProps: { value: _vm.term },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.term = $event.target.value
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm._m(1)
+                            ]
+                          )
+                        ]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body p-0" }, [
+                    _c("div", { staticClass: "mailbox-controls" }, [
+                      _c("div", { staticClass: "float-right" }, [
+                        _c("i", { staticClass: "fas fa-envelope" }),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.elems_no_papelera_tot) +
+                            " disponible(s)\n                                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "table-responsive mailbox-messages" },
+                      [
+                        _c(
+                          "table",
+                          { staticClass: "table table-hover table-striped" },
+                          [
+                            _vm.elems.length == 0
+                              ? _c("tbody", [
+                                  _c("tr", [
+                                    _c(
+                                      "td",
+                                      { staticClass: "text-muted text-center" },
+                                      [
+                                        _vm._v(
+                                          'Sin resultados sobre "' +
+                                            _vm._s(_vm.term) +
+                                            '"'
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              : _c(
+                                  "tbody",
+                                  _vm._l(_vm.elems, function(elem, index) {
+                                    return _c("tr", { key: index }, [
+                                      _c("td", [
+                                        elem.leido
+                                          ? _c(
+                                              "a",
+                                              {
+                                                staticClass: "text-primary",
+                                                attrs: {
+                                                  href: "javascript: void(0);",
+                                                  title:
+                                                    "Leido - Marcar como NO LEIDO"
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.updateField(
+                                                      elem.id,
+                                                      "leido",
+                                                      0
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "fas fa-circle i_mens_contacto_leidoOK"
+                                                })
+                                              ]
+                                            )
+                                          : _c(
+                                              "a",
+                                              {
+                                                staticClass: "text-primary",
+                                                attrs: {
+                                                  href: "javascript: void(0);",
+                                                  title:
+                                                    "Sin leer - Marcar como LEIDO"
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.updateField(
+                                                      elem.id,
+                                                      "leido",
+                                                      1
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "fas fa-circle i_mens_contacto_leidoNOK"
+                                                })
+                                              ]
+                                            )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-name" },
+                                        [
+                                          _c(
+                                            "router-link",
+                                            {
+                                              attrs: {
+                                                to: {
+                                                  name: "contact_msg",
+                                                  params: { id: elem.id }
+                                                },
+                                                title:
+                                                  "Ver mensaje de " +
+                                                  elem.correo
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                                            " +
+                                                  _vm._s(elem.nombre) +
+                                                  "\n                                                        "
+                                              )
+                                            ]
+                                          )
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-subject" },
+                                        [
+                                          _c("strong", [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm._f("resumenTxt")(
+                                                  elem.asunto
+                                                )
+                                              )
+                                            )
+                                          ]),
+                                          _vm._v(" "),
+                                          elem.respuestas_count > 0
+                                            ? _c(
+                                                "span",
+                                                {
+                                                  staticClass:
+                                                    "badge badge-primary",
+                                                  staticStyle: {
+                                                    position: "relative",
+                                                    top: "-7px",
+                                                    left: "-2px"
+                                                  },
+                                                  attrs: {
+                                                    title:
+                                                      "Respuesta(s) asociada(s)"
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      elem.respuestas_count
+                                                    )
+                                                  )
+                                                ]
+                                              )
+                                            : _vm._e(),
+                                          _vm._v(" "),
+                                          _c("br"),
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm._f("resumenTxt")(elem.mensaje)
+                                            ) +
+                                              "\n                                                    "
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        [
+                                          elem.deleted_at != null
+                                            ? _c(
+                                                "router-link",
+                                                {
+                                                  attrs: {
+                                                    to: {
+                                                      name:
+                                                        "contacts_trashed_list"
+                                                    },
+                                                    title:
+                                                      "En la carpeta [Papelera] ... Ir"
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "span",
+                                                    {
+                                                      staticClass:
+                                                        "badge badge-primary"
+                                                    },
+                                                    [_vm._v("Papelera")]
+                                                  )
+                                                ]
+                                              )
+                                            : elem.msg_origen != 0
+                                              ? _c(
+                                                  "router-link",
+                                                  {
+                                                    attrs: {
+                                                      to: {
+                                                        name:
+                                                          "contacts_sended_list"
+                                                      },
+                                                      title:
+                                                        "En la carpeta [Enviados] ... Ir"
+                                                    }
+                                                  },
+                                                  [
+                                                    _c(
+                                                      "span",
+                                                      {
+                                                        staticClass:
+                                                          "badge badge-primary"
+                                                      },
+                                                      [_vm._v("Enviados")]
+                                                    )
+                                                  ]
+                                                )
+                                              : elem.msg_origen == 0
+                                                ? _c(
+                                                    "router-link",
+                                                    {
+                                                      attrs: {
+                                                        to: {
+                                                          name: "contacts_list"
+                                                        },
+                                                        title:
+                                                          "En la carpeta [Bandeja de entrada] ... Ir"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c(
+                                                        "span",
+                                                        {
+                                                          staticClass:
+                                                            "badge badge-primary"
+                                                        },
+                                                        [
+                                                          _vm._v(
+                                                            "Bandeja de entrada"
+                                                          )
+                                                        ]
+                                                      )
+                                                    ]
+                                                  )
+                                                : _vm._e()
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-date" },
+                                        [
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm._f("formatFHHaceTanto")(
+                                                elem.created_at
+                                              )
+                                            )
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-attachment" },
+                                        [
+                                          _c(
+                                            "a",
+                                            {
+                                              attrs: {
+                                                href: "javascript: void(0);",
+                                                title:
+                                                  "A papelera / Borrar registro [" +
+                                                  elem.id +
+                                                  "]"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.trashElem(elem.id)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("i", {
+                                                staticClass: "fas fa-trash-alt"
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ])
+                                  }),
+                                  0
+                                )
+                          ]
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(2)
+                ]
+              )
+            ])
+          ],
+          1
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Contactos")])
     ])
   },
   function() {
@@ -63889,6 +65596,778 @@ var staticRenderFns = [
         { staticClass: "btn btn-primary", attrs: { type: "submit" } },
         [_c("i", { staticClass: "fa fa-search", attrs: { title: "Buscar" } })]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-footer p-0" }, [
+      _c("div", { staticClass: "mailbox-controls" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=template&id=d37511b0&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=template&id=d37511b0& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "content-header" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c("div", { staticClass: "row mb-2" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-6" }, [
+            _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
+              _c(
+                "li",
+                { staticClass: "breadcrumb-item" },
+                [
+                  _c(
+                    "router-link",
+                    {
+                      attrs: {
+                        to: "/admin/dashboard",
+                        title: "Ir al Dashboard"
+                      }
+                    },
+                    [_vm._v("Dashboard")]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Contactos")
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "content" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c(
+          "div",
+          { staticClass: "row" },
+          [
+            _c("contacts-navbar-folders-component", {
+              attrs: {
+                elems_no_papelera_leido_no_tot:
+                  _vm.elems_no_papelera_leido_no_tot_var
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-9" }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "card card-primary card-outline borde-inf-primary"
+                },
+                [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h3", { staticClass: "card-title" }, [
+                      _vm._v("Enviados")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-tools" }, [
+                      _c(
+                        "form",
+                        {
+                          staticClass: "form-inline ml-5",
+                          attrs: { method: "post" },
+                          on: {
+                            submit: function($event) {
+                              $event.preventDefault()
+                              return _vm.search()
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "input-group input-group-sm" },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.term,
+                                    expression: "term"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  placeholder: "Buscar mensajes"
+                                },
+                                domProps: { value: _vm.term },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.term = $event.target.value
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm._m(1)
+                            ]
+                          )
+                        ]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body p-0" }, [
+                    _c("div", { staticClass: "mailbox-controls" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-default btn-sm",
+                          attrs: { title: "Actualizar lista" },
+                          on: { click: _vm.recargaPag }
+                        },
+                        [_c("i", { staticClass: "fas fa-sync-alt" })]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "float-right" }, [
+                        _c("i", { staticClass: "fas fa-envelope" }),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.elems_no_papelera_tot) +
+                            " disponible(s)\n                                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "table-responsive mailbox-messages" },
+                      [
+                        _c(
+                          "table",
+                          { staticClass: "table table-hover table-striped" },
+                          [
+                            _vm.elems.length == 0
+                              ? _c("tbody", [_vm._m(2)])
+                              : _c(
+                                  "tbody",
+                                  _vm._l(_vm.elems, function(elem, index) {
+                                    return _c("tr", { key: index }, [
+                                      _c("td", [
+                                        elem.leido
+                                          ? _c(
+                                              "a",
+                                              {
+                                                staticClass: "text-primary",
+                                                attrs: {
+                                                  href: "javascript: void(0);",
+                                                  title:
+                                                    "Leido - Marcar como NO LEIDO"
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.updateField(
+                                                      elem.id,
+                                                      "leido",
+                                                      0
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "fas fa-circle i_mens_contacto_leidoOK"
+                                                })
+                                              ]
+                                            )
+                                          : _c(
+                                              "a",
+                                              {
+                                                staticClass: "text-primary",
+                                                attrs: {
+                                                  href: "javascript: void(0);",
+                                                  title:
+                                                    "Sin leer - Marcar como LEIDO"
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.updateField(
+                                                      elem.id,
+                                                      "leido",
+                                                      1
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "fas fa-circle i_mens_contacto_leidoNOK"
+                                                })
+                                              ]
+                                            )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-name" },
+                                        [
+                                          _c(
+                                            "router-link",
+                                            {
+                                              attrs: {
+                                                to: {
+                                                  name: "contact_msg",
+                                                  params: { id: elem.id }
+                                                },
+                                                title:
+                                                  "Ver mensaje de " +
+                                                  elem.correo
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                                            " +
+                                                  _vm._s(elem.nombre) +
+                                                  "\n                                                        "
+                                              )
+                                            ]
+                                          )
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-subject" },
+                                        [
+                                          _c("strong", [
+                                            _vm._v(_vm._s(elem.asunto))
+                                          ]),
+                                          _c("br"),
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm._f("resumenTxt")(elem.mensaje)
+                                            )
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-date" },
+                                        [
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm._f("formatFHHaceTanto")(
+                                                elem.created_at
+                                              )
+                                            )
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-attachment" },
+                                        [
+                                          _c(
+                                            "a",
+                                            {
+                                              attrs: {
+                                                href: "javascript: void(0);",
+                                                title:
+                                                  "A papelera / Borrar registro [" +
+                                                  elem.id +
+                                                  "]"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.trashElem(elem.id)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("i", {
+                                                staticClass: "fas fa-trash-alt"
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ])
+                                  }),
+                                  0
+                                )
+                          ]
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(3)
+                ]
+              )
+            ])
+          ],
+          1
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Contactos")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_c("i", { staticClass: "fa fa-search", attrs: { title: "Buscar" } })]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { staticClass: "text-muted text-center" }, [
+        _vm._v("Carpeta vacía actualmente")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-footer p-0" }, [
+      _c("div", { staticClass: "mailbox-controls" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=template&id=0572dac4&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=template&id=0572dac4& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "content-header" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c("div", { staticClass: "row mb-2" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-6" }, [
+            _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
+              _c(
+                "li",
+                { staticClass: "breadcrumb-item" },
+                [
+                  _c(
+                    "router-link",
+                    {
+                      attrs: {
+                        to: "/admin/dashboard",
+                        title: "Ir al Dashboard"
+                      }
+                    },
+                    [_vm._v("Dashboard")]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Contactos")
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "content" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c(
+          "div",
+          { staticClass: "row" },
+          [
+            _c("contacts-navbar-folders-component", {
+              attrs: {
+                elems_no_papelera_leido_no_tot:
+                  _vm.elems_no_papelera_leido_no_tot_var
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-9" }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "card card-primary card-outline borde-inf-primary"
+                },
+                [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h3", { staticClass: "card-title" }, [
+                      _vm._v("Papelera")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-tools" }, [
+                      _c(
+                        "form",
+                        {
+                          staticClass: "form-inline ml-5",
+                          attrs: { method: "post" },
+                          on: {
+                            submit: function($event) {
+                              $event.preventDefault()
+                              return _vm.search()
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "input-group input-group-sm" },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.term,
+                                    expression: "term"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  placeholder: "Buscar mensajes"
+                                },
+                                domProps: { value: _vm.term },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.term = $event.target.value
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm._m(1)
+                            ]
+                          )
+                        ]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body p-0" }, [
+                    _c("div", { staticClass: "mailbox-controls" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-default btn-sm",
+                          attrs: { title: "Actualizar lista" },
+                          on: { click: _vm.recargaPag }
+                        },
+                        [_c("i", { staticClass: "fas fa-sync-alt" })]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-default btn-sm",
+                          attrs: { title: "Restaurar todos" },
+                          on: { click: _vm.restoreAll }
+                        },
+                        [_c("i", { staticClass: "fas fa-trash-restore-alt" })]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-default btn-sm",
+                          attrs: { title: "Vaciar papelera" },
+                          on: { click: _vm.forceDeleteAll }
+                        },
+                        [_c("i", { staticClass: "fas fa-trash-alt" })]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "float-right" }, [
+                        _c("i", { staticClass: "fas fa-envelope" }),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.elems_en_papelera_tot) +
+                            " disponible(s)\n                                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "table-responsive mailbox-messages" },
+                      [
+                        _c(
+                          "table",
+                          { staticClass: "table table-hover table-striped" },
+                          [
+                            _vm.elems.length == 0
+                              ? _c("tbody", [_vm._m(2)])
+                              : _c(
+                                  "tbody",
+                                  _vm._l(_vm.elems, function(elem, index) {
+                                    return _c("tr", { key: index }, [
+                                      _c("td", [
+                                        elem.leido
+                                          ? _c(
+                                              "a",
+                                              {
+                                                staticClass: "text-primary",
+                                                attrs: {
+                                                  href: "javascript: void(0);",
+                                                  title:
+                                                    "Leido - Marcar como NO LEIDO"
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.updateField(
+                                                      elem.id,
+                                                      "leido",
+                                                      0
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "fas fa-circle i_mens_contacto_leidoOK"
+                                                })
+                                              ]
+                                            )
+                                          : _c(
+                                              "a",
+                                              {
+                                                staticClass: "text-primary",
+                                                attrs: {
+                                                  href: "javascript: void(0);",
+                                                  title:
+                                                    "Sin leer - Marcar como LEIDO"
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.updateField(
+                                                      elem.id,
+                                                      "leido",
+                                                      1
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "fas fa-circle i_mens_contacto_leidoNOK"
+                                                })
+                                              ]
+                                            )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-name" },
+                                        [
+                                          _c(
+                                            "router-link",
+                                            {
+                                              attrs: {
+                                                to: {
+                                                  name: "contact_msg",
+                                                  params: { id: elem.id }
+                                                },
+                                                title:
+                                                  "Ver mensaje de " +
+                                                  elem.correo
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                                            " +
+                                                  _vm._s(elem.nombre) +
+                                                  "\n                                                        "
+                                              )
+                                            ]
+                                          )
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-subject" },
+                                        [
+                                          _c("strong", [
+                                            _vm._v(_vm._s(elem.asunto))
+                                          ]),
+                                          _c("br"),
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm._f("resumenTxt")(elem.mensaje)
+                                            )
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-date" },
+                                        [
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm._f("formatFHHaceTanto")(
+                                                elem.created_at
+                                              )
+                                            )
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        { staticClass: "mailbox-attachment" },
+                                        [
+                                          _c(
+                                            "a",
+                                            {
+                                              staticClass: "text-warning-trash",
+                                              attrs: {
+                                                href: "javascript: void(0);",
+                                                title:
+                                                  "Restaurar / Borrar registro [" +
+                                                  elem.id +
+                                                  "]"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.restoreDeleteElem(
+                                                    elem.id
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("i", {
+                                                staticClass:
+                                                  "fas fa-trash-restore-alt"
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ])
+                                  }),
+                                  0
+                                )
+                          ]
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(3)
+                ]
+              )
+            ])
+          ],
+          1
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h1", { staticClass: "m-0 text-dark" }, [_vm._v("Contactos")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_c("i", { staticClass: "fa fa-search", attrs: { title: "Buscar" } })]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { staticClass: "text-muted text-center" }, [
+        _vm._v("Papelera vacía actualmente")
+      ])
     ])
   },
   function() {
@@ -64337,12 +66816,141 @@ var render = function() {
               ]
             ),
             _vm._v(" "),
-            _vm._m(1)
+            _vm.elems_Top3LeidoNo.length == 0
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "dropdown-menu dropdown-menu-lg dropdown-menu-right",
+                    attrs: { id: "dropdown-menu-top3-lno" }
+                  },
+                  [
+                    _c(
+                      "router-link",
+                      {
+                        staticClass:
+                          "dropdown-item dropdown-footer text-center",
+                        attrs: { to: "/admin/contacts", title: "Ir a Mensajes" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    Ver Todos los Mensajes\n                "
+                        )
+                      ]
+                    )
+                  ],
+                  1
+                )
+              : _c(
+                  "div",
+                  {
+                    staticClass:
+                      "dropdown-menu dropdown-menu-lg dropdown-menu-right",
+                    attrs: { id: "dropdown-menu-top3-lno" }
+                  },
+                  [
+                    _vm._l(_vm.elems_Top3LeidoNo, function(
+                      elem_Top3LNo,
+                      index
+                    ) {
+                      return _c(
+                        "div",
+                        { key: index },
+                        [
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "dropdown-item",
+                              attrs: {
+                                to: {
+                                  name: "contact_msg",
+                                  params: { id: elem_Top3LNo.id }
+                                },
+                                title: "Ver mensaje de " + elem_Top3LNo.correo
+                              }
+                            },
+                            [
+                              _c("div", { staticClass: "media" }, [
+                                _c("img", {
+                                  staticClass: "img-size-50 mr-3 img-circle",
+                                  attrs: {
+                                    src: "images/user_icon_gnral.png",
+                                    alt: "Avatar de usuario no registrado"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "media-body" }, [
+                                  _c(
+                                    "h3",
+                                    { staticClass: "dropdown-item-title" },
+                                    [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(elem_Top3LNo.nombre) +
+                                          "\n                                "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("p", { staticClass: "text-sm" }, [
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm._f("resumenTxt_Top3LNo")(
+                                          elem_Top3LNo.asunto
+                                        )
+                                      )
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "p",
+                                    { staticClass: "text-sm text-muted" },
+                                    [
+                                      _c("i", {
+                                        staticClass: "far fa-clock mr-1"
+                                      }),
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(
+                                            _vm._f("formatFHHaceTanto")(
+                                              elem_Top3LNo.created_at
+                                            )
+                                          )
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "dropdown-divider" })
+                        ],
+                        1
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        staticClass:
+                          "dropdown-item dropdown-footer text-center",
+                        attrs: { to: "/admin/contacts", title: "Ir a Mensajes" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    Ver Todos los Mensajes\n                "
+                        )
+                      ]
+                    )
+                  ],
+                  2
+                )
           ]),
           _vm._v(" "),
-          _vm._m(2),
+          _vm._m(1),
           _vm._v(" "),
-          _vm._m(3)
+          _vm._m(2)
         ]
       )
     ]
@@ -64363,120 +66971,6 @@ var staticRenderFns = [
         [_c("i", { staticClass: "fa fa-bars" })]
       )
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "dropdown-menu dropdown-menu-lg dropdown-menu-right" },
-      [
-        _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-          _c("div", { staticClass: "media" }, [
-            _c("img", {
-              staticClass: "img-size-50 mr-3 img-circle",
-              attrs: { src: "images/user1-128x128.jpg", alt: "User Avatar" }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "media-body" }, [
-              _c("h3", { staticClass: "dropdown-item-title" }, [
-                _vm._v(
-                  "\n                                Brad Diesel\n                                "
-                ),
-                _c("span", { staticClass: "float-right text-sm text-danger" }, [
-                  _c("i", { staticClass: "fa fa-star" })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _vm._v("Call me whenever you can...")
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm text-muted" }, [
-                _c("i", { staticClass: "fa fa-clock-o mr-1" }),
-                _vm._v(" 4 Hours Ago")
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown-divider" }),
-        _vm._v(" "),
-        _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-          _c("div", { staticClass: "media" }, [
-            _c("img", {
-              staticClass: "img-size-50 img-circle mr-3",
-              attrs: { src: "images/user8-128x128.jpg", alt: "User Avatar" }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "media-body" }, [
-              _c("h3", { staticClass: "dropdown-item-title" }, [
-                _vm._v(
-                  "\n                                John Pierce\n                                "
-                ),
-                _c("span", { staticClass: "float-right text-sm text-muted" }, [
-                  _c("i", { staticClass: "fa fa-star" })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _vm._v("I got your message bro")
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm text-muted" }, [
-                _c("i", { staticClass: "fa fa-clock-o mr-1" }),
-                _vm._v(" 4 Hours Ago")
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown-divider" }),
-        _vm._v(" "),
-        _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-          _c("div", { staticClass: "media" }, [
-            _c("img", {
-              staticClass: "img-size-50 img-circle mr-3",
-              attrs: { src: "images/user3-128x128.jpg", alt: "User Avatar" }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "media-body" }, [
-              _c("h3", { staticClass: "dropdown-item-title" }, [
-                _vm._v(
-                  "\n                                Nora Silvester\n                                "
-                ),
-                _c(
-                  "span",
-                  { staticClass: "float-right text-sm text-warning" },
-                  [_c("i", { staticClass: "fa fa-star" })]
-                )
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm" }, [
-                _vm._v("The subject goes here")
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm text-muted" }, [
-                _c("i", { staticClass: "fa fa-clock-o mr-1" }),
-                _vm._v(" 4 Hours Ago")
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown-divider" }),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "dropdown-item dropdown-footer",
-            attrs: { href: "#" }
-          },
-          [_vm._v("See All Messages")]
-        )
-      ]
-    )
   },
   function() {
     var _vm = this
@@ -66727,202 +69221,222 @@ var render = function() {
                   _c("table", { staticClass: "table table-hover" }, [
                     _vm._m(2),
                     _vm._v(" "),
-                    _c(
-                      "tbody",
-                      _vm._l(_vm.users, function(user, index) {
-                        return _c(
-                          "tr",
-                          {
-                            key: user.id,
-                            staticClass: "lista-usuarios",
-                            staticStyle: { "vertical-align": "middle" }
-                          },
-                          [
-                            _c(
-                              "td",
-                              { staticClass: "lista_indice text-center" },
-                              [
-                                user.deleted_at == null
-                                  ? _c("span", { staticClass: "reg-activo" }, [
-                                      _vm._v(_vm._s(_vm.users.length - index))
-                                    ])
-                                  : _c("span", { staticClass: "reg-trashed" }, [
-                                      _vm._v(_vm._s(_vm.users.length - index))
-                                    ])
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c("td", { staticClass: "text-center" }, [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "negrita",
-                                  attrs: {
-                                    href: "/admin/users/" + user.id,
-                                    title: [
-                                      user.isOnline
-                                        ? "Ir al detalle::ON"
-                                        : "Ir al detalle::OFF"
-                                    ]
-                                  }
-                                },
-                                [
-                                  _c("img", {
-                                    staticClass: "avatar",
-                                    class: [
-                                      user.isOnline
-                                        ? "marco-useron-list"
-                                        : "marco-useroff-list"
-                                    ],
-                                    attrs: {
-                                      src: user.avatar,
-                                      alt: "Avatar del usuario"
-                                    }
-                                  })
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            user.name == ""
-                              ? _c("td", [
-                                  _c("small", [_vm._v("Sin detallar")])
-                                ])
-                              : user.name == null
-                                ? _c("td", [
-                                    _c("small", [_vm._v("Sin detallar")])
-                                  ])
-                                : _c("td", {
-                                    domProps: { textContent: _vm._s(user.name) }
-                                  }),
-                            _vm._v(" "),
-                            user.lastname == ""
-                              ? _c("td", [
-                                  _c("small", [_vm._v("Sin detallar")])
-                                ])
-                              : user.lastname == null
-                                ? _c("td", [
-                                    _c("small", [_vm._v("Sin detallar")])
-                                  ])
-                                : _c("td", {
-                                    domProps: {
-                                      textContent: _vm._s(user.lastname)
-                                    }
-                                  }),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(user.username))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(user.email))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(user.perfil.nombre))]),
-                            _vm._v(" "),
-                            _c("td", [
-                              _c(
-                                "small",
-                                { attrs: { title: user.created_at } },
-                                [_vm._v(_vm._s(user.created_at))]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "td",
-                              { staticClass: "text-center" },
+                    _vm.users.length == 0
+                      ? _c("tbody", [_vm._m(3)])
+                      : _c(
+                          "tbody",
+                          _vm._l(_vm.users, function(user, index) {
+                            return _c(
+                              "tr",
+                              {
+                                key: user.id,
+                                staticClass: "lista-usuarios",
+                                staticStyle: { "vertical-align": "middle" }
+                              },
                               [
                                 _c(
-                                  "router-link",
-                                  {
-                                    staticClass: "text-success",
-                                    attrs: {
-                                      to: {
-                                        name: "user_profile",
-                                        params: { id: user.id }
-                                      },
-                                      title: "Perfil completo [" + user.id + "]"
-                                    }
-                                  },
+                                  "td",
+                                  { staticClass: "lista_indice text-center" },
                                   [
-                                    _c("i", {
-                                      staticClass: "fas fa-user-circle"
-                                    })
+                                    user.deleted_at == null
+                                      ? _c(
+                                          "span",
+                                          { staticClass: "reg-activo" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(_vm.users.length - index)
+                                            )
+                                          ]
+                                        )
+                                      : _c(
+                                          "span",
+                                          { staticClass: "reg-trashed" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(_vm.users.length - index)
+                                            )
+                                          ]
+                                        )
                                   ]
                                 ),
                                 _vm._v(" "),
-                                _c(
-                                  "a",
-                                  {
-                                    staticClass: "text-primary",
-                                    attrs: {
-                                      href: "javascript: void(0);",
-                                      title: "Editar registro [" + user.id + "]"
-                                    },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.regEditModal(user)
+                                _c("td", { staticClass: "text-center" }, [
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "negrita",
+                                      attrs: {
+                                        href: "/admin/users/" + user.id,
+                                        title: [
+                                          user.isOnline
+                                            ? "Ir al detalle::ON"
+                                            : "Ir al detalle::OFF"
+                                        ]
                                       }
-                                    }
-                                  },
-                                  [_c("i", { staticClass: "fas fa-edit" })]
-                                ),
+                                    },
+                                    [
+                                      _c("img", {
+                                        staticClass: "avatar",
+                                        class: [
+                                          user.isOnline
+                                            ? "marco-useron-list"
+                                            : "marco-useroff-list"
+                                        ],
+                                        attrs: {
+                                          src: user.avatar,
+                                          alt: "Avatar del usuario"
+                                        }
+                                      })
+                                    ]
+                                  )
+                                ]),
                                 _vm._v(" "),
-                                user.deleted_at == null
-                                  ? _c(
-                                      "a",
+                                user.name == ""
+                                  ? _c("td", [
+                                      _c("small", [_vm._v("Sin detallar")])
+                                    ])
+                                  : user.name == null
+                                    ? _c("td", [
+                                        _c("small", [_vm._v("Sin detallar")])
+                                      ])
+                                    : _c("td", {
+                                        domProps: {
+                                          textContent: _vm._s(user.name)
+                                        }
+                                      }),
+                                _vm._v(" "),
+                                user.lastname == ""
+                                  ? _c("td", [
+                                      _c("small", [_vm._v("Sin detallar")])
+                                    ])
+                                  : user.lastname == null
+                                    ? _c("td", [
+                                        _c("small", [_vm._v("Sin detallar")])
+                                      ])
+                                    : _c("td", {
+                                        domProps: {
+                                          textContent: _vm._s(user.lastname)
+                                        }
+                                      }),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(user.username))]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(user.email))]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(user.perfil.nombre))]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _c(
+                                    "small",
+                                    { attrs: { title: user.created_at } },
+                                    [_vm._v(_vm._s(user.created_at))]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "td",
+                                  { staticClass: "text-center" },
+                                  [
+                                    _c(
+                                      "router-link",
                                       {
-                                        staticClass: "text-danger",
+                                        staticClass: "text-success",
                                         attrs: {
-                                          href: "javascript: void(0);",
+                                          to: {
+                                            name: "user_profile",
+                                            params: { id: user.id }
+                                          },
                                           title:
-                                            "A papelera / Borrar registro [" +
-                                            user.id +
-                                            "]"
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            $event.preventDefault()
-                                            return _vm.trashDeleteUser(user.id)
-                                          }
+                                            "Perfil completo [" + user.id + "]"
                                         }
                                       },
                                       [
                                         _c("i", {
-                                          staticClass: "fas fa-trash-alt"
+                                          staticClass: "fas fa-user-circle"
                                         })
                                       ]
-                                    )
-                                  : _c(
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
                                       "a",
                                       {
-                                        staticClass: "text-warning-trash",
+                                        staticClass: "text-primary",
                                         attrs: {
                                           href: "javascript: void(0);",
                                           title:
-                                            "Restaurar / Borrar registro [" +
-                                            user.id +
-                                            "]"
+                                            "Editar registro [" + user.id + "]"
                                         },
                                         on: {
                                           click: function($event) {
-                                            $event.preventDefault()
-                                            return _vm.restoreDeleteUser(
-                                              user.id
-                                            )
+                                            return _vm.regEditModal(user)
                                           }
                                         }
                                       },
-                                      [
-                                        _c("i", {
-                                          staticClass:
-                                            "fas fa-trash-restore-alt"
-                                        })
-                                      ]
-                                    )
-                              ],
-                              1
+                                      [_c("i", { staticClass: "fas fa-edit" })]
+                                    ),
+                                    _vm._v(" "),
+                                    user.deleted_at == null
+                                      ? _c(
+                                          "a",
+                                          {
+                                            staticClass: "text-danger",
+                                            attrs: {
+                                              href: "javascript: void(0);",
+                                              title:
+                                                "A papelera / Borrar registro [" +
+                                                user.id +
+                                                "]"
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                $event.preventDefault()
+                                                return _vm.trashDeleteUser(
+                                                  user.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "fas fa-trash-alt"
+                                            })
+                                          ]
+                                        )
+                                      : _c(
+                                          "a",
+                                          {
+                                            staticClass: "text-warning-trash",
+                                            attrs: {
+                                              href: "javascript: void(0);",
+                                              title:
+                                                "Restaurar / Borrar registro [" +
+                                                user.id +
+                                                "]"
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                $event.preventDefault()
+                                                return _vm.restoreDeleteUser(
+                                                  user.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass:
+                                                "fas fa-trash-restore-alt"
+                                            })
+                                          ]
+                                        )
+                                  ],
+                                  1
+                                )
+                              ]
                             )
-                          ]
+                          }),
+                          0
                         )
-                      }),
-                      0
-                    )
                   ])
                 ])
               ])
@@ -66981,6 +69495,18 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "text-center" }, [_vm._v("Modificar")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c(
+        "td",
+        { staticClass: "text-muted text-center", attrs: { colspan: "9" } },
+        [_vm._v("Ningún usuario registrado actualmente")]
+      )
     ])
   }
 ]
@@ -81609,6 +84135,142 @@ webpackContext.id = "./resources/js sync recursive ^\\.\\/components.*\\/Contact
 
 /***/ }),
 
+/***/ "./resources/js sync recursive ^\\.\\/components.*\\/ContactsNavbarFoldersComponent\\.vue$":
+/*!***********************************************************************************!*\
+  !*** ./resources/js sync ^\.\/components.*\/ContactsNavbarFoldersComponent\.vue$ ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./components/admin/ContactsNavbarFoldersComponent.vue": "./resources/js/components/admin/ContactsNavbarFoldersComponent.vue"
+};
+
+
+function webpackContext(req) {
+	var id = webpackContextResolve(req);
+	return __webpack_require__(id);
+}
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) { // check for number or string
+		var e = new Error("Cannot find module '" + req + "'");
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
+	return id;
+}
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = "./resources/js sync recursive ^\\.\\/components.*\\/ContactsNavbarFoldersComponent\\.vue$";
+
+/***/ }),
+
+/***/ "./resources/js sync recursive ^\\.\\/components.*\\/ContactsSearchComponent\\.vue$":
+/*!****************************************************************************!*\
+  !*** ./resources/js sync ^\.\/components.*\/ContactsSearchComponent\.vue$ ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./components/admin/ContactsSearchComponent.vue": "./resources/js/components/admin/ContactsSearchComponent.vue"
+};
+
+
+function webpackContext(req) {
+	var id = webpackContextResolve(req);
+	return __webpack_require__(id);
+}
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) { // check for number or string
+		var e = new Error("Cannot find module '" + req + "'");
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
+	return id;
+}
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = "./resources/js sync recursive ^\\.\\/components.*\\/ContactsSearchComponent\\.vue$";
+
+/***/ }),
+
+/***/ "./resources/js sync recursive ^\\.\\/components.*\\/ContactsSendedComponent\\.vue$":
+/*!****************************************************************************!*\
+  !*** ./resources/js sync ^\.\/components.*\/ContactsSendedComponent\.vue$ ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./components/admin/ContactsSendedComponent.vue": "./resources/js/components/admin/ContactsSendedComponent.vue"
+};
+
+
+function webpackContext(req) {
+	var id = webpackContextResolve(req);
+	return __webpack_require__(id);
+}
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) { // check for number or string
+		var e = new Error("Cannot find module '" + req + "'");
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
+	return id;
+}
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = "./resources/js sync recursive ^\\.\\/components.*\\/ContactsSendedComponent\\.vue$";
+
+/***/ }),
+
+/***/ "./resources/js sync recursive ^\\.\\/components.*\\/ContactsTrashedComponent\\.vue$":
+/*!*****************************************************************************!*\
+  !*** ./resources/js sync ^\.\/components.*\/ContactsTrashedComponent\.vue$ ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./components/admin/ContactsTrashedComponent.vue": "./resources/js/components/admin/ContactsTrashedComponent.vue"
+};
+
+
+function webpackContext(req) {
+	var id = webpackContextResolve(req);
+	return __webpack_require__(id);
+}
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) { // check for number or string
+		var e = new Error("Cannot find module '" + req + "'");
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
+	return id;
+}
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = "./resources/js sync recursive ^\\.\\/components.*\\/ContactsTrashedComponent\\.vue$";
+
+/***/ }),
+
 /***/ "./resources/js sync recursive ^\\.\\/components.*\\/DashboardComponent\\.vue$":
 /*!***********************************************************************!*\
   !*** ./resources/js sync ^\.\/components.*\/DashboardComponent\.vue$ ***!
@@ -81971,9 +84633,21 @@ var routes = [//  =>> :: DASHBOARD ::
   name: 'contacts_list',
   component: __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/ContactsComponent\\.vue$")("./components" + patron + "/ContactsComponent.vue").default
 }, {
+  path: patron + '/contacts/sended',
+  name: 'contacts_sended_list',
+  component: __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/ContactsSendedComponent\\.vue$")("./components" + patron + "/ContactsSendedComponent.vue").default
+}, {
+  path: patron + '/contacts/trashed',
+  name: 'contacts_trashed_list',
+  component: __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/ContactsTrashedComponent\\.vue$")("./components" + patron + "/ContactsTrashedComponent.vue").default
+}, {
   path: patron + '/contacts/:id',
   name: 'contact_msg',
   component: __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/ContactMsgComponent\\.vue$")("./components" + patron + "/ContactMsgComponent.vue").default
+}, {
+  path: patron + '/contacts/search/:term',
+  name: 'contacts_search',
+  component: __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/ContactsSearchComponent\\.vue$")("./components" + patron + "/ContactsSearchComponent.vue").default
 }]; //Instancia de VueRouter y asignación de rutas
 
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_4__["default"]({
@@ -81984,11 +84658,22 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_4__["default"]({
 
 }); //Filtros de Vue
 //----------------------------------------------------------
-//Para poner un txt en mayúsculas
+//Para resumir textos largos
 
 Vue.filter('resumenTxt', function (value) {
   if (!value) return '-';
   var maxChar = 50;
+
+  if (value.length > maxChar) {
+    value = value.substring(0, maxChar).trim() + '...';
+  }
+
+  return value;
+}); //Para resumir textos largos en Top3 - Barra Superior
+
+Vue.filter('resumenTxt_Top3LNo', function (value) {
+  if (!value) return '-';
+  var maxChar = 25;
 
   if (value.length > maxChar) {
     value = value.substring(0, maxChar).trim() + '...';
@@ -82028,7 +84713,8 @@ Vue.component('main-navbar-top-component', __webpack_require__("./resources/js s
 Vue.component('user-ins-edit-component', __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/UserInsEditComponent\\.vue$")("./components" + patron + "/UserInsEditComponent.vue").default);
 Vue.component('user-prof-tots-component', __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/UserProfTotsComponent\\.vue$")("./components" + patron + "/UserProfTotsComponent.vue").default);
 Vue.component('user-prof-activ-component', __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/UserProfActivComponent\\.vue$")("./components" + patron + "/UserProfActivComponent.vue").default);
-Vue.component('user-prof-edit-component', __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/UserProfEditComponent\\.vue$")("./components" + patron + "/UserProfEditComponent.vue").default); //Instancia de Vue para emplear como Bus de eventos
+Vue.component('user-prof-edit-component', __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/UserProfEditComponent\\.vue$")("./components" + patron + "/UserProfEditComponent.vue").default);
+Vue.component('contacts-navbar-folders-component', __webpack_require__("./resources/js sync recursive ^\\.\\/components.*\\/ContactsNavbarFoldersComponent\\.vue$")("./components" + patron + "/ContactsNavbarFoldersComponent.vue").default); //Instancia de Vue para emplear como Bus de eventos
 //para la emisión/recepción de los mismos de forma global
 //  >> Forma larga de declarar variable y registrarla globalmente en el objeto WINDOW
 ////let BusEvent = new Vue();
@@ -82329,6 +85015,282 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsComponent_vue_vue_type_template_id_6f552d8f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsComponent_vue_vue_type_template_id_6f552d8f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsNavbarFoldersComponent.vue":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsNavbarFoldersComponent.vue ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ContactsNavbarFoldersComponent_vue_vue_type_template_id_0fb7a946___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContactsNavbarFoldersComponent.vue?vue&type=template&id=0fb7a946& */ "./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=template&id=0fb7a946&");
+/* harmony import */ var _ContactsNavbarFoldersComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ContactsNavbarFoldersComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ContactsNavbarFoldersComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ContactsNavbarFoldersComponent_vue_vue_type_template_id_0fb7a946___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ContactsNavbarFoldersComponent_vue_vue_type_template_id_0fb7a946___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/ContactsNavbarFoldersComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsNavbarFoldersComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactsNavbarFoldersComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsNavbarFoldersComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=template&id=0fb7a946&":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=template&id=0fb7a946& ***!
+  \*********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsNavbarFoldersComponent_vue_vue_type_template_id_0fb7a946___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactsNavbarFoldersComponent.vue?vue&type=template&id=0fb7a946& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsNavbarFoldersComponent.vue?vue&type=template&id=0fb7a946&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsNavbarFoldersComponent_vue_vue_type_template_id_0fb7a946___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsNavbarFoldersComponent_vue_vue_type_template_id_0fb7a946___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsSearchComponent.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsSearchComponent.vue ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ContactsSearchComponent_vue_vue_type_template_id_b140b572___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContactsSearchComponent.vue?vue&type=template&id=b140b572& */ "./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=template&id=b140b572&");
+/* harmony import */ var _ContactsSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ContactsSearchComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ContactsSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ContactsSearchComponent_vue_vue_type_template_id_b140b572___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ContactsSearchComponent_vue_vue_type_template_id_b140b572___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/ContactsSearchComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactsSearchComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=template&id=b140b572&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=template&id=b140b572& ***!
+  \**************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsSearchComponent_vue_vue_type_template_id_b140b572___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactsSearchComponent.vue?vue&type=template&id=b140b572& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsSearchComponent.vue?vue&type=template&id=b140b572&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsSearchComponent_vue_vue_type_template_id_b140b572___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsSearchComponent_vue_vue_type_template_id_b140b572___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsSendedComponent.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsSendedComponent.vue ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ContactsSendedComponent_vue_vue_type_template_id_d37511b0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContactsSendedComponent.vue?vue&type=template&id=d37511b0& */ "./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=template&id=d37511b0&");
+/* harmony import */ var _ContactsSendedComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ContactsSendedComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ContactsSendedComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ContactsSendedComponent_vue_vue_type_template_id_d37511b0___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ContactsSendedComponent_vue_vue_type_template_id_d37511b0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/ContactsSendedComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsSendedComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactsSendedComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsSendedComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=template&id=d37511b0&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=template&id=d37511b0& ***!
+  \**************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsSendedComponent_vue_vue_type_template_id_d37511b0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactsSendedComponent.vue?vue&type=template&id=d37511b0& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsSendedComponent.vue?vue&type=template&id=d37511b0&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsSendedComponent_vue_vue_type_template_id_d37511b0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsSendedComponent_vue_vue_type_template_id_d37511b0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsTrashedComponent.vue":
+/*!********************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsTrashedComponent.vue ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ContactsTrashedComponent_vue_vue_type_template_id_0572dac4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContactsTrashedComponent.vue?vue&type=template&id=0572dac4& */ "./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=template&id=0572dac4&");
+/* harmony import */ var _ContactsTrashedComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ContactsTrashedComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ContactsTrashedComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ContactsTrashedComponent_vue_vue_type_template_id_0572dac4___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ContactsTrashedComponent_vue_vue_type_template_id_0572dac4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/ContactsTrashedComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsTrashedComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactsTrashedComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsTrashedComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=template&id=0572dac4&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=template&id=0572dac4& ***!
+  \***************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsTrashedComponent_vue_vue_type_template_id_0572dac4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactsTrashedComponent.vue?vue&type=template&id=0572dac4& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ContactsTrashedComponent.vue?vue&type=template&id=0572dac4&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsTrashedComponent_vue_vue_type_template_id_0572dac4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactsTrashedComponent_vue_vue_type_template_id_0572dac4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

@@ -121,6 +121,7 @@
         //datos devueltos por el componente:
         data() {
             return {
+                urlBase: '/api/users',
                 //variable que guarda el archivo seleccionado
                 avatarSelecc: null,
                 //variable para almacenar los datos del registro a almacenar
@@ -171,7 +172,7 @@
             fillEditFormReg(regID) {
                 //Cargando datos del registro correspondiente
                 //URL hacia la ruta de obtener datos del registro
-                let url = '/api/users/' + regID;
+                let url = this.urlBase + '/' + regID;
                 //Empleado el método DELETE de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 axios.get(url)
@@ -189,7 +190,7 @@
             */
             updateReg() {
                 console.log('Actualizando registro... [' + this.objReg.id + ']');
-                let url = '/api/users/' + this.objReg.id;
+                let url = this.urlBase + '/' + this.objReg.id;
                 axios.put(url, this.objReg)
                 .then((response) => {       //SI TODO OK
 
@@ -328,7 +329,7 @@
 
                         //Borrado definitivo del registro
                         //URL hacia la ruta de borrado definitivo de registro
-                        let url = '/api/users/force-delete/' + this.objReg.id;
+                        let url = this.urlBase + '/force-delete/' + this.objReg.id;
                         //Empleado el método GET de Axios, el cliente AJAX,
                         //que es el método referido a la ruta llamada
                         axios.get(url)

@@ -29781,6 +29781,10 @@ hr {
   font-size: 58%;
 }
 
+#dropdown-menu-top3-lno {
+  min-width: 280px;
+}
+
 .elem_mostrar {
   display: block;
 }
@@ -29979,8 +29983,24 @@ a.text-warning-trash:focus {
   box-shadow: 0 0 0 0.2rem rgba(246, 155, 65, 0.5) !important;
 }
 
+list-badge {
+  position: relative !important;
+  top: -10px !important;
+  right: 6px !important;
+}
+
 .borde-inf-primary {
   border-bottom: 3px solid #007bff;
+}
+
+.mailbox-read-info h5 {
+  display: inline-block;
+}
+
+.mailbox-read-info span {
+  position: relative;
+  top: -11px;
+  left: -2px;
 }
 
 .mailbox-read-message textarea {
@@ -29990,5 +30010,9 @@ a.text-warning-trash:focus {
 
 #accordion-msg-resp form textarea {
   height: 200px;
+}
+
+ul#contacts-folders-menu li .menu-item {
+  padding-left: 0px;
 }
 

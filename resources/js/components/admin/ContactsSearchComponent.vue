@@ -32,7 +32,7 @@
                             <div class="col-md-9">
                                 <div class="card card-primary card-outline borde-inf-primary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Bandeja de entrada</h3>
+                                        <h3 class="card-title">Resultados</h3>
 
                                         <div class="card-tools">
                                             <form @submit.prevent="search()" class="form-inline ml-5" method="post">
@@ -51,9 +51,6 @@
                                     <!-- /.card-header -->
                                     <div class="card-body p-0">
                                         <div class="mailbox-controls">
-                                            <button @click="recargaPag" class="btn btn-default btn-sm" title="Actualizar lista">
-                                                <i class="fas fa-sync-alt"></i>
-                                            </button>
                                             <div class="float-right">
                                                 <i class="fas fa-envelope"></i> {{ elems_no_papelera_tot }} disponible(s)
                                             </div>
@@ -62,7 +59,7 @@
                                             <table class="table table-hover table-striped">
                                                 <tbody v-if="elems.length == 0">
                                                     <tr>
-                                                        <td class="text-muted text-center">Carpeta vacía actualmente</td>
+                                                        <td class="text-muted text-center">Sin resultados sobre "{{ term }}"</td>
                                                     </tr>
                                                 </tbody>
                                                 <tbody v-else>
@@ -81,7 +78,18 @@
                                                             </router-link>
                                                         </td>
                                                         <td class="mailbox-subject">
-                                                            <strong>{{ elem.asunto }}</strong> <span v-if="elem.respuestas_count > 0" class="badge badge-primary" style="position: relative; top: -7px; left: -2px;" title="Respuesta(s) asociada(s)">{{ elem.respuestas_count }}</span> <br>{{ elem.mensaje | resumenTxt }}
+                                                            <strong>{{ elem.asunto | resumenTxt }}</strong> <span v-if="elem.respuestas_count > 0" class="badge badge-primary" style="position: relative; top: -7px; left: -2px;" title="Respuesta(s) asociada(s)">{{ elem.respuestas_count }}</span> <br>{{ elem.mensaje | resumenTxt }}
+                                                        </td>
+                                                        <td>
+                                                            <router-link v-if="elem.deleted_at != null" :to="{ name: 'contacts_trashed_list' }" title="En la carpeta [Papelera] ... Ir">
+                                                                <span class="badge badge-primary">Papelera</span>
+                                                            </router-link>
+                                                            <router-link v-else-if="elem.msg_origen != 0" :to="{ name: 'contacts_sended_list' }" title="En la carpeta [Enviados] ... Ir">
+                                                                <span class="badge badge-primary">Enviados</span>
+                                                            </router-link>
+                                                            <router-link v-else-if="elem.msg_origen == 0" :to="{ name: 'contacts_list' }" title="En la carpeta [Bandeja de entrada] ... Ir">
+                                                                <span class="badge badge-primary">Bandeja de entrada</span>
+                                                            </router-link>
                                                         </td>
                                                         <td class="mailbox-date">{{ elem.created_at | formatFHHaceTanto }}</td>
                                                         <td class="mailbox-attachment">
@@ -120,16 +128,10 @@
         created() {
             //console.log('Component mounted.')
 
-            //para cargar el listado de registros al llegar al componente
-            this.getElems();
-            //para volverlo a cargar en cada intervalo de X tiempo
-            //aunque esta forma de recarga va en contra del rendimiento
-            ////setInterval(() => this.getElems(), 3000);
-
-            //Recibiendo notificación de borrado emitida por ContactMsgComponent
-            BusEvent.$on('notifContactDelRegEvent', (elemDelID) => {
-                this.notifDelReg(elemDelID);
-            });
+            //llamar a almacenar el parámetro recibido
+            this.getParam();
+            //lanzar búsqueda
+            this.search();
         },
 
         //datos devueltos por el componente:
@@ -159,39 +161,19 @@
         methods: {
 
             /**
-             * Recargando página
-            */
-            recargaPag() {
-                this.$router.go(this.$router.currentRoute)
-            },
-
-            /**
              * Obteniendo listado de registros
             */
-            getElems() {
-                //URL hacia la ruta del listado de registros
-                //  >> SIN paginación
-                let url = this.urlBase;
-                //Empleado el método GET de Axios, el cliente AJAX,
-                //que es el método referido a la ruta llamada
-                //  -> Si es correcto, se recogen los datos
-                //  dentro del contenedor definido
-                axios.get(url).then( response => {
-                    ////console.log(response.data)
-                    this.elems = response.data.elems_no_papelera
-                    this.elems_no_papelera_tot = this.elems.length
-                    this.elems_no_papelera_leido_no_tot_var = response.data.elems_no_papelera_leido_no_tot
-                });
+            getParam() {
+                this.term = this.$route.params.term;
             },
 
             /**
-             * Enviando término de búsqueda para filtrar registros
+             * Obteniendo listado de registros filtrados por término de búsqueda
             */
             search() {
                 console.log('Enviando filtrado de búsqueda...por [' + this.term + ']');
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
-                /*// BUSCADOR-versión.anterior-ini
                 let url = this.urlBase + '/search';
                 //Empleado el método POST de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
@@ -206,15 +188,29 @@
                     ////console.log(response.data)
                     this.elems = response.data
                     this.elems_no_papelera_tot = this.elems.length
+
+                    //Y obteniendo TOT de no leidos
+                    this.getElemsTotNoLeidos();
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR
                     console.log(error.response.data.errors);
                 });
-                // BUSCADOR-versión.anterior-fin
-                */
-                this.$router.push({
-                    name: 'contacts_search',
-                    params: { term: this.term }
+            },
+
+            /**
+             * Obteniendo TOT de los no leidos
+            */
+            getElemsTotNoLeidos() {
+                //URL hacia la ruta del listado de registros
+                //  >> SIN paginación
+                let url = this.urlBase + '/no-readed/tot';
+                //Empleado el método GET de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
+                //  -> Si es correcto, se recogen los datos
+                //  dentro del contenedor definido
+                axios.get(url).then( response => {
+                    ////console.log(response.data)
+                    this.elems_no_papelera_leido_no_tot_var = response.data
                 });
             },
 
@@ -233,8 +229,8 @@
                 axios.get(url)
                 .then((response) => {       //SI TODO OK
 
-                    //refrescando listado
-                    this.getElems();
+                    //refrescando listado de resultados
+                    this.search();
 
                     //Lanzando notificación satisfactoria
                     toast({
@@ -280,9 +276,10 @@
                         //que es el método referido a la ruta llamada
                         axios.delete(url)
                         .then(response => {       //SI TODO OK
-                            //tras borrado temporal, si todo OK, se muestra
-                            //el listado tras recargarlo
-                            this.getElems();
+                            //tras borrado temporal, si todo OK,
+                            //se actualizan resultados
+                            this.search();
+                            //this.$router.go(this.$router.currentRoute)
                             let server_msg_del = response.data.message;
                             console.log(server_msg_del);
 
@@ -311,18 +308,6 @@
                         console.log('Acción cancelada');
                     }
                 })//fin confirmación
-            },
-
-            /**
-             * Notificando borrado definitivo desde la ficha de detalle
-            */
-            notifDelReg(id) {
-                //Lanzando notificación satisfactoria
-                Swal.fire(
-                    '¡Borrado!',
-                    'El registro con ID [' + id + '] fue mandado a la papelera correctamente.',
-                    'success'
-                )
             },
 
         },

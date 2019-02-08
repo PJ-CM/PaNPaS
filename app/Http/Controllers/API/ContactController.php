@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
-    //Email remitente de respuesta
+    //EmailADMIN remitente de respuesta(s)
     protected $app_email;
 
     /**
@@ -30,6 +30,8 @@ class ContactController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * Buzón del ADMIN
+     *
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -37,6 +39,76 @@ class ContactController extends Controller
         //  >>CON Soft Delete activado
         //      -> pero los registros en papelera se mostrarán en otra vista
         $elems_no_papelera = Contacto::where('correo', '!=', $this->app_email)
+                        ->orderBy('created_at', 'desc')
+                        //obteniendo, dentro de un campo "respuestas_count"
+                        //el total de respuestas del mensaje recorrido
+                        //a través de la relación de nombre "respuestas"
+                        ->withCount('respuestas')
+                        ->get();
+
+        $elems_no_papelera_leido_no_tot = $this->getTotLeidoNo();
+
+        $_arr_detalle = [];
+
+        $_arr_detalle['elems_no_papelera'] = $elems_no_papelera;
+        $_arr_detalle['elems_no_papelera_leido_no_tot'] = $elems_no_papelera_leido_no_tot;
+
+        return $_arr_detalle;
+    }
+
+    /**
+     * Tot no leido(s) fuera de la papelera.
+     *
+     * @return int
+     */
+    public function getTotLeidoNo()
+    {
+        return Contacto::where('correo', '!=', $this->app_email)
+                        ->where('leido', 0)
+                        ->count();
+    }
+
+    /**
+     * Top3 no leido(s) fuera de la papelera.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getTop3LeidoNo()
+    {
+        return Contacto::where('correo', '!=', $this->app_email)
+                        ->where('leido', 0)
+                        ->orderBy('created_at', 'desc')
+                        ->orderBy('id', 'DESC')
+                        ->take(3)->get();
+    }
+
+    /**
+     * Display a listing of the resource's responses.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getResponses($id)
+    {
+        //  >>CON Soft Delete activado
+        //      -> pero los registros en papelera se mostrarán en otra vista
+        return Contacto::where('msg_origen', $id)
+                        ->where('correo', $this->app_email)
+                        ->orderBy('created_at', 'desc')->get();
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * Mensajes enviados
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sended()
+    {
+        //  >>CON Soft Delete activado
+        //      -> pero los registros en papelera se mostrarán en otra vista
+        $elems_no_papelera = Contacto::where('correo', $this->app_email)
                         ->orderBy('created_at', 'desc')->get();
 
         $elems_no_papelera_leido_no_tot = $this->getTotLeidoNo();
@@ -50,32 +122,31 @@ class ContactController extends Controller
     }
 
     /**
-     * Display a listing of the resource's responses.
+     * Display a listing of the resource.
      *
-     * @param  int  $id
+     * Mensajes en papelera
+     *
      * @return \Illuminate\Http\Response
      */
-    public function getResponses($id)
+    public function trashed()
     {
+        ////$msg = 'Desde dentro de API\ContactController@trashed';
+        ////return [
+        ////    'message' => $msg,
+        ////];
         //  >>CON Soft Delete activado
         //      -> pero los registros en papelera se mostrarán en otra vista
-        $elems_responses = Contacto::where('msg_origen', $id)
-                        ->where('correo', $this->app_email)
+        $elems_en_papelera = Contacto::onlyTrashed()
                         ->orderBy('created_at', 'desc')->get();
 
-        return $elems_responses;
-    }
+        $elems_no_papelera_leido_no_tot = $this->getTotLeidoNo();
 
-    /**
-     * Tot no leido(s) fuena de la papelera.
-     *
-     * @return int
-     */
-    public function getTotLeidoNo()
-    {
-        return Contacto::where('correo', '!=', $this->app_email)
-                        ->where('leido', 0)
-                        ->count();
+        $_arr_detalle = [];
+
+        $_arr_detalle['elems_en_papelera'] = $elems_en_papelera;
+        $_arr_detalle['elems_no_papelera_leido_no_tot'] = $elems_no_papelera_leido_no_tot;
+
+        return $_arr_detalle;
     }
 
     /**
@@ -131,7 +202,13 @@ class ContactController extends Controller
      */
     public function show($id)
     {
-        return Contacto::withTrashed()->findOrFail($id);
+        ////return Contacto::withTrashed()->findOrFail($id);
+        return Contacto::withTrashed()
+                        //total de respuestas para este mensaje
+                        ->withCount('respuestas')
+                        //incluyendo datos de respuestas
+                        ->with('respuestas')
+                        ->findOrFail($id);
     }
 
     /**
@@ -196,7 +273,7 @@ class ContactController extends Controller
      * Forcing remove the specified resource.
      *      >> Teniendo Soft Delete activado
      *          -> es necesario forzar el DELETE()
-     *          para eliminar el registro totalmente
+     *          para eliminar todos los registros totalmente
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -210,6 +287,28 @@ class ContactController extends Controller
 
             $elem->forceDelete();
             $msg = 'Registro borrado definitivamente ... OK';
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+        }
+
+        return [
+            'message' => $msg,
+        ];
+    }
+
+    /**
+     * Forcing remove the specified resource.
+     *      >> Teniendo Soft Delete activado
+     *          -> es necesario forzar el DELETE()
+     *          para eliminar todos los registros totalmente
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function forceDeleteAll()
+    {
+        try {
+            Contacto::onlyTrashed()->forceDelete();
+            $msg = 'Todos los registros fueron eliminados totalmente ... OK';
         } catch (\Exception $e) {
             $msg = $e->getMessage();
         }
@@ -235,6 +334,28 @@ class ContactController extends Controller
 
             $elem->restore();
             $msg = 'Registro restaurado de la papelera ... OK';
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+        }
+
+        return [
+            'message' => $msg,
+        ];
+    }
+
+    /**
+     * Restore form trash the specified resource.
+     *      >> Teniendo Soft Delete activado
+     *          -> se restauran todos los registros desactivados
+     *          por encontrarse en la papelera
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function restoreDeleteAll()
+    {
+        try {
+            Contacto::query()->restore();
+            $msg = 'Todos los registros fueron restaurados ... OK';
         } catch (\Exception $e) {
             $msg = $e->getMessage();
         }

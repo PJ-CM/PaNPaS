@@ -32,7 +32,7 @@
                             <div class="col-md-9">
                                 <div class="card card-primary card-outline borde-inf-primary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Bandeja de entrada</h3>
+                                        <h3 class="card-title">Papelera</h3>
 
                                         <div class="card-tools">
                                             <form @submit.prevent="search()" class="form-inline ml-5" method="post">
@@ -54,15 +54,21 @@
                                             <button @click="recargaPag" class="btn btn-default btn-sm" title="Actualizar lista">
                                                 <i class="fas fa-sync-alt"></i>
                                             </button>
+                                            <button @click="restoreAll" class="btn btn-default btn-sm" title="Restaurar todos">
+                                                <i class="fas fa-trash-restore-alt"></i>
+                                            </button>
+                                            <button @click="forceDeleteAll" class="btn btn-default btn-sm" title="Vaciar papelera">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                             <div class="float-right">
-                                                <i class="fas fa-envelope"></i> {{ elems_no_papelera_tot }} disponible(s)
+                                                <i class="fas fa-envelope"></i> {{ elems_en_papelera_tot }} disponible(s)
                                             </div>
                                         </div>
                                         <div class="table-responsive mailbox-messages">
                                             <table class="table table-hover table-striped">
                                                 <tbody v-if="elems.length == 0">
                                                     <tr>
-                                                        <td class="text-muted text-center">Carpeta vacía actualmente</td>
+                                                        <td class="text-muted text-center">Papelera vacía actualmente</td>
                                                     </tr>
                                                 </tbody>
                                                 <tbody v-else>
@@ -80,13 +86,11 @@
                                                                 {{ elem.nombre }}
                                                             </router-link>
                                                         </td>
-                                                        <td class="mailbox-subject">
-                                                            <strong>{{ elem.asunto }}</strong> <span v-if="elem.respuestas_count > 0" class="badge badge-primary" style="position: relative; top: -7px; left: -2px;" title="Respuesta(s) asociada(s)">{{ elem.respuestas_count }}</span> <br>{{ elem.mensaje | resumenTxt }}
-                                                        </td>
+                                                        <td class="mailbox-subject"><strong>{{ elem.asunto }}</strong><br>{{ elem.mensaje | resumenTxt }}</td>
                                                         <td class="mailbox-date">{{ elem.created_at | formatFHHaceTanto }}</td>
                                                         <td class="mailbox-attachment">
-                                                            <a href="javascript: void(0);" @click.prevent="trashElem(elem.id)" :title="'A papelera / Borrar registro [' + elem.id + ']'">
-                                                                <i class="fas fa-trash-alt"></i>
+                                                            <a href="javascript: void(0);" @click.prevent="restoreDeleteElem(elem.id)" class="text-warning-trash" :title="'Restaurar / Borrar registro [' + elem.id + ']'">
+                                                                <i class="fas fa-trash-restore-alt"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -122,14 +126,6 @@
 
             //para cargar el listado de registros al llegar al componente
             this.getElems();
-            //para volverlo a cargar en cada intervalo de X tiempo
-            //aunque esta forma de recarga va en contra del rendimiento
-            ////setInterval(() => this.getElems(), 3000);
-
-            //Recibiendo notificación de borrado emitida por ContactMsgComponent
-            BusEvent.$on('notifContactDelRegEvent', (elemDelID) => {
-                this.notifDelReg(elemDelID);
-            });
         },
 
         //datos devueltos por el componente:
@@ -138,7 +134,7 @@
                 urlBase: '/api/contacts',
                 //Puede ser también     >>      elems: [],
                 elems: {},  //variable contenedora de los registros a listar
-                elems_no_papelera_tot: 0,
+                elems_en_papelera_tot: 0,
                 //valor mandado al componente hijo ContactsNavbarFoldersComponent
                 elems_no_papelera_leido_no_tot_var: 0,
                 term: '',   //término por el que filtrar resultados
@@ -171,16 +167,21 @@
             getElems() {
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
-                let url = this.urlBase;
+                let url = this.urlBase + '/trashed/list';
                 //Empleado el método GET de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 //  -> Si es correcto, se recogen los datos
                 //  dentro del contenedor definido
                 axios.get(url).then( response => {
                     ////console.log(response.data)
-                    this.elems = response.data.elems_no_papelera
-                    this.elems_no_papelera_tot = this.elems.length
+                    ////console.log(response.data.message)
+                    /**/
+                    this.elems = response.data.elems_en_papelera
+                    this.elems_en_papelera_tot = this.elems.length
                     this.elems_no_papelera_leido_no_tot_var = response.data.elems_no_papelera_leido_no_tot
+                })
+                .catch(error => {           //SI HAY ALGÚN ERROR
+                    console.log(error.response.data.errors);
                 });
             },
 
@@ -189,29 +190,6 @@
             */
             search() {
                 console.log('Enviando filtrado de búsqueda...por [' + this.term + ']');
-                //URL hacia la ruta del listado de registros
-                //  >> SIN paginación
-                /*// BUSCADOR-versión.anterior-ini
-                let url = this.urlBase + '/search';
-                //Empleado el método POST de Axios, el cliente AJAX,
-                //que es el método referido a la ruta llamada
-                //  -> Si es correcto, se recogen los datos
-                //  dentro del contenedor definido
-                //  -> IMPORTANTE
-                //  Todo lo que se manda como parámetro debe ser dentro de un OBJETO
-                //  El término de búsqueda se debe mandar dentro de un objeto
-                axios.post(url, {
-                    term: this.term
-                }).then( response => {  //SI TODO OK
-                    ////console.log(response.data)
-                    this.elems = response.data
-                    this.elems_no_papelera_tot = this.elems.length
-                })
-                .catch(error => {           //SI HAY ALGÚN ERROR
-                    console.log(error.response.data.errors);
-                });
-                // BUSCADOR-versión.anterior-fin
-                */
                 this.$router.push({
                     name: 'contacts_search',
                     params: { term: this.term }
@@ -252,44 +230,140 @@
             },
 
             /**
-             * Mandar a papelera el registro
+             * Restaurar / Borrado definitivo del registro
             */
-            trashElem(id) {
+            restoreDeleteElem(id) {
                 /* BORRADO CON CONFIRMACIÓN */
                 /**/
                 Swal.fire({
-                    title: 'A la papelera',
-                    text: '¿Mandar este mensaje a la papelera?',
+                    title: 'Eliminar o Restaurar',
+                    text: 'El ELIMINAR no es reversible',
+                    type: 'question',
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3490dc',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Restaurar',
+                    cancelButtonText: 'Eliminar',
+                }).then((result) => {
+
+                    //Pulsando el botón equivalente a CONFIRMAR la acción
+                    if (result.value) {
+
+                        /**/
+                        //URL hacia la ruta de restaurar de la papelera el registro
+                        let url = this.urlBase + '/restore-delete/' + id;
+                        //Empleado el método GET de Axios, el cliente AJAX,
+                        //que es el método referido a la ruta llamada
+                        axios.get(url)
+                        .then(response => {       //SI TODO OK
+                            //tras restaurar de la papelera, si todo OK, se muestra
+                            //el listado tras recargarlo
+                            this.getElems();
+                            let server_msg = response.data.message;
+                            console.log(server_msg);
+
+                            //Lanzando notificación satisfactoria
+                            Swal.fire(
+                                '¡Activado!',
+                                'El registro con ID [' + id + '] fue restaurado de la papelera correctamente.',
+                                'success'
+                            )
+
+                            //Emitiendo evento de recarga de total
+                            BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+                        })
+                        .catch(error => {           //SI HAY ALGÚN ERROR
+                            //Lanzando notificación errónea
+                            toast({
+                                type: 'warning',
+                                title: 'ERROR al querer restaurar de la papelera el registro con ID [' + id + ']'
+                            });
+                        });
+
+                    //Pulsando el botón equivalente a CANCELAR la acción
+                    } else if ( result.dismiss === Swal.DismissReason.cancel ) {
+
+                        //Borrado definitivo del registro
+                        this.deleteTotalElem(id);
+
+                    //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+                    } else {
+                        console.log('Acción cancelada');
+                    }
+                })
+            },
+
+            /**
+             * Borrado definitivo del registro
+            */
+            deleteTotalElem(id) {
+
+                //URL hacia la ruta de borrado definitivo de registro
+                let url = this.urlBase + '/force-delete/' + id;
+                //Empleado el método GET de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
+                axios.get(url)
+                .then(response => {       //SI TODO OK
+                    //tras borrado definitivo, si todo OK, se muestra
+                    //el listado tras recargarlo
+                    this.getElems();
+                    let server_msg_del = response.data.message;
+                    console.log(server_msg_del);
+
+                    //Lanzando notificación satisfactoria
+                    Swal.fire(
+                        '¡Borrado!',
+                        'El registro con ID [' + id + '] fue eliminado correctamente.',
+                        'success'
+                    )
+                })
+                .catch(error => {           //SI HAY ALGÚN ERROR
+                    //Lanzando notificación errónea
+                    toast({
+                        type: 'warning',
+                        title: 'ERROR al querer eliminar totalmente el registro con ID [' + id + ']'
+                    });
+                });
+
+            },
+
+            /**
+             * Restaurar todos los registros de la papelera
+            */
+            restoreAll() {
+                /* BORRADO CON CONFIRMACIÓN */
+                /**/
+                Swal.fire({
+                    title: 'Restaurar',
+                    text: '¿Restaurar todos los mensajes?',
                     type: 'question',
                     showCloseButton: true,
                     showCancelButton: true,
                     confirmButtonColor: '#6c757d',
-                    cancelButtonColor: '#f6993f',
+                    cancelButtonColor: '#3490dc',
                     confirmButtonText: 'Cancelar',
-                    cancelButtonText: 'A papelera',
+                    cancelButtonText: 'Restaurar',
                 }).then((result) => {
 
                     //Pulsando el botón equivalente a CANCELAR la acción
                     if ( result.dismiss === Swal.DismissReason.cancel ) {
 
                         /**/
-                        console.log('Se efectuará un Soft Delete...');
-                        //URL hacia la ruta de borrado temporal de registro
-                        let url = this.urlBase + '/' + id;
-                        //Empleado el método DELETE de Axios, el cliente AJAX,
-                        //que es el método referido a la ruta llamada
-                        axios.delete(url)
+                        console.log('Se efectuará una Restauración total...');
+                        let url = this.urlBase + '/restore-delete/all';
+                        axios.get(url)
                         .then(response => {       //SI TODO OK
-                            //tras borrado temporal, si todo OK, se muestra
+                            //tras restauración total, si todo OK, se muestra
                             //el listado tras recargarlo
                             this.getElems();
-                            let server_msg_del = response.data.message;
-                            console.log(server_msg_del);
+                            let server_msg = response.data.message;
+                            console.log(server_msg);
 
                             //Lanzando notificación satisfactoria
                             Swal.fire(
-                                '¡A la papelera!',
-                                'El registro con ID [' + id + '] fue mandado a la papelera correctamente.',
+                                'Restaurar',
+                                'Todos los registros de la papelera fueron restaurados correctamente.',
                                 'success'
                             )
 
@@ -302,7 +376,7 @@
                             //Lanzando notificación errónea
                             toast({
                                 type: 'warning',
-                                title: 'ERROR al querer mandar a la papelera el registro con ID [' + id + ']'
+                                title: 'ERROR al querer restaurar todos los registros'
                             });
                         });
 
@@ -314,15 +388,62 @@
             },
 
             /**
-             * Notificando borrado definitivo desde la ficha de detalle
+             * Vaciar la papelera - Forzar el borrado de todos los registros de la papelera
             */
-            notifDelReg(id) {
-                //Lanzando notificación satisfactoria
-                Swal.fire(
-                    '¡Borrado!',
-                    'El registro con ID [' + id + '] fue mandado a la papelera correctamente.',
-                    'success'
-                )
+            forceDeleteAll() {
+                /* BORRADO CON CONFIRMACIÓN */
+                /**/
+                Swal.fire({
+                    title: 'Borrado Total',
+                    text: 'Eliminar definitivamente todos los mensajes?',
+                    type: 'question',
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonColor: '#6c757d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Cancelar',
+                    cancelButtonText: 'Eliminar',
+                }).then((result) => {
+
+                    //Pulsando el botón equivalente a CANCELAR la acción
+                    if ( result.dismiss === Swal.DismissReason.cancel ) {
+
+                        /**/
+                        console.log('Se efectuará un Borrado total...');
+                        let url = this.urlBase + '/force-delete/all';
+                        axios.get(url)
+                        .then(response => {       //SI TODO OK
+                            //tras borrado total, si todo OK, se muestra
+                            //el listado tras recargarlo
+                            this.getElems();
+                            let server_msg = response.data.message;
+                            console.log(server_msg);
+
+                            //Lanzando notificación satisfactoria
+                            Swal.fire(
+                                'Eliminar',
+                                'Todos los registros de la papelera fueron eliminados correctamente.',
+                                'success'
+                            )
+
+                            //Emitiendo evento de recarga de total
+                            BusEvent.$emit('notifRecargaLeidosNoTotEvent');
+
+                        })
+                        .catch(error => {           //SI HAY ALGÚN ERROR
+                            console.log(error.response.data.errors);
+                            //Lanzando notificación errónea
+                            toast({
+                                type: 'warning',
+                                title: 'ERROR al querer eliminar todos los registros'
+                            });
+                        });
+
+                    //Pulsando cualquier otra equivalencia (ESC, fuera de la ventana,...)
+                    } else {
+                        console.log('Acción cancelada');
+                    }
+                })//fin confirmación
             },
 
         },

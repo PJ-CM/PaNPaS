@@ -67,7 +67,10 @@ let routes = [
     // ----------------------------------------------------
     //  =>> :: CONTACTOS ::
     { path: patron + '/contacts', name: 'contacts_list', component: require('./components' + patron + '/ContactsComponent.vue').default },
+    { path: patron + '/contacts/sended', name: 'contacts_sended_list', component: require('./components' + patron + '/ContactsSendedComponent.vue').default },
+    { path: patron + '/contacts/trashed', name: 'contacts_trashed_list', component: require('./components' + patron + '/ContactsTrashedComponent.vue').default },
     { path: patron + '/contacts/:id', name: 'contact_msg', component: require('./components' + patron + '/ContactMsgComponent.vue').default },
+    { path: patron + '/contacts/search/:term', name: 'contacts_search', component: require('./components' + patron + '/ContactsSearchComponent.vue').default },
 ]
 
 //Instancia de VueRouter y asignación de rutas
@@ -81,10 +84,19 @@ const router = new VueRouter({
 
 //Filtros de Vue
 //----------------------------------------------------------
-//Para poner un txt en mayúsculas
+//Para resumir textos largos
 Vue.filter('resumenTxt', function (value) {
     if (!value) return '-'
     let maxChar = 50;
+    if(value.length > maxChar) {
+        value = value.substring(0, maxChar).trim() + '...';
+    }
+    return value;
+})
+//Para resumir textos largos en Top3 - Barra Superior
+Vue.filter('resumenTxt_Top3LNo', function (value) {
+    if (!value) return '-'
+    let maxChar = 25;
     if(value.length > maxChar) {
         value = value.substring(0, maxChar).trim() + '...';
     }
@@ -128,6 +140,13 @@ Vue.component('user-ins-edit-component', require('./components' + patron + '/Use
 Vue.component('user-prof-tots-component', require('./components' + patron + '/UserProfTotsComponent.vue').default);
 Vue.component('user-prof-activ-component', require('./components' + patron + '/UserProfActivComponent.vue').default);
 Vue.component('user-prof-edit-component', require('./components' + patron + '/UserProfEditComponent.vue').default);
+Vue.component('contacts-navbar-folders-component', require('./components' + patron + '/ContactsNavbarFoldersComponent.vue').default);
+
+//Vue-infinite-loading :: Paginado Infinito
+//  >> Registro del componente
+//      ==> dándole un nombre personal con el que manejarlo
+//      ==> indicando el nombre real del componente (se puede ver dentro de package.json)
+Vue.component('InfiniteLoading', require('vue-infinite-loading'));
 
 //Instancia de Vue para emplear como Bus de eventos
 //para la emisión/recepción de los mismos de forma global

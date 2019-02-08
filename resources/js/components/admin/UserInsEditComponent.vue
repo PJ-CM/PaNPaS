@@ -152,6 +152,7 @@
         //datos devueltos por el componente:
         data() {
             return {
+                urlBase: '/api/users',
                 //variable que guarda el archivo seleccionado
                 avatarSelecc: null,
                 //variable para almacenar los datos del registro a almacenar
@@ -197,7 +198,7 @@
             */
             storeUser() {
                 console.log('Registrando nuevo registro...');
-                let url = '/api/users';
+                let url = this.urlBase;
                 axios.post(url, this.objUser)
                 .then((response) => {       //SI TODO OK
                     ////document.location = '/';
@@ -250,7 +251,7 @@
             */
             updateUser() {
                 console.log('Actualizando registro... [' + this.objUser.id + ']');
-                let url = '/api/users/' + this.objUser.id;
+                let url = this.urlBase + '/' + this.objUser.id;
                 axios.put(url, this.objUser)
                 .then((response) => {       //SI TODO OK
 

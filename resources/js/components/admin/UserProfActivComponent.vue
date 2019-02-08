@@ -118,6 +118,7 @@
         //datos devueltos por el componente:
         data() {
             return {
+                urlBase: '/api/users',
                 //variable para almacenar los datos del registro a almacenar
                 objActivReg: {},
                 element: '',
@@ -232,7 +233,7 @@
             fillActivReg(regID) {
                 console.log('Cargando datos de actividad del registro [' + regID + ']');
                 //Haciendo la petición de datos
-                let url = '/api/users/prof-activity/' + regID;
+                let url = this.urlBase + '/prof-activity/' + regID;
                 axios.get(url)
                 .then( response => {       //SI TODO OK
                     console.log('Top Últimas recetas:' + response.data);

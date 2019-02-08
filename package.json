@@ -33,6 +33,7 @@
     "sweetalert2": "^7.33.1",
     "vue-bootstrap-datetimepicker": "^5.0.1",
     "vue-google-charts": "^0.3.2",
+    "vue-infinite-loading": "^2.4.3",
     "vue-router": "^3.0.2"
   }
 }

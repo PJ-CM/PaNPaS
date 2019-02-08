@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Contacto;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,4 +33,13 @@ class Contacto extends Model
      * @var array
      */
     protected $hidden = [];
+
+    /**
+     * Para obtener el total de respuestas que tenga asociadas un mensaje.
+     * (ver en API/ContactController@index, línea sobre withCount())
+     *
+     */
+    public function respuestas() {
+        return $this->hasMany(Contacto::class, 'msg_origen');
+    }
 }
