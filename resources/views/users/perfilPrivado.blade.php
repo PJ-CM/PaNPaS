@@ -55,7 +55,7 @@
 
                             <div class="card-body">
                                 <h2>Modificar Avatar:</h2>
-                                <input type="file" name="newAvatar" class="btn btn-secondary" required><input type="submit" name="sub_avatar" value="Cambiar" class="btn btn-primary">
+                                <input type="file" name="newAvatar" class="btn btn-secondary col-12" required><input type="submit" name="sub_avatar" value="Cambiar" class="btn btn-primary">
                                 <form action="/user/guardarFotoPerfil" method="post" enctype="multipart/form-data" class="centrado">
                                 	<img src="{{$user->avatar}}" class="avatar">
                                     <div class="col-12" style="max-width: 390px; float: right;">
