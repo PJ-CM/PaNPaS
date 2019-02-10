@@ -70,7 +70,12 @@
                                                     <th class="text-center">Modificar</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody v-if="users.length == 0">
+                                                <tr>
+                                                    <td colspan="9" class="text-muted text-center">Ningún usuario registrado actualmente</td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody v-else>
                                                 <tr class="lista-usuarios" v-for="(user, index) in users" :key="user.id" style="vertical-align: middle;">
                                                     <!-- ORDEN ASC -->
                                                     <!--<td class="lista_indice text-center" v-if="(index + 1) < 10">{{ '0' + (index + 1) }}</td>
@@ -143,6 +148,7 @@
         //datos devueltos por el componente:
         data() {
             return {
+                urlBase: '/api/users',
                 //Puede ser también     >>      users: [],
                 users: {},  //variable contenedora de los registros a listar
                 term: '',   //término por el que filtrar resultados
@@ -168,7 +174,7 @@
             getUsers() {
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
-                let url = '/api/users';
+                let url = this.urlBase;
                 //Empleado el método GET de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 //  -> Si es correcto, se recogen los datos
@@ -186,7 +192,7 @@
                 console.log('Enviando filtrado de búsqueda...por [' + this.term + ']');
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
-                let url = '/api/users/search';
+                let url = this.urlBase + '/search';
                 //Empleado el método POST de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 //  -> Si es correcto, se recogen los datos
@@ -236,20 +242,13 @@
             },
 
             /**
-             * Editando registro
-            */
-            editUser(user) {
-                //
-            },
-
-            /**
              * Mandar a papelera / Borrado definitivo del registro
             */
             trashDeleteUser(id) {
                 /* BORRADO SIN CONFIRMACIÓN */
                 /*
                 //URL hacia la ruta de borrado de registro
-                var url = '/api/users/' + id;
+                var url = this.urlBase + '/' + id;
                 //Empleado el método DELETE de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 axios.delete(url).then(response => {
@@ -302,7 +301,7 @@
                         /**/
                         console.log('Se efectuará un Soft Delete...');
                         //URL hacia la ruta de borrado temporal de registro
-                        let url = '/api/users/' + id;
+                        let url = this.urlBase + '/' + id;
                         //Empleado el método DELETE de Axios, el cliente AJAX,
                         //que es el método referido a la ruta llamada
                         axios.delete(url)
@@ -364,7 +363,7 @@
 
                         /**/
                         //URL hacia la ruta de restaurar de la papelera el registro
-                        let url = '/api/users/restore-delete/' + id;
+                        let url = this.urlBase + '/restore-delete/' + id;
                         //Empleado el método GET de Axios, el cliente AJAX,
                         //que es el método referido a la ruta llamada
                         axios.get(url)
@@ -409,7 +408,7 @@
             deleteTotalUser(id) {
 
                 //URL hacia la ruta de borrado definitivo de registro
-                let url = '/api/users/force-delete/' + id;
+                let url = this.urlBase + '/force-delete/' + id;
                 //Empleado el método GET de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 axios.get(url)

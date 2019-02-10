@@ -26,7 +26,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <!-- Barra de Carpetas -->
-                            <contacts-navbar-folders-component></contacts-navbar-folders-component>
+                            <contacts-navbar-folders-component :elems_no_papelera_leido_no_tot="elems_no_papelera_leido_no_tot_var"></contacts-navbar-folders-component>
                             <!-- /.col -->
 
                             <div class="col-md-9">
@@ -51,14 +51,21 @@
                                     <!-- /.card-header -->
                                     <div class="card-body p-0">
                                         <div class="mailbox-controls">
-                                            <router-link to="/admin/contacts" class="btn btn-default btn-sm" title="Actualizar lista"><i class="fas fa-sync-alt"></i></router-link>
+                                            <button @click="recargaPag" class="btn btn-default btn-sm" title="Actualizar lista">
+                                                <i class="fas fa-sync-alt"></i>
+                                            </button>
                                             <div class="float-right">
                                                 <i class="fas fa-envelope"></i> {{ elems_no_papelera_tot }} disponible(s)
                                             </div>
                                         </div>
                                         <div class="table-responsive mailbox-messages">
                                             <table class="table table-hover table-striped">
-                                                <tbody>
+                                                <tbody v-if="elems.length == 0">
+                                                    <tr>
+                                                        <td class="text-muted text-center">Carpeta vacía actualmente</td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody v-else>
                                                     <tr v-for="(elem, index) in elems" :key="index">
                                                         <td>
                                                             <a v-if="elem.leido" href="javascript: void(0);" @click="updateField(elem.id, 'leido', 0)" class="text-primary" title="Leido - Marcar como NO LEIDO">
@@ -73,7 +80,9 @@
                                                                 {{ elem.nombre }}
                                                             </router-link>
                                                         </td>
-                                                        <td class="mailbox-subject"><strong>{{ elem.asunto }}</strong><br>{{ elem.mensaje | resumenTxt }}</td>
+                                                        <td class="mailbox-subject">
+                                                            <strong>{{ elem.asunto }}</strong> <span v-if="elem.respuestas_count > 0" class="badge badge-primary" style="position: relative; top: -7px; left: -2px;" title="Respuesta(s) asociada(s)">{{ elem.respuestas_count }}</span> <br>{{ elem.mensaje | resumenTxt }}
+                                                        </td>
                                                         <td class="mailbox-date">{{ elem.created_at | formatFHHaceTanto }}</td>
                                                         <td class="mailbox-attachment">
                                                             <a href="javascript: void(0);" @click.prevent="trashElem(elem.id)" :title="'A papelera / Borrar registro [' + elem.id + ']'">
@@ -117,7 +126,7 @@
             //aunque esta forma de recarga va en contra del rendimiento
             ////setInterval(() => this.getElems(), 3000);
 
-            //Recibiendo notificación de borrado emitida por ContactDetailComponent
+            //Recibiendo notificación de borrado emitida por ContactMsgComponent
             BusEvent.$on('notifContactDelRegEvent', (elemDelID) => {
                 this.notifDelReg(elemDelID);
             });
@@ -130,7 +139,8 @@
                 //Puede ser también     >>      elems: [],
                 elems: {},  //variable contenedora de los registros a listar
                 elems_no_papelera_tot: 0,
-                elems_no_papelera_leido_no_tot: 0,
+                //valor mandado al componente hijo ContactsNavbarFoldersComponent
+                elems_no_papelera_leido_no_tot_var: 0,
                 term: '',   //término por el que filtrar resultados
             }
         },
@@ -149,6 +159,13 @@
         methods: {
 
             /**
+             * Recargando página
+            */
+            recargaPag() {
+                this.$router.go(this.$router.currentRoute)
+            },
+
+            /**
              * Obteniendo listado de registros
             */
             getElems() {
@@ -163,17 +180,18 @@
                     ////console.log(response.data)
                     this.elems = response.data.elems_no_papelera
                     this.elems_no_papelera_tot = this.elems.length
-                    this.elems_no_papelera_leido_no_tot = response.data.elems_no_papelera_leido_no_tot
+                    this.elems_no_papelera_leido_no_tot_var = response.data.elems_no_papelera_leido_no_tot
                 });
             },
 
             /**
-             * Obteniendo listado de registros filtrados por término de búsqueda
+             * Enviando término de búsqueda para filtrar registros
             */
             search() {
                 console.log('Enviando filtrado de búsqueda...por [' + this.term + ']');
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
+                /*// BUSCADOR-versión.anterior-ini
                 let url = this.urlBase + '/search';
                 //Empleado el método POST de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
@@ -191,6 +209,12 @@
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR
                     console.log(error.response.data.errors);
+                });
+                // BUSCADOR-versión.anterior-fin
+                */
+                this.$router.push({
+                    name: 'contacts_search',
+                    params: { term: this.term }
                 });
             },
 
@@ -228,44 +252,9 @@
             },
 
             /**
-             * Mandar a papelera / Borrado definitivo del registro
+             * Mandar a papelera el registro
             */
             trashElem(id) {
-                /* BORRADO SIN CONFIRMACIÓN */
-                /*
-                //URL hacia la ruta de borrado de registro
-                var url = this.urlBase + '/' + id;
-                //Empleado el método DELETE de Axios, el cliente AJAX,
-                //que es el método referido a la ruta llamada
-                axios.delete(url).then(response => {
-                    //tras borrado, si todo OK, se muestra el listado tras recargarlo
-                    this.getElems();
-
-                    //Lanzando notificación satisfactoria
-                    toast({
-                        type: 'success',
-                        title: 'Eliminado, correctamente, registro con ID [' + id + ']'
-                    });
-                });*/
-
-                /*
-                    ¡¡ATENCIÓN!!
-                    Es preciso capturar el elemento pulsado, si se quiere asociar alguna
-                    acción al CancelButton diferente de la predeterminada de cerrar la
-                    ventana.
-                    Si no es así, y se considera todo lo que no sea ConfirmButton, en el
-                    mismo ELSE, entonces, todo ello se vinculará a lo que se asocie al
-                    CancelButton.
-                    De asociar la acción de eliminar registro a todo el ELSE, incluso,
-                    cancelando la acción, pulsando en el icono de cerrar, pulsando en ESC
-                    o fuera de la ventana, el registro terminará siendo eliminado aunque
-                    no sea la acción que se eligió.
-                    Para evitar esto, se captura uno de los posibles eventos de dissMissals
-                    de esta librería.
-                    En estos casos, se emplea la captura de pulsar el CancelButton:
-                        result.dismiss === Swal.DismissReason.cancel
-                */
-
                 /* BORRADO CON CONFIRMACIÓN */
                 /**/
                 Swal.fire({

@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 
 class AdminPanelController extends Controller
 {
+    //EmailADMIN remitente de respuesta(s)
+    protected $app_email;
+
     /**
      * Create a new controller instance.
      *
@@ -19,6 +22,8 @@ class AdminPanelController extends Controller
     {
         //  >> Desactivarlo mientras se desarrolla
         $this->middleware(['auth', 'verified']);
+
+        $this->app_email = config('mail.from.address', 'panpas.zm@gmail.com');
     }
 
     public function index()
@@ -38,7 +43,8 @@ class AdminPanelController extends Controller
         $tot_users          = User::withTrashed()->count();
         $tot_recetas        = Receta::count();
         $tot_comentarios    = Comentario::count();
-        $tot_mens_contacto  = Contacto::count();
+        $tot_mens_contacto  = Contacto::where('correo', '!=', $this->app_email)
+                                        ->count();//sin los enviados por ADMIN como respuesta
 
         $_arr_detalle['tot_users']          = $tot_users;
         $_arr_detalle['tot_recetas']        = $tot_recetas;

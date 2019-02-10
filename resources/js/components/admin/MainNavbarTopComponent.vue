@@ -33,58 +33,36 @@
                             <i id="ico_msg" class="fas fa-comments"></i>
                             <span v-if="elemsTop_no_papelera_leido_no_tot > 0" class="badge badge-primary navbar-badge" title="Mensaje(s) sin leer">{{ elemsTop_no_papelera_leido_no_tot }}</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <div id="dropdown-menu-top3-lno" v-if="elems_Top3LeidoNo.length == 0" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <router-link to="/admin/contacts" class="dropdown-item dropdown-footer text-center" title="Ir a Mensajes">
+                                Ver Todos los Mensajes
+                            </router-link>
+                        </div>
+                        <div id="dropdown-menu-top3-lno" v-else class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <!-- Message Start -->
-                            <a href="#" class="dropdown-item">
-                                <div class="media">
-                                    <img src="images/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-                                    <div class="media-body">
-                                        <h3 class="dropdown-item-title">
-                                            Brad Diesel
-                                            <span class="float-right text-sm text-danger"><i class="fa fa-star"></i></span>
-                                        </h3>
-                                        <p class="text-sm">Call me whenever you can...</p>
-                                        <p class="text-sm text-muted"><i class="fa fa-clock-o mr-1"></i> 4 Hours Ago</p>
+                            <div v-for="(elem_Top3LNo, index) in elems_Top3LeidoNo" :key="index">
+                                <router-link :to="{ name: 'contact_msg', params: {id: elem_Top3LNo.id} }" :title="'Ver mensaje de ' + elem_Top3LNo.correo" class="dropdown-item">
+                                    <div class="media">
+                                        <img src="images/user_icon_gnral.png" alt="Avatar de usuario no registrado" class="img-size-50 mr-3 img-circle">
+                                        <div class="media-body">
+                                            <h3 class="dropdown-item-title">
+                                                {{ elem_Top3LNo.nombre }}
+                                            </h3>
+                                            <p class="text-sm">{{ elem_Top3LNo.asunto | resumenTxt_Top3LNo }}</p>
+                                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> {{ elem_Top3LNo.created_at | formatFHHaceTanto }}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <!-- Message End -->
-                            <div class="dropdown-divider"></div>
-                            <!-- Message Start -->
-                            <a href="#" class="dropdown-item">
-                                <div class="media">
-                                    <img src="images/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                                    <div class="media-body">
-                                        <h3 class="dropdown-item-title">
-                                            John Pierce
-                                            <span class="float-right text-sm text-muted"><i class="fa fa-star"></i></span>
-                                        </h3>
-                                        <p class="text-sm">I got your message bro</p>
-                                        <p class="text-sm text-muted"><i class="fa fa-clock-o mr-1"></i> 4 Hours Ago</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- Message End -->
-                            <div class="dropdown-divider"></div>
-                            <!-- Message Start -->
-                            <a href="#" class="dropdown-item">
-                                <div class="media">
-                                    <img src="images/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                                    <div class="media-body">
-                                        <h3 class="dropdown-item-title">
-                                            Nora Silvester
-                                            <span class="float-right text-sm text-warning"><i class="fa fa-star"></i></span>
-                                        </h3>
-                                        <p class="text-sm">The subject goes here</p>
-                                        <p class="text-sm text-muted"><i class="fa fa-clock-o mr-1"></i> 4 Hours Ago</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- Message End -->
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+                                </router-link>
+                                <!-- Message End -->
+                                <div class="dropdown-divider"></div>
+                            </div>
+
+                            <router-link to="/admin/contacts" class="dropdown-item dropdown-footer text-center" title="Ir a Mensajes">
+                                Ver Todos los Mensajes
+                            </router-link>
                         </div>
                     </li>
+
                     <!-- Notifications Dropdown Menu -->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
@@ -124,8 +102,8 @@
         mounted() {//o created()
             console.log('Component mounted.')
 
-            //para cargar el listado de registros al llegar al componente
-            this.getElems();
+            //para cargar el listado de registros no leidos al llegar al componente
+            this.getElemsTotNoLeidos();
 
             //Recibiendo notificación de todo evento que cambie el total de correos no leidos
             BusEvent.$on('notifRecargaLeidosNoTotEvent', () => {
@@ -137,37 +115,59 @@
         data() {
             return {
                 urlBase: '/api/contacts',
-                //Puede ser también     >>      elems: [],
-                elemsTop: {},  //variable contenedora de los registros a listar
                 elemsTop_no_papelera_leido_no_tot: 0,
+                //Puede ser también     >>      elemsTop3_LeidoNo: [],
+                elems_Top3LeidoNo: {},  //variable contenedora de los registros a listar
             }
         },
 
         methods: {
 
             /**
-             * Obteniendo listado de registros
-             * para contar los no leidos
+             * Obteniendo TOT de los no leidos
             */
-            getElems() {
+            getElemsTotNoLeidos() {
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
-                let url = this.urlBase;
+                let url = this.urlBase + '/no-readed/tot';
                 //Empleado el método GET de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 //  -> Si es correcto, se recogen los datos
                 //  dentro del contenedor definido
                 axios.get(url).then( response => {
                     ////console.log(response.data)
-                    this.elemsTop_no_papelera_leido_no_tot = response.data.elems_no_papelera_leido_no_tot
+                    this.elemsTop_no_papelera_leido_no_tot = response.data
+                    //Habiendo algún mensaje no leido fuera de la papelera...
+                    if(this.elemsTop_no_papelera_leido_no_tot > 0) {
+                        this.getElemsTop3NoLeidos();
+                    }
                 });
             },
 
             /**
-             * Recarga de total de mensajes no leidos
+             * Obteniendo TOP3 de los no leidos
+            */
+            getElemsTop3NoLeidos() {
+                //URL hacia la ruta del listado de registros
+                //  >> SIN paginación
+                let url = this.urlBase + '/no-readed/top3';
+                //Empleado el método GET de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
+                //  -> Si es correcto, se recogen los datos
+                //  dentro del contenedor definido
+                axios.get(url).then( response => {
+                    ////console.log(response.data)
+                    this.elems_Top3LeidoNo = response.data
+                });
+            },
+
+            /**
+             * Recarga de:
+             *      >> total de mensajes no leidos
+             *          => top3 de mensajes no leidos
             */
             notifRecargaLeidosNoTot() {
-                this.getElems();
+                this.getElemsTotNoLeidos();
             },
 
         }

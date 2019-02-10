@@ -32,7 +32,7 @@
                             <div class="col-md-9">
                                 <div class="card card-primary card-outline borde-inf-primary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Enviados</h3>
+                                        <h3 class="card-title">Resultados</h3>
 
                                         <div class="card-tools">
                                             <form @submit.prevent="search()" class="form-inline ml-5" method="post">
@@ -51,9 +51,6 @@
                                     <!-- /.card-header -->
                                     <div class="card-body p-0">
                                         <div class="mailbox-controls">
-                                            <button @click="recargaPag" class="btn btn-default btn-sm" title="Actualizar lista">
-                                                <i class="fas fa-sync-alt"></i>
-                                            </button>
                                             <div class="float-right">
                                                 <i class="fas fa-envelope"></i> {{ elems_no_papelera_tot }} disponible(s)
                                             </div>
@@ -62,7 +59,7 @@
                                             <table class="table table-hover table-striped">
                                                 <tbody v-if="elems.length == 0">
                                                     <tr>
-                                                        <td class="text-muted text-center">Carpeta vacía actualmente</td>
+                                                        <td class="text-muted text-center">Sin resultados sobre "{{ term }}"</td>
                                                     </tr>
                                                 </tbody>
                                                 <tbody v-else>
@@ -80,7 +77,20 @@
                                                                 {{ elem.nombre }}
                                                             </router-link>
                                                         </td>
-                                                        <td class="mailbox-subject"><strong>{{ elem.asunto }}</strong><br>{{ elem.mensaje | resumenTxt }}</td>
+                                                        <td class="mailbox-subject">
+                                                            <strong>{{ elem.asunto | resumenTxt }}</strong> <span v-if="elem.respuestas_count > 0" class="badge badge-primary" style="position: relative; top: -7px; left: -2px;" title="Respuesta(s) asociada(s)">{{ elem.respuestas_count }}</span> <br>{{ elem.mensaje | resumenTxt }}
+                                                        </td>
+                                                        <td>
+                                                            <router-link v-if="elem.deleted_at != null" :to="{ name: 'contacts_trashed_list' }" title="En la carpeta [Papelera] ... Ir">
+                                                                <span class="badge badge-primary">Papelera</span>
+                                                            </router-link>
+                                                            <router-link v-else-if="elem.msg_origen != 0" :to="{ name: 'contacts_sended_list' }" title="En la carpeta [Enviados] ... Ir">
+                                                                <span class="badge badge-primary">Enviados</span>
+                                                            </router-link>
+                                                            <router-link v-else-if="elem.msg_origen == 0" :to="{ name: 'contacts_list' }" title="En la carpeta [Bandeja de entrada] ... Ir">
+                                                                <span class="badge badge-primary">Bandeja de entrada</span>
+                                                            </router-link>
+                                                        </td>
                                                         <td class="mailbox-date">{{ elem.created_at | formatFHHaceTanto }}</td>
                                                         <td class="mailbox-attachment">
                                                             <a href="javascript: void(0);" @click.prevent="trashElem(elem.id)" :title="'A papelera / Borrar registro [' + elem.id + ']'">
@@ -118,8 +128,10 @@
         created() {
             //console.log('Component mounted.')
 
-            //para cargar el listado de registros al llegar al componente
-            this.getElems();
+            //llamar a almacenar el parámetro recibido
+            this.getParam();
+            //lanzar búsqueda
+            this.search();
         },
 
         //datos devueltos por el componente:
@@ -149,28 +161,36 @@
         methods: {
 
             /**
-             * Recargando página
+             * Obteniendo listado de registros
             */
-            recargaPag() {
-                this.$router.go(this.$router.currentRoute)
+            getParam() {
+                this.term = this.$route.params.term;
             },
 
             /**
-             * Obteniendo listado de registros
+             * Obteniendo listado de registros filtrados por término de búsqueda
             */
-            getElems() {
+            search() {
+                console.log('Enviando filtrado de búsqueda...por [' + this.term + ']');
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
-                let url = this.urlBase + '/sended/list';
-                //Empleado el método GET de Axios, el cliente AJAX,
+                let url = this.urlBase + '/search';
+                //Empleado el método POST de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 //  -> Si es correcto, se recogen los datos
                 //  dentro del contenedor definido
-                axios.get(url).then( response => {
+                //  -> IMPORTANTE
+                //  Todo lo que se manda como parámetro debe ser dentro de un OBJETO
+                //  El término de búsqueda se debe mandar dentro de un objeto
+                axios.post(url, {
+                    term: this.term
+                }).then( response => {  //SI TODO OK
                     ////console.log(response.data)
-                    this.elems = response.data.elems_no_papelera
+                    this.elems = response.data
                     this.elems_no_papelera_tot = this.elems.length
-                    this.elems_no_papelera_leido_no_tot_var = response.data.elems_no_papelera_leido_no_tot
+
+                    //Y obteniendo TOT de no leidos
+                    this.getElemsTotNoLeidos();
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR
                     console.log(error.response.data.errors);
@@ -178,13 +198,19 @@
             },
 
             /**
-             * Enviando término de búsqueda para filtrar registros
+             * Obteniendo TOT de los no leidos
             */
-            search() {
-                console.log('Enviando filtrado de búsqueda...por [' + this.term + ']');
-                this.$router.push({
-                    name: 'contacts_search',
-                    params: { term: this.term }
+            getElemsTotNoLeidos() {
+                //URL hacia la ruta del listado de registros
+                //  >> SIN paginación
+                let url = this.urlBase + '/no-readed/tot';
+                //Empleado el método GET de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
+                //  -> Si es correcto, se recogen los datos
+                //  dentro del contenedor definido
+                axios.get(url).then( response => {
+                    ////console.log(response.data)
+                    this.elems_no_papelera_leido_no_tot_var = response.data
                 });
             },
 
@@ -203,8 +229,8 @@
                 axios.get(url)
                 .then((response) => {       //SI TODO OK
 
-                    //refrescando listado
-                    this.getElems();
+                    //refrescando listado de resultados
+                    this.search();
 
                     //Lanzando notificación satisfactoria
                     toast({
@@ -250,9 +276,10 @@
                         //que es el método referido a la ruta llamada
                         axios.delete(url)
                         .then(response => {       //SI TODO OK
-                            //tras borrado temporal, si todo OK, se muestra
-                            //el listado tras recargarlo
-                            this.getElems();
+                            //tras borrado temporal, si todo OK,
+                            //se actualizan resultados
+                            this.search();
+                            //this.$router.go(this.$router.currentRoute)
                             let server_msg_del = response.data.message;
                             console.log(server_msg_del);
 

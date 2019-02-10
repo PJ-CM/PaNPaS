@@ -26,7 +26,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <!-- Barra de Carpetas -->
-                            <contacts-navbar-folders-component></contacts-navbar-folders-component>
+                            <contacts-navbar-folders-component :elems_no_papelera_leido_no_tot="elems_no_papelera_leido_no_tot_var"></contacts-navbar-folders-component>
                             <!-- /.col -->
 
                             <div class="col-md-9">
@@ -37,7 +37,8 @@
                                     <!-- /.card-header -->
                                     <div class="card-body p-0">
                                         <div class="mailbox-read-info">
-                                            <h5><strong>{{ objReg.asunto }}</strong></h5>
+                                            <h5 :title="objReg.asunto"><strong>{{ objReg.asunto | resumenTxt }}</strong></h5>
+                                            <span v-if="objReg.respuestas_count > 0" class="badge bg-primary" title="Cantidad de respuestas">{{ objReg.respuestas_count }}</span>
                                             <h6>de: {{ objReg.nombre }} &lt;{{ objReg.correo }}&gt;
                                             <span class="mailbox-read-time float-right">{{ objReg.created_at | formatFechaHoraTxt }}</span></h6>
                                         </div>
@@ -46,7 +47,8 @@
                                             <div class="btn-group">
                                                 <button type="button" @click="trashElem()" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Mandar a la papelera">
                                                 <i class="fas fa-trash-alt"></i></button>
-                                                <a href="#txt-msg-resp" data-toggle="collapse" class="btn btn-default btn-sm" data-container="body" title="Responder">
+                                                <!-- Temporalmente, solo se deja responder al mensaje original -->
+                                                <a v-if="objReg.msg_origen == 0" href="#txt-msg-resp" data-toggle="collapse" class="btn btn-default btn-sm" data-container="body" title="Responder">
                                                 <i class="fa fa-reply"></i></a>
                                                 <!--<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Reenviar">
                                                 <i class="fa fa-share"></i></button>-->
@@ -60,14 +62,22 @@
                                             <textarea class="col-12" disabled v-model="objReg.mensaje"></textarea>
                                         </div>
                                         <!-- /.mailbox-read-message -->
+                                        <div v-if="objReg.msg_origen != 0" class="float-right">
+                                            <a href="javascript: void(0);" @click="fillEditFormReg(objReg.msg_origen)" class="btn btn-default" title="Ver conversación">
+                                                <i class="fas fa-mail-bulk"></i> Ver conversación
+                                            </a>
+                                            <!-- <router-link :to="'/admin/contacts/' + objReg.msg_origen" class="btn btn-default" title="Ver conversación">
+                                                <i class="fas fa-mail-bulk"></i> Ver conversación
+                                            </router-link> -->
+                                        </div>
                                     </div>
                                     <!-- /.card-body -->
 
                                     <!-- LISTADO DE POSIBLE(S) RESPUESTA(S) YA EXISTENTE(S) -->
-                                    <div v-for="(elemResp, indexResp) in objRegResps" :key="indexResp" class="card-body p-0">
+                                    <div v-for="(elemResp, indexResp) in objReg.respuestas" :key="indexResp" class="card-body p-0">
                                         <a :href="'#txt-msg-resps-' + elemResp.id" data-toggle="collapse">
                                         <div class="mailbox-read-info">
-                                            <h5><strong>{{ elemResp.asunto }}</strong></h5>
+                                            <h5><strong>{{ elemResp.asunto | resumenTxt }}</strong></h5>
                                             <h6>de: {{ elemResp.nombre }} &lt;{{ elemResp.correo }}&gt;
                                             <span class="mailbox-read-time float-right">{{ elemResp.created_at | formatFechaHoraTxt }}</span></h6>
                                         </div>
@@ -81,7 +91,11 @@
                                     <!-- /.card-body -->
                                     <!-- LISTADO DE POSIBLE(S) RESPUESTA(S) YA EXISTENTE(S) -->
 
-                                    <div id="accordion-msg-resp">
+                                    <!--
+                                        Temporalmente, solo se deja responder al mensaje original, por ello la disposición de los botones
+                                        depende de este condicional
+                                    -->
+                                    <div v-if="objReg.msg_origen == 0" id="accordion-msg-resp">
                                         <div class="callout callout-primary ml-2 mr-2 p-0">
                                             <div id="txt-msg-resp" class="collapse" data-parent="#accordion-msg-resp">
                                                 <h6>Respuesta:</h6>
@@ -95,11 +109,16 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card-footer">
+
+                                    <div v-if="objReg.msg_origen == 0" class="card-footer">
                                         <div class="float-right">
                                             <a href="#txt-msg-resp" data-toggle="collapse" class="btn btn-default"><i class="fa fa-reply"></i> Responder</a>
                                             <!--<button type="button" class="btn btn-default"><i class="fa fa-share"></i> Reenviar</button>-->
                                         </div>
+                                        <button type="button" @click="trashElem()" class="btn btn-default" title="Mandar a la papelera"><i class="fas fa-trash-alt"></i> A papelera</button>
+                                        <!--<button type="button" class="btn btn-default"><i class="fa fa-print"></i> Imprimir</button>-->
+                                    </div>
+                                    <div v-else class="card-footer text-center">
                                         <button type="button" @click="trashElem()" class="btn btn-default" title="Mandar a la papelera"><i class="fas fa-trash-alt"></i> A papelera</button>
                                         <!--<button type="button" class="btn btn-default"><i class="fa fa-print"></i> Imprimir</button>-->
                                     </div>
@@ -131,8 +150,6 @@
             this.getParam();
             //carga de datos
             this.fillEditFormReg(this.elem_id);
-            //para cargar el listado de registros y obtener el total de no leidos
-            this.getElems();
         },
 
         //datos devueltos por el componente:
@@ -143,15 +160,14 @@
                 urlBase: '/api/contacts',
                 //variable para almacenar los datos del registro a mostrar
                 objReg: {},
-                //variable para almacenar los datos de posible(s) respuesta(s) que ya tenga
-                objRegResps: {},
                 //variable para almacenar los datos del correo de respuesta a enviar
                 objRegResp: {},
-                //variable para registrar la respesta enviada
+                //variable para registrar la respuesta enviada
                 objNewElem: {},
                 //posibles errores
                 errors: new Errors(),
-                elems_no_papelera_leido_no_tot: 0,
+                //valor mandado al componente hijo ContactsNavbarFoldersComponent
+                elems_no_papelera_leido_no_tot_var: 0,
             }
         },
 
@@ -195,8 +211,6 @@
                     console.log(response.data)
                     this.objReg = response.data
 
-                    //Capturando posble(s) respuesta(s) existente(s)
-                    this.getElemsResps();
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR
                     console.log(error.response.data.errors);
@@ -204,38 +218,19 @@
             },
 
             /**
-             * Obteniendo listado de registros respuesta
-             * referidos al registro consultado
+             * Obteniendo TOT de los no leidos
             */
-            getElemsResps() {
+            getElemsTotNoLeidos() {
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
-                let url = this.urlBase + '/get-responses/' + this.elem_id;
+                let url = this.urlBase + '/no-readed/tot';
                 //Empleado el método GET de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 //  -> Si es correcto, se recogen los datos
                 //  dentro del contenedor definido
                 axios.get(url).then( response => {
                     ////console.log(response.data)
-                    this.objRegResps = response.data
-                });
-            },
-
-            /**
-             * Obteniendo listado de registros
-             * para contar los no leidos
-            */
-            getElems() {
-                //URL hacia la ruta del listado de registros
-                //  >> SIN paginación
-                let url = this.urlBase;
-                //Empleado el método GET de Axios, el cliente AJAX,
-                //que es el método referido a la ruta llamada
-                //  -> Si es correcto, se recogen los datos
-                //  dentro del contenedor definido
-                axios.get(url).then( response => {
-                    ////console.log(response.data)
-                    this.elems_no_papelera_leido_no_tot = response.data.elems_no_papelera_leido_no_tot
+                    this.elems_no_papelera_leido_no_tot_var = response.data
                 });
             },
 
@@ -250,6 +245,7 @@
                 .then((response) => {       //SI TODO OK
 
                     console.log(msg_success);
+                    this.getElemsTotNoLeidos();
 
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR

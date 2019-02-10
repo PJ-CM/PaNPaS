@@ -46,6 +46,7 @@
         //datos devueltos por el componente:
         data() {
             return {
+                urlBase: '/api/users',
                 //variable para almacenar los datos del registro a almacenar
                 objDataResReg: {},
             }
@@ -59,7 +60,7 @@
             fillDataResumReg(regID) {
                 console.log('Cargando datos resumen del registro [' + regID + ']');
                 //Haciendo la petición de datos
-                let url = '/api/users/prof-data-resum/' + regID;
+                let url = this.urlBase + '/prof-data-resum/' + regID;
                 axios.get(url)
                 .then( response => {       //SI TODO OK
                     console.log(response.data)

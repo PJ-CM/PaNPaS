@@ -70,6 +70,7 @@ let routes = [
     { path: patron + '/contacts/sended', name: 'contacts_sended_list', component: require('./components' + patron + '/ContactsSendedComponent.vue').default },
     { path: patron + '/contacts/trashed', name: 'contacts_trashed_list', component: require('./components' + patron + '/ContactsTrashedComponent.vue').default },
     { path: patron + '/contacts/:id', name: 'contact_msg', component: require('./components' + patron + '/ContactMsgComponent.vue').default },
+    { path: patron + '/contacts/search/:term', name: 'contacts_search', component: require('./components' + patron + '/ContactsSearchComponent.vue').default },
 ]
 
 //Instancia de VueRouter y asignación de rutas
@@ -83,10 +84,19 @@ const router = new VueRouter({
 
 //Filtros de Vue
 //----------------------------------------------------------
-//Para poner un txt en mayúsculas
+//Para resumir textos largos
 Vue.filter('resumenTxt', function (value) {
     if (!value) return '-'
     let maxChar = 50;
+    if(value.length > maxChar) {
+        value = value.substring(0, maxChar).trim() + '...';
+    }
+    return value;
+})
+//Para resumir textos largos en Top3 - Barra Superior
+Vue.filter('resumenTxt_Top3LNo', function (value) {
+    if (!value) return '-'
+    let maxChar = 25;
     if(value.length > maxChar) {
         value = value.substring(0, maxChar).trim() + '...';
     }
