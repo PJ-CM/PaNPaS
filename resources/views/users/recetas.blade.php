@@ -125,7 +125,7 @@
                         <a class="ranking-link" href="/receta/' + recetas[i].titulo + '"> \
                             <div class="ranking-hover" title="Preparar ' + recetas[i].titulo + '"> \
                                 <div class="ranking-hover-content">\
-                                    <i class="fas fa-plus fa-3x"></i>\
+                                    <i class="fas fa-blender fa-3x"></i>\
                                 </div>\
                             </div>\
                             <img class="img-fluid" src="' + recetas[i].imagen + '" title="' + recetas[i].titulo + '">\
@@ -149,7 +149,7 @@
                         <a class="ranking-link" href="/receta/' + recetas[i].titulo + '"> \
                             <div class="ranking-hover" title="Preparar ' + recetas[i].titulo + '"> \
                                 <div class="ranking-hover-content">\
-                                    <i class="fas fa-plus fa-3x"></i>\
+                                    <i class="fas fa-blender fa-3x"></i>\
                                 </div>\
                             </div>\
                             <img class="img-fluid" src="' + recetas[i].imagen + '" title="' + recetas[i].titulo + '">\

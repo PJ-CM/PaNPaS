@@ -49,7 +49,7 @@
         <section id="user_panel">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         <div class="card">
                             <div class="card-header"><h1 style=";">Perfil Privado</h1> 
 
@@ -62,8 +62,6 @@
                                     <div class="col-12" style="max-width: 390px; float: right;">
                                          <canvas id="graph_recetas"></canvas>
                                     </div>
-                                           
-                                	    
                                 </form>
 
 
