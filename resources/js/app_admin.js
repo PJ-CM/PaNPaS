@@ -142,6 +142,12 @@ Vue.component('user-prof-activ-component', require('./components' + patron + '/U
 Vue.component('user-prof-edit-component', require('./components' + patron + '/UserProfEditComponent.vue').default);
 Vue.component('contacts-navbar-folders-component', require('./components' + patron + '/ContactsNavbarFoldersComponent.vue').default);
 
+//Vue-infinite-loading :: Paginado Infinito
+//  >> Registro del componente
+//      ==> dándole un nombre personal con el que manejarlo
+//      ==> indicando el nombre real del componente (se puede ver dentro de package.json)
+Vue.component('InfiniteLoading', require('vue-infinite-loading'));
+
 //Instancia de Vue para emplear como Bus de eventos
 //para la emisión/recepción de los mismos de forma global
 //  >> Forma larga de declarar variable y registrarla globalmente en el objeto WINDOW
