@@ -3,7 +3,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="loginModalLabel">{{ __('Login') }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="Cerrar ventana modal">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -69,10 +69,10 @@
                             <div class="col-md-12 text-center">
                                 @if (Route::has('register'))
                                     {{--<a class="btn btn-link" href="{{ route('register') }}">{{ __('Registrarse') }}</a>--}}
-                                    <a class="btn btn-link" data-dismiss="modal" data-toggle="modal" href="#registerModal">{{ __('Registrarse') }}</a>
+                                    <a class="btn btn-link" data-dismiss="modal" data-toggle="modal" href="#registerModal" title="Pulsar para registrarse">{{ __('Registrarse') }}</a>
                                 @endif
                                 @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                                    <a class="btn btn-link" href="{{ route('password.request') }}" title="Pulsar si se olvido la contraseña">
                                         {{ __('¿Olvido de contraseña?') }}
                                     </a>
                                 @endif
@@ -83,14 +83,14 @@
                         <div class="row">
                             <div class="col-md-12 social-auth-links">
                                 <p>- O -</p>
-                                <a class="btn btn-block btn-social btn-twitter">
+                                <a class="btn btn-block btn-social btn-twitter" title="Iniciar sesión con Twitter">
                                     <i class="fab fa-twitter"></i> Iniciar sesión con Twitter
                                   </a>
-                                <a href="#" class="btn btn-block btn-social btn-facebook">
+                                <a href="#" class="btn btn-block btn-social btn-facebook" title="Iniciar sesión con Facebook">
                                     <i class="fab fa-facebook-f"></i> Iniciar sesión con Facebook
                                 </a>
-                                <a href="#" class="btn btn-block btn-social btn-google">
-                                    <i class="fab fa-google-plus-g"></i> Iniciar sesión con Google+
+                                <a href="#" class="btn btn-block btn-social btn-github" title="Iniciar sesión con GitHub">
+                                    <i class="fab fa-github"></i> Iniciar sesión con GitHub
                                 </a>
                             </div>
                         </div>
@@ -98,8 +98,8 @@
                     <div class="modal-footer">
                         <span class="input-group-btn">
                             <input type="hidden" name="modal" value="loginModal">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary" id="btn_ini_sesion">Iniciar sesión</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cerrar ventana modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary" id="btn_ini_sesion" title="Iniciar sesión">Iniciar sesión</button>
                         </span>
                     </div>
                     </form>

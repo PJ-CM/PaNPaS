@@ -14,7 +14,7 @@
                                 if($pag_actual == '/admin/users') { $class_menu_open = ' menu-open'; }
                             @endphp
                             <br>@{{ $route.path }}<br>--}}
-                            <li class="nav-item has-treeview">
+                            <li class="nav-item has-treeview menu-open">
                                 <a href="#" class="nav-link active" title="Desplegar/replegar secciones">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>

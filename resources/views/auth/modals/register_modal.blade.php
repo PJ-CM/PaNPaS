@@ -3,7 +3,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="registerModalLabel">{{ __('Registro') }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="Cerrar ventana modal">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -55,7 +55,7 @@
                         <div class="form-group row">
                             <div class="col-md-12 text-center">
                                 @if (Route::has('login'))
-                                    <a class="btn btn-link" data-dismiss="modal" data-toggle="modal" href="#loginModal">{{ __('Ya tengo una cuenta') }}</a>
+                                    <a class="btn btn-link" data-dismiss="modal" data-toggle="modal" href="#loginModal" title="Ir a iniciar sesión">{{ __('Ya tengo una cuenta') }}</a>
                                 @endif
                             </div>
                         </div>
@@ -64,14 +64,14 @@
                         <div class="row">
                             <div class="col-md-12 social-auth-links">
                                 <p>- O -</p>
-                                <a class="btn btn-block btn-social btn-twitter">
+                                <a class="btn btn-block btn-social btn-twitter" title="Iniciar sesión con Twitter">
                                     <i class="fab fa-twitter"></i> Registrarse con Twitter
                                   </a>
-                                <a href="#" class="btn btn-block btn-social btn-facebook">
+                                <a href="#" class="btn btn-block btn-social btn-facebook" title="Iniciar sesión con Facebook">
                                     <i class="fab fa-facebook-f"></i> Registrarse con Facebook
                                 </a>
-                                <a href="#" class="btn btn-block btn-social btn-google">
-                                    <i class="fab fa-google-plus-g"></i> Registrarse con Google+
+                                <a href="#" class="btn btn-block btn-social btn-github" title="Iniciar sesión con GitHub">
+                                    <i class="fab fa-github"></i> Registrarse con GitHub
                                 </a>
                             </div>
                         </div>

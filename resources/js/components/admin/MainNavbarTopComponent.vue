@@ -29,9 +29,9 @@
                 <ul id="icos-alerts" class="navbar-nav ml-auto">
                     <!-- Messages Dropdown Menu -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link" data-toggle="dropdown" href="#">
+                        <a href="#" class="nav-link" data-toggle="dropdown" title="Mensaje(s) sin leer">
                             <i id="ico_msg" class="fas fa-comments"></i>
-                            <span v-if="elemsTop_no_papelera_leido_no_tot > 0" class="badge badge-primary navbar-badge" title="Mensaje(s) sin leer">{{ elemsTop_no_papelera_leido_no_tot }}</span>
+                            <span v-if="elemsTop_no_papelera_leido_no_tot > 0" class="badge badge-primary navbar-badge">{{ elemsTop_no_papelera_leido_no_tot }}</span>
                         </a>
                         <div id="dropdown-menu-top3-lno" v-if="elems_Top3LeidoNo.length == 0" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <router-link to="/admin/contacts" class="dropdown-item dropdown-footer text-center" title="Ir a Mensajes">
@@ -43,7 +43,7 @@
                             <div v-for="(elem_Top3LNo, index) in elems_Top3LeidoNo" :key="index">
                                 <router-link :to="{ name: 'contact_msg', params: {id: elem_Top3LNo.id} }" :title="'Ver mensaje de ' + elem_Top3LNo.correo" class="dropdown-item">
                                     <div class="media">
-                                        <img src="images/user_icon_gnral.png" alt="Avatar de usuario no registrado" class="img-size-50 mr-3 img-circle">
+                                        <img src="/admin/images/user_icon_gnral.png" alt="Avatar de usuario no registrado" class="img-size-50 mr-3 img-circle">
                                         <div class="media-body">
                                             <h3 class="dropdown-item-title">
                                                 {{ elem_Top3LNo.nombre }}
@@ -105,6 +105,9 @@
             //para cargar el listado de registros no leidos al llegar al componente
             this.getElemsTotNoLeidos();
 
+            //para cargar el listado de usuarios conectados al llegar al componente
+            this.getElemsList();
+
             //Recibiendo notificación de todo evento que cambie el total de correos no leidos
             BusEvent.$on('notifRecargaLeidosNoTotEvent', () => {
                 this.notifRecargaLeidosNoTot();
@@ -114,10 +117,14 @@
         //datos devueltos por el componente:
         data() {
             return {
-                urlBase: '/api/contacts',
+                urlBaseContacts: '/api/contacts',
+                urlBaseUsers: '/api/users',
                 elemsTop_no_papelera_leido_no_tot: 0,
                 //Puede ser también     >>      elemsTop3_LeidoNo: [],
                 elems_Top3LeidoNo: {},  //variable contenedora de los registros a listar
+                elems_users: {},
+                //elems_users_online: {},
+                elems_users_online: [],
             }
         },
 
@@ -129,7 +136,7 @@
             getElemsTotNoLeidos() {
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
-                let url = this.urlBase + '/no-readed/tot';
+                let url = this.urlBaseContacts + '/no-readed/tot';
                 //Empleado el método GET de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 //  -> Si es correcto, se recogen los datos
@@ -150,7 +157,7 @@
             getElemsTop3NoLeidos() {
                 //URL hacia la ruta del listado de registros
                 //  >> SIN paginación
-                let url = this.urlBase + '/no-readed/top3';
+                let url = this.urlBaseContacts + '/no-readed/top3';
                 //Empleado el método GET de Axios, el cliente AJAX,
                 //que es el método referido a la ruta llamada
                 //  -> Si es correcto, se recogen los datos
@@ -159,6 +166,88 @@
                     ////console.log(response.data)
                     this.elems_Top3LeidoNo = response.data
                 });
+            },
+
+            /**
+             * Obteniendo lista
+            */
+            getElemsList() {
+                //1: se obtienen todos los usuarios
+                //----------------------------------------------------
+                //URL hacia la ruta del listado de registros
+                //  >> SIN paginación
+                let url = this.urlBaseUsers + '/online/list';
+                //Empleado el método GET de Axios, el cliente AJAX,
+                //que es el método referido a la ruta llamada
+                //  -> Si es correcto, se recogen los datos
+                //  dentro del contenedor definido
+                axios.get(url).then( response => {
+                    console.log('Usuarios a evaluar si están conectados:' + response.data)
+                    this.elems_users = response.data
+                    //////Habiendo algún mensaje no leido fuera de la papelera...
+                    ////if(this.elemsTop_no_papelera_leido_no_tot > 0) {
+                    ////    this.getElemsTop3NoLeidos();
+                    ////}
+                    //Filtrando solamente los conectados
+                    this.getElemsListOnline();
+                })
+                .catch(error => {           //SI HAY ALGÚN ERROR
+                    console.log(error.response.data.errors);
+                });
+            },
+
+            /**
+             * Obteniendo lista
+            */
+            getElemsListOnline() {
+                console.log('Se van a filtrar solo los conectados...' + this.elems_users.length);
+                //2: Recuperando solo los conectados
+                /*
+                this.elems_users.forEach(function(elem_usu) {
+                    console.log('El valor de conectado es [' + elem_usu.isOnline + ']');
+
+                    if(elem_usu.isOnline == true) {
+                        console.log('El ID = [' + elem_usu.id + '] está conectado');
+                        //se añade a la lista
+                        this.elems_users_online.push(elem_usu);
+                    } else {
+                        console.log('[' + elem_usu.id + '] No conectado');
+                    }
+                })*/
+
+                for(var i = 0; i < this.elems_users.length; i++) {
+                    console.log('Vamos a ver');
+                    var elem_usu = this.elems_users[i];
+                    console.log('El valor de conectado es ...');
+
+                    if(elem_usu.isOnline == true) {
+                        console.log('El ID = [' + elem_usu.id + '] está conectado');
+                        //se añade a la lista
+                        this.elems_users_online.push(elem_usu);
+                        //this.elems_users_online=elem_usu;
+                    } else {
+                        console.log('[' + elem_usu.id + '] No conectado');
+                    }/**/
+                }
+
+                /*let num = 0;
+                this.elems_users = json_encode(this.elems_users)
+                console.log('elems_users tras JSON_ENCODE', this.elems_users)
+                Object.keys(this.elems_users).forEach((elem_usu) => {
+                    //elem_usu = this.elems_users[itemKey];
+                    num++;
+                    console.log('[' + num + '] El valor de conexión está a [' + elem_usu['isOnline'] + ']');
+
+                    if(elem_usu.isOnline == true) {
+                        console.log('El ID = [' + elem_usu.id + '] está conectado');
+                        //se añade a la lista
+                        this.elems_users_online.push(elem_usu);
+                    } else {
+                        console.log('[' + elem_usu.id + '] No conectado');
+                    }
+                })*/
+
+                console.log('Estos están conectados:' + this.elems_users_online);
             },
 
             /**

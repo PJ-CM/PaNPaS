@@ -25,6 +25,9 @@ Route::apiResources([
     'contacts' => 'API\ContactController',
 ]);
 // -------------------------------------------------------------------------------
+//Listar usuarios conectados
+Route::get('/users/online/list', 'API\UserController@onlineList')
+    ->name('user.online.list');
 //Buscador para filtrar resultados en el listado
 //  >> término que buscar
 Route::post('/users/search', 'API\UserController@search')
