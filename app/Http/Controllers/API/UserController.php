@@ -80,8 +80,8 @@ class UserController extends Controller
      */
     public function onlineList()
     {
-        return User::select ('id', 'username', 'name', 'lastname')
-                    ->get()
+        return User::select ('id', 'username', 'name', 'lastname', 'avatar', 'last_access_at')
+                    ->orderBy('last_access_at', 'desc')->get()
                     ->map(function ($user) {//Registrando si el usuario recorrido está conectado
                         $user->isOnline = $user->isOnline();
                         return $user;

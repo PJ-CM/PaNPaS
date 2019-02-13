@@ -156,7 +156,7 @@
 
 									<ul id="comments-list" class="comments-list">
 
-										
+
 										@for ($i = count($receta->comentarios) - 1; $i >= 0; $i--)
 											@php $comentario = $receta->comentarios[$i]; @endphp
 											<li>
@@ -177,10 +177,10 @@
 												</div>
 											</li>
 										@endfor
-										
+
 
 										<!-- Formulario para insertar comentario en la receta -->
-										
+
 
 
 									</ul>
@@ -204,5 +204,5 @@
         <script src="{{ asset('js/app.js') }}"></script>
 
         {{-- Otros --}}
-        <script src="js/agency.js"></script>
+        <script src="{{ asset('js/agency.js') }}"></script>
 @endsection

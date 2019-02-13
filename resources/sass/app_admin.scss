@@ -74,7 +74,27 @@ hr { width: 100%; height: 1px; background-color: #4f5962; }
     font-size: 58%;
 }
 
-#dropdown-menu-top3-lno { min-width: 280px; }
+//Paneles notificaciones
+#dropdown-menu-top3-lno, #dropdown-menu-top3-online { min-width: 280px; }
+
+//Panel listado usuarios online
+.pnl-online-item {
+    padding: 3px 0px 3px 3px;
+}
+.pnl-online-item div:first-child {
+    padding-left: 0;
+}
+.pnl-online-item:hover {
+    background-color: rgb(255, 255, 255, 0.9);
+    color: #272727;
+    border-radius: 5px;
+}
+.pnl-online-item a {
+    text-decoration: none;
+}
+.pnl-online-item a:hover {
+    color: #000;
+}
 
 //Mostrar/Ocultar elemento
 .elem_mostrar { display: block; }

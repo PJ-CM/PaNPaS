@@ -128,6 +128,9 @@
         created() {
             //console.log('Component mounted.')
 
+            //para cargar un listado de usuarios conectados actualizado
+            BusEvent.$emit('notifCargaUsersOnlineEvent');
+
             //llamar a almacenar el parámetro recibido
             this.getParam();
             //lanzar búsqueda

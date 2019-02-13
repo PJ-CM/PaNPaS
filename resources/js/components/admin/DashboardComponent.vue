@@ -182,6 +182,9 @@
         mounted() {
             console.log('Component mounted.');
 
+            //para cargar un listado de usuarios conectados actualizado
+            BusEvent.$emit('notifCargaUsersOnlineEvent');
+
             //para cargar total de recursos al llegar al componente
             this.getTotRecursos();
         },

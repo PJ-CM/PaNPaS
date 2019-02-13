@@ -33,12 +33,12 @@
                             <i id="ico_msg" class="fas fa-comments"></i>
                             <span v-if="elemsTop_no_papelera_leido_no_tot > 0" class="badge badge-primary navbar-badge">{{ elemsTop_no_papelera_leido_no_tot }}</span>
                         </a>
-                        <div id="dropdown-menu-top3-lno" v-if="elems_Top3LeidoNo.length == 0" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <div v-if="elems_Top3LeidoNo.length == 0" id="dropdown-menu-top3-lno" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <router-link to="/admin/contacts" class="dropdown-item dropdown-footer text-center" title="Ir a Mensajes">
                                 Ver Todos los Mensajes
                             </router-link>
                         </div>
-                        <div id="dropdown-menu-top3-lno" v-else class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <div v-else id="dropdown-menu-top3-lno" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <!-- Message Start -->
                             <div v-for="(elem_Top3LNo, index) in elems_Top3LeidoNo" :key="index">
                                 <router-link :to="{ name: 'contact_msg', params: {id: elem_Top3LNo.id} }" :title="'Ver mensaje de ' + elem_Top3LNo.correo" class="dropdown-item">
@@ -65,29 +65,30 @@
 
                     <!-- Notifications Dropdown Menu -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link" data-toggle="dropdown" href="#">
+                        <a href="#" class="nav-link" data-toggle="dropdown" title="Usuario(s) conectado(s)">
                             <i id="ico_notif" class="fas fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">15</span>
+                            <span v-if="elems_users_online.length > 0" class="badge badge-success navbar-badge">{{ elems_users_online.length }}</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-header">15 Notifications</span>
+                        <div v-if="elems_users_online.length == 0" id="dropdown-menu-top3-online" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <span class="dropdown-header">Ningún Usuario Conectado</span>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fa fa-envelope mr-2"></i> 4 new messages
-                                <span class="float-right text-muted text-sm">3 mins</span>
+                            <router-link :to="{ name: 'users_list' }" class="dropdown-item dropdown-footer text-center" title="Ir a Usuarios">
+                                Ir al Apartado de Usuarios
+                            </router-link>
+                        </div>
+                        <div v-else id="dropdown-menu-top3-online" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <span class="dropdown-header">Top3 Últimos Conectados</span>
+                            <div class="dropdown-divider"></div>
+                            <div v-for="(elem_Top3Onl, index) in elems_users_online.slice(0, listLimit)" :key="index">
+                                <router-link :to="{ name: 'user_profile', params: {id: elem_Top3Onl.id} }" :title="'Ver perfil de ' + elem_Top3Onl.name + ' ' + elem_Top3Onl.lastname" class="dropdown-item">
+                                    <img :src="elem_Top3Onl.avatar" alt="Avatar del usuario" class="img-size-50 mr-3 img-circle" style="border: green 2px solid;"> {{ '@' + elem_Top3Onl.username }}
+                                    <span class="float-right text-muted text-sm">{{ elem_Top3Onl.last_access_at | formatFHHaceTanto }}</span>
+                                </router-link>
+                                <div class="dropdown-divider"></div>
+                            </div>
+                            <a href="#" class="dropdown-item dropdown-footer text-center" data-widget="control-sidebar" data-slide="true" title="Ver Usuarios Conectados">
+                                Ver Lista Completa
                             </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fa fa-users mr-2"></i> 8 friend requests
-                                <span class="float-right text-muted text-sm">12 hours</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fa fa-file mr-2"></i> 3 new reports
-                                <span class="float-right text-muted text-sm">2 days</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                         </div>
                     </li>
                     <li class="nav-item">
@@ -106,7 +107,14 @@
             this.getElemsTotNoLeidos();
 
             //para cargar el listado de usuarios conectados al llegar al componente
-            this.getElemsList();
+            ////this.getElemsList();
+            //Recibiendo notificación desde cada cambio de apartado
+            //para cargar un listado de usuarios conectados actualizado
+            BusEvent.$on('notifCargaUsersOnlineEvent', () => {
+                //reiniciando cada vez para evitar repeticiones
+                this.elems_users_online = [];
+                this.getElemsList();
+            });
 
             //Recibiendo notificación de todo evento que cambie el total de correos no leidos
             BusEvent.$on('notifRecargaLeidosNoTotEvent', () => {
@@ -125,6 +133,7 @@
                 elems_users: {},
                 //elems_users_online: {},
                 elems_users_online: [],
+                listLimit: 3,
             }
         },
 
@@ -182,7 +191,7 @@
                 //  -> Si es correcto, se recogen los datos
                 //  dentro del contenedor definido
                 axios.get(url).then( response => {
-                    console.log('Usuarios a evaluar si están conectados:' + response.data)
+                    console.log('Usuarios a evaluar si están conectados:', response.data)
                     this.elems_users = response.data
                     //////Habiendo algún mensaje no leido fuera de la papelera...
                     ////if(this.elemsTop_no_papelera_leido_no_tot > 0) {
@@ -197,57 +206,84 @@
             },
 
             /**
-             * Obteniendo lista
+             * Filtrando los usuarios que están conectados
+             * necesario para calcular el total de los mismos
             */
             getElemsListOnline() {
-                console.log('Se van a filtrar solo los conectados...' + this.elems_users.length);
                 //2: Recuperando solo los conectados
-                /*
+                //----------------------------------------------------------
+
+                /**
+                 * Sin saber el POR QUé, aunque en otras pruebas de ARRAY de Objetos
+                 * esta forma de recorrer y rellenar otro array con los objetos recorridos
+                 * funciona, en este caso, da este ERROR:
+                 *      Uncaught (in promise) TypeError: Cannot read property 'data' of undefined
+                 *      >> el ERROR se refleja cuando se llega a esta línea, en el momento
+                 *      que se quiere añadir un element
+                 *          this.elems_users_online.push(elem_usu);
+                 *
+                 * Cualquiera de las otras dos si funcionan
+                 */
+
+                //CON Error
+                //--------------------------------------------------------------------------
+
+                /*let index = 0;
+                let elem_usu;
                 this.elems_users.forEach(function(elem_usu) {
+                    elem_usu = this.elems_users[index];
                     console.log('El valor de conectado es [' + elem_usu.isOnline + ']');
 
-                    if(elem_usu.isOnline == true) {
+                    if(elem_usu.isOnline) {
+                        console.log('El ID = [' + elem_usu.id + '] está conectado');
+                        //se añade a la lista
+                        //this.elems_users_online.push(elem_usu);
+                        //this.elems_users_online[0] = 'elem_usu';
+                        //---------------------------------------------
+                        this.elems_users_online.push('elem_usu');
+                    } else {
+                        console.log('[' + elem_usu.id + '] No conectado');
+                    }
+                    index++;
+                })*/
+
+                //SIN Error (cualquiera de las dos siguentes funcionan)
+                //--------------------------------------------------------------------------
+                //  En ambos casos, la variable "elems_users_online" debe ser de tipo ARRAY
+                //  para poder añadirle elementos con push():
+                //      elems_users_online: []
+
+                /*let i, elem_usu;
+                for(i = 0; i < this.elems_users.length; i++) {
+                    elem_usu = this.elems_users[i];
+
+                    if(elem_usu.isOnline) {
                         console.log('El ID = [' + elem_usu.id + '] está conectado');
                         //se añade a la lista
                         this.elems_users_online.push(elem_usu);
                     } else {
                         console.log('[' + elem_usu.id + '] No conectado');
                     }
-                })*/
+                }*/
 
-                for(var i = 0; i < this.elems_users.length; i++) {
-                    console.log('Vamos a ver');
-                    var elem_usu = this.elems_users[i];
-                    console.log('El valor de conectado es ...');
+                /**
+                 * Se obtiene cada dimensión del array "elemKey" gracias al cuál
+                 * se pueden examinar los valores del cada uno de los objetos "elem_usu"
+                 * recorridos en el bucle
+                 */
+                let elem_usu;
+                Object.keys(this.elems_users).forEach((elemKey) => {
+                    elem_usu = this.elems_users[elemKey];
 
-                    if(elem_usu.isOnline == true) {
-                        console.log('El ID = [' + elem_usu.id + '] está conectado');
-                        //se añade a la lista
+                    if(elem_usu.isOnline) {
+                        //se añade a la lista de los conectados
                         this.elems_users_online.push(elem_usu);
-                        //this.elems_users_online=elem_usu;
-                    } else {
-                        console.log('[' + elem_usu.id + '] No conectado');
-                    }/**/
-                }
-
-                /*let num = 0;
-                this.elems_users = json_encode(this.elems_users)
-                console.log('elems_users tras JSON_ENCODE', this.elems_users)
-                Object.keys(this.elems_users).forEach((elem_usu) => {
-                    //elem_usu = this.elems_users[itemKey];
-                    num++;
-                    console.log('[' + num + '] El valor de conexión está a [' + elem_usu['isOnline'] + ']');
-
-                    if(elem_usu.isOnline == true) {
-                        console.log('El ID = [' + elem_usu.id + '] está conectado');
-                        //se añade a la lista
-                        this.elems_users_online.push(elem_usu);
-                    } else {
-                        console.log('[' + elem_usu.id + '] No conectado');
                     }
-                })*/
+                })/**/
 
-                console.log('Estos están conectados:' + this.elems_users_online);
+                console.log('Cantidad de conectados: [' + this.elems_users_online.length + ']');
+                //Mandando lista al panel derecho emergente
+                BusEvent.$emit('notifRecargaOnLineListEvent', this.elems_users_online);
             },
 
             /**

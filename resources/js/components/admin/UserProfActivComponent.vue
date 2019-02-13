@@ -236,7 +236,7 @@
                 let url = this.urlBase + '/prof-activity/' + regID;
                 axios.get(url)
                 .then( response => {       //SI TODO OK
-                    console.log('Top Últimas recetas:' + response.data);
+                    console.log('Top Últimos Varios:', response.data);
                     this.objActivReg = response.data;
                 })
                 .catch(error => {           //SI HAY ALGÚN ERROR

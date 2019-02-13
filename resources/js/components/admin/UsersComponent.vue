@@ -133,6 +133,9 @@
         created() {
             //console.log('Component mounted.')
 
+            //para cargar un listado de usuarios conectados actualizado
+            BusEvent.$emit('notifCargaUsersOnlineEvent');
+
             //para cargar el listado de usuarios al llegar al componente
             this.getUsers();
             //para volverlo a cargar en cada intervalo de X tiempo

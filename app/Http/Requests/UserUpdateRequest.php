@@ -32,8 +32,8 @@ class UserUpdateRequest extends FormRequest
             'email'     => 'required|string|email|max:100|unique:users,email,' . $this->id,
             'password'  => 'nullable|string|min:6|confirmed',
             'perfil_id' => 'required',
-            'name' => 'nullable|regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s-_]+$/|max:50',
-            'lastname' => 'nullable|regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s-_]+$/|max:74',
+            'name' => 'nullable|regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s_-]+$/|max:50',
+            'lastname' => 'nullable|regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s_-]+$/|max:74',
         ];
 
         return $rules;

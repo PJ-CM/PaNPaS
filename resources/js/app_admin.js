@@ -136,6 +136,7 @@ Vue.filter('formatFechaHoraTxt', function (value) {
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('main-navbar-top-component', require('./components' + patron + '/MainNavbarTopComponent.vue').default);
+Vue.component('aside-right-panel-content-component', require('./components' + patron + '/AsideRightPnlContentComponent.vue').default);
 Vue.component('user-ins-edit-component', require('./components' + patron + '/UserInsEditComponent.vue').default);
 Vue.component('user-prof-tots-component', require('./components' + patron + '/UserProfTotsComponent.vue').default);
 Vue.component('user-prof-activ-component', require('./components' + patron + '/UserProfActivComponent.vue').default);

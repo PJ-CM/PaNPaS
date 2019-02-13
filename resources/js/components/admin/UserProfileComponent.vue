@@ -81,6 +81,10 @@
     export default {
         mounted() {
             console.log('Component mounted.');
+
+            //para cargar un listado de usuarios conectados actualizado
+            BusEvent.$emit('notifCargaUsersOnlineEvent');
+
             //llamar a almacenar el parámetro recibido
             this.getParam();
             //carga de datos en los paneles
