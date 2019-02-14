@@ -161,10 +161,19 @@ class ContactController extends Controller
     {
         $termino = $request->term;
         return Contacto::withTrashed()
-                ->where('nombre', 'LIKE', "%{$termino}%")
-                ->orWhere('correo', 'LIKE', "%{$termino}%")
-                ->orWhere('asunto', 'LIKE', "%{$termino}%")
-                ->orWhere('mensaje', 'LIKE', "%{$termino}%")
+                //para Caso SENSITIVO a Mayúsculas
+                //  >> sacando solo resultados que coincidan exactamente
+                ////->where('nombre', 'LIKE', "%{$termino}%")
+                ////->orWhere('correo', 'LIKE', "%{$termino}%")
+                ////->orWhere('asunto', 'LIKE', "%{$termino}%")
+                ////->orWhere('mensaje', 'LIKE', "%{$termino}%")
+                //para Caso INSENSITIVO a Mayúsculas
+                //  >> sacando resultados que coincidan
+                //  ya sea en mayúsc. o minúsculas
+                ->where('nombre', 'ilike', "%{$termino}%")
+                ->orWhere('correo', 'ilike', "%{$termino}%")
+                ->orWhere('asunto', 'ilike', "%{$termino}%")
+                ->orWhere('mensaje', 'ilike', "%{$termino}%")
                 ->orderBy('created_at', 'desc')->get();
     }
 

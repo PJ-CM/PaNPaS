@@ -101,10 +101,19 @@ class UserController extends Controller
         $termino = $request->term;
         return User::withTrashed()
                 ->with('perfil:id,nombre')
-                ->where('name', 'LIKE', "%{$termino}%")
-                ->orWhere('lastname', 'LIKE', "%{$termino}%")
-                ->orWhere('username', 'LIKE', "%{$termino}%")
-                ->orWhere('email', 'LIKE', "%{$termino}%")
+                //para Caso SENSITIVO a Mayúsculas
+                //  >> sacando solo resultados que coincidan exactamente
+                ////->where('name', 'LIKE', "%{$termino}%")
+                ////->orWhere('lastname', 'LIKE', "%{$termino}%")
+                ////->orWhere('username', 'LIKE', "%{$termino}%")
+                ////->orWhere('email', 'LIKE', "%{$termino}%")
+                //para Caso INSENSITIVO a Mayúsculas
+                //  >> sacando resultados que coincidan
+                //  ya sea en mayúsc. o minúsculas
+                ->where('name', 'ilike', "%{$termino}%")
+                ->orWhere('lastname', 'ilike', "%{$termino}%")
+                ->orWhere('username', 'ilike', "%{$termino}%")
+                ->orWhere('email', 'ilike', "%{$termino}%")
                 ->orderBy('id', 'desc')->get()
                 ->map(function ($user) {//Registrando si el usuario recorrido está conectado
                     $user->isOnline = $user->isOnline();

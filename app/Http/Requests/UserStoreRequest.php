@@ -65,7 +65,7 @@ class UserStoreRequest extends FormRequest
         //Otra sería indicarlo al principio o al final de toda la cadena de caracteres aceptados
         //Optando por dejarlo como último carácter, a regla a establecer:
         //  >> pasa de esto
-        //      regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s_-]+$/
+        //      regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s-_]+$/
         //  >> a esto otro
         //      regex:/^[áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛñÑA-Za-z\s_-]+$/
         //  De no tenerse esto en cuenta, puede producirse este ERROR:
